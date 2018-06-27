@@ -4,6 +4,10 @@
 * 启动:npm restart
 * 地址:127.0.0.1:4000
 
-![image](https://github.com/a393821466/node_project/tree/xinxiluru/pic/12.JPG)
+## Project
+### 1.images
+ **Result：**
+![pic1](https://github.com/a393821466/node_project/tree/xinxiluru/pic/12.png)
 
-![image](https://github.com/a393821466/node_project/tree/xinxiluru/pic/13.jpg)
+![pic2](https://github.com/a393821466/node_project/tree/xinxiluru/pic/13.png)
+
