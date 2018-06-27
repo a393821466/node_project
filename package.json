@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "koa": "^2.5.1",
+    "koa-ejs": "^4.1.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa-views": "^6.1.4",
+    "mongoose": "^5.1.7",
+    "nodemon": "^1.17.5"
+  },
+  "scripts":{
+    "start":"node index.js",
+    "restart":"nodemon index.js"
+  }
+}

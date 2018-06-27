@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>
+    数据表
+  </title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2>信息录入:</h2>
+    <hr/>
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputUsername">输入名字</label>
+            <input type="text" class="form-control" name="username" placeholder="输入名字">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputAge">输入年龄</label>
+            <input type="text" class="form-control" name="age" placeholder="输入年龄">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputAge">输入电话</label>
+            <input type="text" class="form-control" name="phone" placeholder="输入电话">
+          </div>
+          <button type="button" class="btn btn-primary" id="submit_from">提交</button>
+        </form>
+        <hr/>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>姓名</th>
+              <th>年龄</th>
+              <th>电话</th>
+              <th>录入时间</th>
+            </tr>
+          </thead>
+          <tbody id="tableData">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</body>
+<script>
+  //录入
+  $("#submit_from").off("click").on("click", function () {
+    var data = {
+      username: $("[name='username']").val(),
+      age: $("[name='age']").val(),
+      phone: $("[name='phone']").val()
+    }
+    if (!(/^1[34578]\d{9}$/.test(data.phone))) {
+      alert("手机格式不正确");
+      return;
+    }
+    var _this = $(this);
+    // setTimeout(function () {
+    $.ajax({
+      url: '/postForm',
+      type: 'POST',
+      data: data,
+      timeout: 5000,
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        _this.text('loading..').attr("disabled", "false");
+      },
+      success: function (data) {
+        alert(data.message);
+        auto();
+        _this.removeAttr("disabled").text('提交');
+        $("[name='username']").val("");
+        $("[name='age']").val("");
+        $("[name='phone']").val("");
+      },
+      error: function (xhr) {
+        let err = xhr.responseJSON;
+        _this.removeAttr("disabled").text('提交');
+        alert(err.message);
+      }
+    })
+    // }, 4000)
+  })
+  //获取数据
+  function auto() {
+    $.get("/getData", { "page": 1, "pageSize": 10 }, function (res) {
+      var _html = '';
+      var da = res.value;
+      if (res.statusCode == 1) {
+        if (da.length == 0) {
+          _html += "<tr><th scope='row'></th><td></td><td style='text-align:center;line-height:40px;font-size:18px;color:#999;'>暂无数据</td><td></td></tr>"
+        } else {
+          $.each(da, function (idx, item) {
+            idx = idx + 1;
+            _html += "<tr><th scope='row'>" + idx + "</th><td>" + item.username + "</td><td>" + item.age + "岁</td><td>" + item.phone + "</td><td>" + formatData(item.createDate) + "</td></tr>";
+          })
+        }
+        $("#tableData").html(_html)
+      } else {
+        alert(res.message);
+      }
+    })
+  }
+  auto();
+  //时间格式化
+  function formatData(sj) {
+    var t = parseInt(sj);
+    var time = new Date(t);
+    var y = time.getFullYear();//年
+    var m = time.getMonth() + 1;//月
+    var d = time.getDate();//日
+    var h = time.getHours();//时
+    var mm = time.getMinutes();//分
+    // var s = time.getSeconds();//秒
+    return y + "-" + m + "-" + d + " " + h + ":" + mm;
+  }
+</script>
+
+</html>
