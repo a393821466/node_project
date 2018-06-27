@@ -7,7 +7,7 @@
 ## Project
 ### 1.images
  **Result：**
-![pic1](https://github.com/a393821466/node_project/tree/xinxiluru/pic/12.png)
+![pic1](https://github.com/a393821466/node_project/tree/xinxiluru/My_image/12.png)
 
-![pic2](https://github.com/a393821466/node_project/tree/xinxiluru/pic/13.png)
+![pic2](https://github.com/a393821466/node_project/tree/xinxiluru/My_image/13.png)
 
