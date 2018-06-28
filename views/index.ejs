@@ -41,7 +41,7 @@
               <th>姓名</th>
               <th>年龄</th>
               <th>电话</th>
-              <th>录入时间</th>
+              <th>录入/更新时间</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -154,18 +154,15 @@
           colose(_this);
         })
         //编辑
-        var stf = true;
         $(".icon_Caozuo .edit").off("click").on("click", function () {
-          if (stf) {
-            $(this).css("color", '#ccc');
-            stf = false;
-            $(this).parents(".oid").find("input").removeAttr("readonly").css("background", '#eee');
-            $(this).parents(".oid").find("[name='usernames']").focus();
-          } else {
-            $(this).css("color", '#666');
-            stf = true;
-            $(this).parents(".oid").find('input').attr("readonly", "readonly").css("background", 'none');
-          }
+            if($(this).css('color')!=="rgb(204, 204, 204)"){
+              $(this).css("color", '#ccc');
+              $(this).parents(".oid").find("input").removeAttr("readonly").css("background", '#eee');
+              $(this).parents(".oid").find("[name='usernames']").focus();
+            }else{
+              $(this).css("color", '#666');
+              $(this).parents(".oid").find('input').attr("readonly", "readonly").css("background", 'none');
+            }
         })
         //更改
         $(".icon_Caozuo .sure").off("click").on("click", function () {

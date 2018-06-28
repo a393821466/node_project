@@ -22,7 +22,7 @@
   padding:0 5px;
 }
 #tableData input[name='age'],#tableData input[name='username'],input[name='ages'],input[name='usernames']{
-  width:50px;
+  width:100px;
 }
 #tableData input[name='phone'],input[name='phones']{
   width:120px;
