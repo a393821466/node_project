@@ -9,8 +9,8 @@
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5"
   },
-  "scripts":{
-    "start":"node index.js",
-    "restart":"nodemon index.js"
+  "scripts": {
+    "start": "node index.js",
+    "restart": "nodemon index.js"
   }
 }

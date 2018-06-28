@@ -9,6 +9,7 @@
     数据表
   </title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -16,7 +17,7 @@
     <h2>信息录入:</h2>
     <hr/>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+      <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
         <form>
           <div class="form-group">
             <label for="exampleInputUsername">输入名字</label>
@@ -41,19 +42,31 @@
               <th>年龄</th>
               <th>电话</th>
               <th>录入时间</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody id="tableData">
 
           </tbody>
         </table>
+        <div id="pagesUi">
+          <ul class="pagination" id="pages">
+          </ul>
+          <div class="pageJump">
+            <span>跳转到</span>
+            <input type="text" name="pages" />
+            <span>页</span>
+            <button type="button" class="button_sure">确定</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/pager.js"></script>
 </body>
 <script>
+  var num = 1;
   //录入
   $("#submit_from").off("click").on("click", function () {
     var data = {
@@ -78,41 +91,144 @@
       },
       success: function (data) {
         alert(data.message);
-        auto();
+        peopleData(num);
         _this.removeAttr("disabled").text('提交');
         $("[name='username']").val("");
         $("[name='age']").val("");
         $("[name='phone']").val("");
       },
       error: function (xhr) {
-        let err = xhr.responseJSON;
+        var err = xhr.responseJSON;
         _this.removeAttr("disabled").text('提交');
         alert(err.message);
       }
     })
     // }, 4000)
   })
-  //获取数据
-  function auto() {
-    $.get("/getData", { "page": 1, "pageSize": 10 }, function (res) {
+  //获取录入数据
+  function peopleData(pageNum) {
+    $.get("/getData", { "page": pageNum }, function (res) {
       var _html = '';
+      var sqr = false;
       var da = res.value;
       if (res.statusCode == 1) {
+        if (res.totle < 2) {
+          $("#pagesUi").hide();
+        } else {
+          $("#pagesUi").show();
+        }
+        pg(res.totle, res.page);
         if (da.length == 0) {
-          _html += "<tr><th scope='row'></th><td></td><td style='text-align:center;line-height:40px;font-size:18px;color:#999;'>暂无数据</td><td></td></tr>"
+          _html += "<tr><th scope='row'></th><td style='text-align:center;line-height:40px;font-size:18px;color:#999;'>暂无数据</td><td></td><td></td></tr>"
         } else {
           $.each(da, function (idx, item) {
             idx = idx + 1;
-            _html += "<tr><th scope='row'>" + idx + "</th><td>" + item.username + "</td><td>" + item.age + "岁</td><td>" + item.phone + "</td><td>" + formatData(item.createDate) + "</td></tr>";
+            _html += "<tr class='oid'><th scope='row'>" + idx + "</th><td><input readonly='readonly' type='text' name='usernames' placeholder='" + item.username + "'></td><td><input readonly='readonly' type='text' name='ages' placeholder=" + item.age + "岁></td></td><td><input readonly='readonly' type='text' name='phones' placeholder=" + item.phone + "></td><td>" + formatData(item.createDate) + "</td>" +
+              "<td><div class='icon_fonts'><span class='caozuo glyphicon glyphicon-cog'></span><span data-item=" + item._id + " class='del glyphicon glyphicon-trash'></span></div><div class='icon_Caozuo'><span class='edit glyphicon glyphicon-pencil'></span><span class='sure glyphicon glyphicon-ok' data-id=" + item._id + "></span><span class='closed glyphicon glyphicon-remove'></span></div></td></tr>";
           })
         }
         $("#tableData").html(_html)
+        //切换状态
+        $(".caozuo").off("click").on("click", function () {
+          $(this).parent(".icon_fonts").hide();
+          $(this).parent(".icon_fonts").siblings(".icon_Caozuo").show();
+        })
+        //关闭
+        function colose(t) {
+          t.parent(".icon_Caozuo").hide();
+          t.parent(".icon_Caozuo").siblings(".icon_fonts").show();
+          t.parents(".oid").find('input').attr("readonly", "readonly").css("background", 'none');;
+          t.siblings(".edit").css("color", '#666');
+          stf = true;
+          $("[name='usernames']").val("");
+          $("[name='ages']").val("");
+          $("[name='phones']").val("");
+        }
+        $(".closed").off("click").on("click", function () {
+          var _this = $(this)
+          colose(_this);
+        })
+        //编辑
+        var stf = true;
+        $(".icon_Caozuo .edit").off("click").on("click", function () {
+          if (stf) {
+            $(this).css("color", '#ccc');
+            stf = false;
+            $(this).parents(".oid").find("input").removeAttr("readonly").css("background", '#eee');
+            $(this).parents(".oid").find("[name='usernames']").focus();
+          } else {
+            $(this).css("color", '#666');
+            stf = true;
+            $(this).parents(".oid").find('input').attr("readonly", "readonly").css("background", 'none');
+          }
+        })
+        //更改
+        $(".icon_Caozuo .sure").off("click").on("click", function () {
+          var _this = $(this);
+          var id = _this.data("id"),
+            names = _this.parents(".oid").find("[name='usernames']").val(),
+            ages = _this.parents(".oid").find("[name='ages']").val(),
+            phones = _this.parents(".oid").find("[name='phones']").val();
+          var data = {
+            uid: id,
+            username: names,
+            age: ages,
+            phone: phones
+          }
+
+          $.post('/upDate', data, function (res) {
+            if (res.statusCode == 1) {
+              colose(_this);
+              peopleData(num);
+              alert(res.message);
+            }
+          })
+        })
+        //删除功能
+        $(".del").off("click").on("click", function () {
+          var item = $(this).data('item');
+          $.ajax({
+            url: "/delData",
+            type: "DELETE",
+            data: { id: item },
+            success: function (res) {
+              if (res.statusCode == 1) {
+                alert("删除成功!");
+                peopleData(num);
+              }
+            }, error: function (xhr) {
+              var err = xhr.responseJSON;
+              alert(err.message);
+            }
+          })
+        })
       } else {
         alert(res.message);
       }
     })
   }
-  auto();
+  //页码数据
+  function pg(totle, page) {
+    Page({
+      num: totle,
+      startnum: page,
+      elem: $('#pages'),
+      callback: function (n) {
+        peopleData(n);
+      }
+    });
+  }
+  //初始化第一页
+  peopleData(num);
+  //跳转输入
+  $(".button_sure").off("click").on("click", function () {
+    var v = $("input[name='pages']").val();
+    if (!(/^[0-9]*$/.test(v))) {
+      alert("只能输入数字");
+      return;
+    }
+    peopleData(v);
+  })
   //时间格式化
   function formatData(sj) {
     var t = parseInt(sj);
@@ -122,8 +238,14 @@
     var d = time.getDate();//日
     var h = time.getHours();//时
     var mm = time.getMinutes();//分
+    var min = '';
+    if (mm < 10) {
+      min = '0' + mm;
+    } else {
+      min = mm;
+    }
     // var s = time.getSeconds();//秒
-    return y + "-" + m + "-" + d + " " + h + ":" + mm;
+    return y + "-" + m + "-" + d + " " + h + ":" + min;
   }
 </script>
 

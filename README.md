@@ -6,6 +6,5 @@
 
 ## Project
 ### 1.images
- ![recipe1](https://github.com/a393821466/node_project/blob/xinxiluru/My_image/12.png)
- ![recipe2](https://github.com/a393821466/node_project/blob/xinxiluru/My_image/13.png)
+ ![recipe1](https://github.com/a393821466/node_project/blob/xinxiluru/My_image/12.gif)
 
