@@ -131,7 +131,12 @@
         //切换状态
         $(".caozuo").off("click").on("click", function () {
           $(this).parent(".icon_fonts").hide();
-          $(this).parent(".icon_fonts").siblings(".icon_Caozuo").show();
+          if ($(this).parent(".icon_Caozuo").css("display") == 'block') {
+            $(this).parent(".icon_fonts").siblings(".icon_Caozuo").hide();
+          } else {
+            $(this).parent(".icon_fonts").siblings(".icon_Caozuo").show();
+          }
+
         })
         //关闭
         function colose(t) {
@@ -175,12 +180,19 @@
             age: ages,
             phone: phones
           }
-
-          $.post('/upDate', data, function (res) {
-            if (res.statusCode == 1) {
-              colose(_this);
-              peopleData(num);
-              alert(res.message);
+          $.ajax({
+            url: "/upDate",
+            type: "POST",
+            data: data,
+            success: function (res) {
+              if (res.statusCode == 1) {
+                colose(_this);
+                peopleData(num);
+                alert(res.message);
+              }
+            }, error: function (xhr) {
+              var err = xhr.responseJSON;
+              alert(err.message);
             }
           })
         })
