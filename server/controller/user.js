@@ -1,14 +1,31 @@
 const db = require("../models/createDB");
 const md5 = require("../middleware/md5");
+const createToken = require('../middleware/createToken.js');
 class user {
   //登录中间件
   static async userLogin(ctx, next) {
-    let query = ctx.request.body;
-    let user = {
-      username: query.username,
-      password: query.password,
+    let { username, password } = ctx.request.body;
+    let finUser = await db.findData(username);
+    if (finUser.length <= 0) {
+      ctx.error("用户不存在");
+    } else {
+      password = md5(md5(password) + 'maple');
+      if (password !== finUser[0].password) {
+        ctx.error(403, "密码错误");
+      } else {
+        let user = {
+          username: finUser[0].username,
+          groupId: finUser[0].groupId
+        }
+        let token = createToken(user);
+        let finUsers = delete (finUser[0].password);
+        ctx.body = {
+          success: true,
+          value: finUser,
+          token: token
+        }
+      }
     }
-    console.log(user);
   }
   //注册中间件
   static async userRegister(ctx, next) {
@@ -35,6 +52,12 @@ class user {
       }
     } else {
       ctx.error("用户名已存在");
+    }
+  }
+  static async allUserApi(ctx, next) {
+    const findAll = await db.findAll();
+    ctx.body = {
+      value: findAll
     }
   }
 }

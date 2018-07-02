@@ -1,7 +1,6 @@
 let errorMiddleware = () => {
   return async (ctx, next) => {
     try {
-      console.log(ctx.status);
       ctx.error = (code, message) => {
         if (typeof code === 'string') {
           message = code;

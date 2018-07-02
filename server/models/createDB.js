@@ -6,13 +6,19 @@ let insertData = (value) => {
   return sqls(_sql, value);
 }
 
-//查找语句
+//查找用户名语句
 let findData = (username) => {
   let _sql = `select * from live_user where username="${username}";`
   return sqls(_sql)
 }
 
+//查找所有用户
+let findAll=()=>{
+  let _sql = `select * from live_user;`
+  return sqls(_sql)
+}
 module.exports = {
   insertData,
-  findData
+  findData,
+  findAll
 }

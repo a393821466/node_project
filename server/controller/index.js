@@ -1,8 +1,10 @@
 const user = require("./user");
 const loginApi = user.userLogin,
-  registerApi = user.userRegister;
+  registerApi = user.userRegister,
+  allUserApi=user.allUserApi;
 
 module.exports = {
   loginApi,
-  registerApi
+  registerApi,
+  allUserApi
 }
