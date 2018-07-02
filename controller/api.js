@@ -27,7 +27,9 @@ class webApi {
         return;
       }
       try {
+        console.time("start");
         let user = await userModels.create(data);
+        console.timeEnd("start")
         ctx.body = {
           statusCode: 1,
           message: `成功添加一个名字叫${data.username}的朋友`
@@ -103,7 +105,9 @@ class webApi {
               "phone": phone == '' ? findbs[0].phone : phone,
               "createDate": Date.now()
             }
+            console.time("start");
             let dbs = await userModels.update({ _id: uid }, data);
+            console.timeEnd("start")
             if (dbs) {
               ctx.body = {
                 statusCode: 1,
