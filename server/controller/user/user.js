@@ -1,6 +1,7 @@
-const db = require("../models/createDB");
-const md5 = require("../middleware/md5");
-const createToken = require('../middleware/createToken.js');
+const db = require("../../models/createDB");
+const md5 = require("../../middleware/md5");
+const configName = require("../../config/config").checkList;
+const createToken = require('../../middleware/createToken.js');
 class user {
   //登录中间件
   static async userLogin(ctx, next) {
@@ -39,12 +40,17 @@ class user {
       statusId: 1,
       create_time: Date.now()
     }
+    //关键字禁止注册
+    if (configName.indexOf(user.username) !== -1) {
+      ctx.error('不能使用该用户名注册!');
+    }
+    //注册逻辑
     let findUser = await db.findData(user.username);
     if (findUser.length <= 0) {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
       } else {
-        let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", "", user.status, user.statusId, "", "", "", user.create_time];
+        let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", "", user.status, user.statusId, "", "", "", "", user.create_time];
         let insertData = await db.insertData(data);
         ctx.body = {
           success: true
@@ -54,12 +60,13 @@ class user {
       ctx.error("用户名已存在");
     }
   }
-  static async allUserApi(ctx, next) {
-    const findAll = await db.findAll();
-    ctx.body = {
-      value: findAll
-    }
-  }
+  //查找所有用户
+  // static async allUserApi(ctx, next) {
+  //   const findAll = await db.findAll();
+  //   ctx.body = {
+  //     value: findAll
+  //   }
+  // }
 }
 
 module.exports = user;

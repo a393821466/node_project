@@ -1,10 +1,10 @@
-const user = require("./user");
-const loginApi = user.userLogin,
-  registerApi = user.userRegister,
-  allUserApi=user.allUserApi;
-
+const users = require("./user/");
+const admin = require("./admin/");
 module.exports = {
-  loginApi,
-  registerApi,
-  allUserApi
+  //注册登录api
+  usersLogin: users.loginApi,
+  userRegister: users.registerApi,
+  //后台api
+  adminUser: admin.addUserApi,
+
 }

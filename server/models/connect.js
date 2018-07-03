@@ -1,7 +1,7 @@
 const mysql = require("mysql");
-const config = require("../config/db_config");
+const config = require("../config/config").sqlConfig;
 
-pool = mysql.createPool(config.sqlConfig);
+pool = mysql.createPool(config);
 
 //数据库连接池
 exports.do = function (sql, data) {

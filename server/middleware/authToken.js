@@ -9,13 +9,13 @@ const publicKey = fs.readFileSync(path.join(__dirname, '../config/pem/public.key
 module.exports = async (ctx, next) => {
   if (ctx.request.header['authorization']) {
     let token = ctx.request.header['authorization'];
-    let decoded=await jwt.verify(token, publicKey);
+    let decoded = await jwt.verify(token, publicKey);
     if (token && decoded.exp <= new Date() / 1000) {
-      ctx.error(401,"token已失效");
+      ctx.error(401, "token已失效");
     } else {
       return next();
     }
   } else {
-    ctx.error(401,"没有token");
+    ctx.error(401, "没有token");
   }
 }
