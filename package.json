@@ -22,6 +22,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "restart": "nodemon server.js"
+    "dev": "nodemon server.js"
   }
 }

@@ -1,5 +1,6 @@
-const addUserApi = require("./user/addUsers").addUser; //用户管理
+const UserManage = require("./user/addUsers");
 
 module.exports = {
-  addUserApi
+  addUserApi:UserManage.addUser,//添加用户
+  delUserApi:UserManage.delUser //批量删除用户
 }

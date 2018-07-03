@@ -1,8 +1,9 @@
 const db = require("../../../models/createDB");
 const md5 = require("../../../middleware/md5");
-const configName = require("../../../config/config").checkList;
+const cfg = require("../../../config/config");
 const validate = require("../../../utils/validate");
 const createToken = require('../../../middleware/createToken.js');
+const configdb=cfg.db_sql;
 
 class adminUser {
   static getInstance() {
@@ -27,20 +28,34 @@ class adminUser {
       superior_user: query.superior_user,
       create_time: Date.now()
     }
-    validate(data).then(ret => {
-      ctx.status = 500;
-      ctx.body = ret;
-    })
-    let findUsername = await db.findData(data.username);
+    let vali=await validate(data);
+    if(vali){
+      ctx.error(500,vali);
+    }
+    let findUsername = await db.findData(configdb.live_user,data.username);
     if (findUsername.length > 0) {
       ctx.error(500, '用户名已存在');
     }
     let addUsername = await db.insertData([data.username, md5(md5(data.password) + 'maple'), data.groupId, data.nicename, "", data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time])
     if (!addUsername) {
-      ctx.error(500, "必填项为填写");
+      ctx.error(500, "必填项未填写");
     }
     ctx.body = {
       success: true
+    }
+  }
+  //批量删除用户
+  static async delUser(ctx,next){
+    let ids=ctx.request.body.id;
+    if(!ids){
+      ctx.error(500,'没有可删除的');
+    }
+    let delBatch=await db.deleBatch("live_user",ids);
+    if(!delBatch){
+      ctx.error(500,'删除出错了');
+    }
+    ctx.body={
+      success:true
     }
   }
 }

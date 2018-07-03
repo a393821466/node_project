@@ -4,7 +4,9 @@ module.exports = {
   //注册登录api
   usersLogin: users.loginApi,
   userRegister: users.registerApi,
+  userLogout: users.logoutApi,
   //后台api
-  adminUser: admin.addUserApi,
+  addUsers: admin.addUserApi,
+  delUsers: admin.delUserApi
 
 }

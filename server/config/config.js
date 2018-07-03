@@ -30,8 +30,11 @@ const config = {
     "status": 1,
     "statusId": 1,
     "create_time": Date.now()
+  },
+  //数据表
+  db_sql: {
+    live_user: "live_user"
   }
-
 }
 
 module.exports = config;
