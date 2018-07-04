@@ -6,7 +6,8 @@ module.exports = {
   userRegister: users.registerApi,
   userLogout: users.logoutApi,
   //后台api
-  addUsers: admin.addUserApi,
-  delUsers: admin.delUserApi
+  addUsers: admin.addUserApi, //添加用户
+  delUsers: admin.delUserApi, //批量删除用户
+  searchUser:admin.searchUserApi //模糊搜索
 
 }

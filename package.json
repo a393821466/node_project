@@ -22,7 +22,7 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "node server.js",
+    "start": "nodemon server.js"
   }
 }

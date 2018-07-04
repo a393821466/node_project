@@ -28,12 +28,12 @@ class ioredisConfig {
     if (ctx.request.header['authorization']) {
       let token = ctx.request.header['authorization'];
       let verifyToken = await redis.get(token);
-      let createTime = formartDate(Date.now(), JSON.parse(verifyToken).tokenCreate);
+      let createTime = !verifyToken ? ctx.error(401, "token不存在") : formartDate(Date.now(), JSON.parse(verifyToken).tokenCreate);
       if (createTime > 10800) {
-        readis.del(token);
+        redis.del(token);
         ctx.error(401, "token已失效");
       }
-
+      console.log(createTime);
       let updateTokens = await ioredisConfig.updateToken(token);
       if (updateTokens) {
         await next();

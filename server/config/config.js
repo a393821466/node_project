@@ -24,8 +24,8 @@ const config = {
 
   //初始超级管理员账号密码
   administrator: {
-    "username": "admin_live",
-    "password": "admin_live",
+    "username": "admin",
+    "password": "admin",
     "groupId": 1,
     "status": 1,
     "statusId": 1,

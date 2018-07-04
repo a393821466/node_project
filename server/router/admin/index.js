@@ -7,5 +7,6 @@ const adminApi = new Router({
 
 adminApi.post('/userManagement', checkToken, apiUser.addUsers)
   .del('/userDelete', checkToken, apiUser.delUsers)
+  .get('/userSearch', checkToken, apiUser.searchUser)
 
 module.exports = adminApi;

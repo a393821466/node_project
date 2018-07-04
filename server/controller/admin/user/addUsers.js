@@ -12,8 +12,9 @@ class adminUser {
     }
     return this.instance;
   }
-  //添加用户
-  static async addUser(ctx, next) {
+
+  //添加用户功能
+  static async addUser(ctx) {
     let query = ctx.request.body;
     let data = {
       username: query.username,
@@ -29,9 +30,10 @@ class adminUser {
       create_time: Date.now()
     }
 
-    // validate(data).then(rs => {
-    //   ctx.error(500, rs);
-    // })
+    let valid = await validate(data);
+    if (valid) {
+      ctx.error(500, valid);
+    }
 
     let findUsername = await db.findData(configdb.live_user, data.username);
     if (findUsername.length > 0) {
@@ -45,18 +47,43 @@ class adminUser {
       success: true
     }
   }
+
   //批量删除用户
-  static async delUser(ctx, next) {
+  static async delUser(ctx) {
     let ids = ctx.request.body.id;
     if (!ids) {
       ctx.error(500, '没有可删除的');
     }
-    let delBatch = await db.deleBatch("live_user", ids);
+    let delBatch = await db.deleBatch(configdb.live_user, ids);
     if (!delBatch) {
       ctx.error(500, '删除出错了');
     }
     ctx.body = {
       success: true
+    }
+  }
+
+  //输入框查询
+  static async searchUser(ctx) {
+    let query = ctx.query.value;
+    let searchDB = '';
+    let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
+    let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
+
+    if (!query) {
+      searchDB = await db.findAll(configdb.live_user, page, size);
+    } else {
+      const dbTable = ['username', 'nicename', 'superior_user'];
+      searchDB = await db.blurryFind(configdb.live_user, dbTable, query,page, size);
+    }
+    if (!searchDB) {
+      ctx.error(500, '查询出错了');
+    }
+    for (var i = 0; i < searchDB.length; i++) {
+      let finUsers = delete (searchDB[i].password);
+    }
+    ctx.body = {
+      value: searchDB
     }
   }
 }

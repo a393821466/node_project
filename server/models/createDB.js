@@ -8,13 +8,11 @@ class dbOperating {
   }
   //如果超级管理员存在
   static async isInsertAdmin() {
-    if (this.admin == "" || this.admin == undefined) {
-      const findAdmin = await this.findData(initConfig.db_sql.live_user,administrator.username);
-      if (findAdmin.length == 0) {
-        this.insertAdmins().then(ret => {
-          console.log("超级管理员创建成功");
-        });
-      }
+    const findAdmin = await this.findData(initConfig.db_sql.live_user,administrator.username);
+    if (findAdmin.length == 0) {
+      this.insertAdmins().then(ret => {
+        console.log("超级管理员创建成功");
+      });
     }
   }
   //创建超级管理员
@@ -23,7 +21,7 @@ class dbOperating {
     return await new Promise((resolve, reject) => {
       try {
         let createTime = Date.now();
-        let addAdmin = _this.insertData([initConfig.username, md5(md5(initConfig.password) + 'maple'), initConfig.groupId, "", "", initConfig.status, initConfig.statusId, "", "", "", "", createTime]);
+        let addAdmin = _this.insertData([administrator.username, md5(md5(administrator.password) + 'maple'), administrator.groupId, "", "", administrator.status, administrator.statusId, "", "", "", "", createTime]);
         resolve(addAdmin);
       } catch (e) {
         reject(e);
@@ -41,9 +39,16 @@ class dbOperating {
     return sqls(_sql)
   }
   //查找所有用户
-  static async findAll(db) {
-    let _sql = `select * from ${db}`;
-    return sqls(_sql)
+  static async findAll(db,page,size) {
+    let arr=[(page-1)*size,size];
+    let _sql = `select * from ${db} order by id limit ?,?`;
+    return sqls(_sql,arr)
+  }
+  //模糊查询
+  static async blurryFind(db,user,value,page,size){
+    let arr=['%'+value+'%',(page-1)*size,size];
+    let _sql=`select * from ${db} where ${user[0]} like ? order by id limit ?,?`;
+    return sqls(_sql,arr);
   }
   //批量删除
   static async deleBatch(db, ids) {
@@ -63,6 +68,7 @@ class dbOperating {
     let _sql = `delete from ${db} where id = ?`;
     return sqls(_sql,ids)
   }
+  
 }
 dbOperating.isInsertAdmin();
 module.exports = dbOperating;
