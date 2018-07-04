@@ -1,7 +1,9 @@
 const db = require("../../models/createDB");
 const md5 = require("../../middleware/md5");
 const configName = require("../../config/config").checkList;
-const createToken = require("../../middleware/createToken.js");
+const uuid = require("uuid/v1");
+const redis = require("../../redis");
+// const createToken = require("../../middleware/createToken.js");
 const fig = require("../../config/config").db_sql;
 class user {
   //登录中间件
@@ -15,18 +17,10 @@ class user {
       if (password !== finUser[0].password) {
         ctx.error(403, "密码错误");
       } else {
-        let user = {
-          id: finUser[0].id,
-          username: finUser[0].username,
-          groupId: finUser[0].groupId
-        }
-        let token = createToken(user);
+        let uid = uuid();
         let finUsers = delete (finUser[0].password);
-        ctx.body = {
-          success: true,
-          value: finUser,
-          token: token
-        }
+        let data = await redis.userToken(uid, finUser);
+        ctx.body = JSON.parse(data);
       }
     }
   }

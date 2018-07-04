@@ -10,8 +10,8 @@ const config = {
   },
   //redis配置
   redisConfig: {
-    host: '127.0.0.1'
-    // port:''
+    host: '127.0.0.1',
+    port: 6379
     // password:''
   },
   EXPIRE: 3600, // redis缓存的生存时间 1h,1*60*60
