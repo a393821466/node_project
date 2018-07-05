@@ -49,7 +49,7 @@ class user {
         let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", "", user.status, user.statusId, "", "", "", "", user.create_time];
         let insertData = await db.insertData(data);
         ctx.body = {
-          success: true
+          code: true
         }
       }
     } else {

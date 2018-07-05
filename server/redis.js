@@ -7,6 +7,16 @@ class ioredisConfig {
   constructor() {
     // this.users = {};
   }
+  static redisClient() {
+    return new Promise((resolve, reject) => {
+      redis.ping().then(v => {
+        if (v !== 'PONG') {
+          reject("redis连接失败");
+        }
+        resolve("redis连接成功");
+      });
+    })
+  }
   //生成token
   static async userToken(uid, v) {
     let user = {
@@ -33,7 +43,7 @@ class ioredisConfig {
         redis.del(token);
         ctx.error(401, "token已失效");
       }
-      console.log(createTime);
+      // console.log(createTime);
       let updateTokens = await ioredisConfig.updateToken(token);
       if (updateTokens) {
         await next();

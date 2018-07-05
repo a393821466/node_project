@@ -23,6 +23,7 @@
   },
   "scripts": {
     "dev": "node server.js",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "inst": "node server/config/init.js"
   }
 }

@@ -1,54 +1,65 @@
 const sqls = require("./connect").do;
 const md5 = require("../middleware/md5");
 const initConfig = require("../config/config");
-const administrator=initConfig.administrator;
 class dbOperating {
-  constructor() {
-    this.admin = "";
-  }
-  //如果超级管理员存在
-  static async isInsertAdmin() {
-    const findAdmin = await this.findData(initConfig.db_sql.live_user,administrator.username);
-    if (findAdmin.length == 0) {
-      this.insertAdmins().then(ret => {
-        console.log("超级管理员创建成功");
-      });
-    }
-  }
-  //创建超级管理员
-  static async insertAdmins() {
-    let _this = this;
-    return await new Promise((resolve, reject) => {
-      try {
-        let createTime = Date.now();
-        let addAdmin = _this.insertData([administrator.username, md5(md5(administrator.password) + 'maple'), administrator.groupId, "", "", administrator.status, administrator.statusId, "", "", "", "", createTime]);
-        resolve(addAdmin);
-      } catch (e) {
-        reject(e);
-      }
-    })
-  }
   //插入语句
   static async insertData(value) {
     let _sql = "insert into live_user(username,password,groupId,nicename,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)";
     return sqls(_sql, value);
   }
-  //查找用户名
-  static async findData(db,username) {
-    let _sql = `select * from ${db} where username="${username}"`;
+  //查询单个数据
+  static async findData(db, fieId, value) {
+    let _sql = `select * from ${db} where ${fieId}="${value}"`;
     return sqls(_sql)
   }
-  //查找所有用户
-  static async findAll(db,page,size) {
-    let arr=[(page-1)*size,size];
+  //查询所有数据
+  static async findAll(db, page, size) {
+    let arr = [(page - 1) * size, size];
     let _sql = `select * from ${db} order by id limit ?,?`;
-    return sqls(_sql,arr)
+    return sqls(_sql, arr)
   }
-  //模糊查询
-  static async blurryFind(db,user,value,page,size){
-    let arr=['%'+value+'%',(page-1)*size,size];
-    let _sql=`select * from ${db} where ${user[0]} like ? order by id limit ?,?`;
-    return sqls(_sql,arr);
+  //选择查询
+  static async blurryFind(db, table, val1, val2, val3, val4, val5, val6, val7, page, size) {
+    let _sql = `select * from ${db} where 1=1 `;
+    let arr = [];
+    if (val1 != "") {
+      val1 = "%" + val1 + "%";
+      _sql += `and ${table[0]} like ? `
+      arr.push(val1)
+    }
+    if (val2 != "") {
+      val2 = "%" + val2 + "%";
+      _sql += `and ${table[1]} like ? `
+      arr.push(val2)
+    }
+    if (val3 != "") {
+      val3 = "%" + val3 + "%";
+      _sql += `and ${table[2]} like ? `
+      arr.push(val3)
+    }
+    if (val4 != "") {
+      val4 = "%" + val4 + "%";
+      _sql += `and ${table[3]} like ? `
+      arr.push(val4)
+    }
+    if (val5 != "") {
+      val5 = "%" + val5 + "%";
+      _sql += `and ${table[4]} like ? `
+      arr.push(val5)
+    }
+    if (val6 != "") {
+      val6 = "%" + val6 + "%";
+      _sql += `and ${table[5]} like ? `
+      arr.push(val6)
+    }
+    if (val7 != "") {
+      val7 = "%" + val7 + "%";
+      _sql += `and ${table[6]} like ? `
+      arr.push(val7)
+    }
+    _sql += `limit ?,?`;
+    arr.push((page - 1) * size, size);
+    return sqls(_sql, arr);
   }
   //批量删除
   static async deleBatch(db, ids) {
@@ -66,9 +77,12 @@ class dbOperating {
   //单个删除
   static async deleSingle(db, ids) {
     let _sql = `delete from ${db} where id = ?`;
-    return sqls(_sql,ids)
+    return sqls(_sql, ids)
   }
-  
+  //更新单个数据
+  // static async upDatedata(db,table,value,id){
+  //   let _sql=`update ${db} set `
+  // }
 }
-dbOperating.isInsertAdmin();
+
 module.exports = dbOperating;

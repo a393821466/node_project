@@ -23,6 +23,11 @@ exports.do = function (sql, data) {
   })
 }.bind(pool)
 
+exports.quit = function () {
+  pool.end(function (err) {
+    if (err) console.log(err)
+  })
+}
 // exports.do = function (sql, data, callback) {
 //     this.getConnection(function (err, connection) {
 //       connection.query(sql, data, function () {
