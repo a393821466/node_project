@@ -6,10 +6,14 @@ const redis = require("../../redis");
 // const createToken = require("../../middleware/createToken.js");
 const fig = require("../../config/config").db_sql;
 class user {
-  //登录中间件
-  static async userLogin(ctx, next) {
+  /**
+   *  登录中间件
+   *  @param {username} 用户名 
+   *  @param {password} 密码 
+   */
+  static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
-    let finUser = await db.findData(fig.live_user, username);
+    let finUser = await db.findData(fig.live_user,"username", username);
     if (finUser.length <= 0) {
       ctx.error("用户不存在");
     } else {
@@ -24,8 +28,18 @@ class user {
       }
     }
   }
-  //注册中间件
-  static async userRegister(ctx, next) {
+  /**
+   *  登录中间件
+   *  @param {username} 用户名 
+   *  @param {password} 密码 
+   *  @param {comfPassword} 确认密码 
+   *  @param {groupId} 用户组 
+   *  @param {status} 是否审核 (后台设定默认0)
+   *  @param {statusId} 是否可以登录 (后台设定默认1) 
+   *  @param {roomId} 房间id  
+   *  @param {create_time} 创建时间 (后台自动创建) 
+   */
+  static async userRegister(ctx) {
     let query = ctx.request.body;
     let user = {
       username: query.username,
@@ -41,7 +55,7 @@ class user {
       ctx.error('不能使用该用户名注册!');
     }
     //注册逻辑
-    let findUser = await db.findData(fig.live_user, user.username);
+    let findUser = await db.findData(fig.live_user, "username",user.username);
     if (findUser.length <= 0) {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
@@ -56,9 +70,20 @@ class user {
       ctx.error("用户名已存在");
     }
   }
-  //登出逻辑
-  static async userLogout(ctx, next) {
-
+  /**
+   * 判断头部authorization内是否带token,
+   * 如果带有token就把它传入到redis方法
+   */
+  static async userLogout(ctx) {
+    if(ctx.request.header['authorization']){
+      let uid=ctx.request.header['authorization'];
+      let del=await redis.delToken(uid);
+      if(del){
+        ctx.body={
+          code:true
+        }
+      }
+    }
   }
 }
 

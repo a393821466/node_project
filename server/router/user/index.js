@@ -1,8 +1,9 @@
 const router = require("koa-router")();
+const checkToken = require('../../redis').authToken;
 const apiUser = require("../../controller/");
-//登录&注册路由s
-router.post("/login", apiUser.usersLogin)
-  .post("/register", apiUser.userRegister)
-  .del("/logout",apiUser.userLogout);
+
+router.post("/login", apiUser.usersLogin) //登录
+  .post("/register", apiUser.userRegister) //注册
+  .del("/logout",checkToken,apiUser.userLogout); //退出
 
 module.exports = router;

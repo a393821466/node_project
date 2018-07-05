@@ -79,10 +79,11 @@ class dbOperating {
     let _sql = `delete from ${db} where id = ?`;
     return sqls(_sql, ids)
   }
-  //更新单个数据
-  // static async upDatedata(db,table,value,id){
-  //   let _sql=`update ${db} set `
-  // }
+  //更新用户多字段数据
+  static async upDatedata(db, table, value, id) {
+    let _sql = `update ${db} set ${table[0]}=?,${table[1]}=?,${table[2]}=?,${table[3]}=?,${table[4]}=?,${table[5]}=? ,${table[6]}=?,${table[7]}=? where id=${id}`
+    return sqls(_sql, value)
+  }
 }
 
 module.exports = dbOperating;

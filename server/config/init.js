@@ -5,6 +5,9 @@ const mysql = require("../models/connect");
 const redis = require("../redis");
 const administrator = initConfig.administrator;
 class init {
+  /**
+   * 单例方法
+   */
   static getInstance() {
     if (!init.instance) {
       init.instance = new init();
@@ -14,14 +17,21 @@ class init {
   constructor() {
     init.connectInit();
   }
+  //等待方法执行
   static async connectInit() {
-    await init.isInsertAdmin();
-    await init.testRedisConnect();
-    mysql.quit();
+    try{
+      await init.isInsertAdmin();
+      await init.testRedisConnect();
+      mysql.quit();
+      redis.quit();
+      console.log("哟西，初始化成功,试试启动项目吧!");
+    }catch(e){
+      console.log("初始化失败,请检查mysql、redis配置是否正确");
+    }
   }
-  //如果超级管理员存在
+  //判断超级管理员是否存在,如果不存在就走if进入下一个方法
   static async isInsertAdmin() {
-    const findAdmin = await db.findData(initConfig.db_sql.live_user, administrator.username);
+    const findAdmin = await db.findData(initConfig.db_sql.live_user,"username", administrator.username);
     if (findAdmin.length == 0 && findAdmin) {
       this.insertAdmins().then(ret => {
         console.log(ret);
@@ -54,4 +64,5 @@ class init {
     console.log(r);
   }
 }
+//初始化方法
 init.getInstance();

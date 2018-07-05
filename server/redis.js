@@ -7,6 +7,9 @@ class ioredisConfig {
   constructor() {
     // this.users = {};
   }
+  /**
+   * 该方法主要是验证redis是否连接成功
+   */
   static redisClient() {
     return new Promise((resolve, reject) => {
       redis.ping().then(v => {
@@ -17,7 +20,13 @@ class ioredisConfig {
       });
     })
   }
-  //生成token
+
+  /**
+   * uid是登录后生成的uuid，作为token登录令牌
+   * v是登录后返回的数据，拿到这里面来组装生成token
+   * @param {String} uid 
+   * @param {Object} v 
+   */
   static async userToken(uid, v) {
     let user = {
       value: [{
@@ -32,9 +41,11 @@ class ioredisConfig {
     let createToken = await redis.set(uid, JSON.stringify(user));
     return redis.get(uid);
   }
-  //验证token
+
+  /**
+   * 验证token中间件
+   */
   static async authToken(ctx, next) {
-    let that = this;
     if (ctx.request.header['authorization']) {
       let token = ctx.request.header['authorization'];
       let verifyToken = await redis.get(token);
@@ -52,7 +63,11 @@ class ioredisConfig {
       ctx.error(401, "没有token");
     }
   }
-  //更新token
+
+  /**
+   * 更新token
+   * @param {String} token 
+   */
   static async updateToken(token) {
     let updateMsg = await redis.get(token);
     let upUser = JSON.parse(updateMsg);
@@ -70,6 +85,29 @@ class ioredisConfig {
       redis.set(upUser.token, JSON.stringify(updateUser)).then(rs => {
         if (rs) resolve(rs);
         reject('出错了');
+      })
+    })
+  }
+  /**
+   * 删除redis的token
+   * @param {String} token 
+   */
+  static async delToken(token) {
+    if (token) {
+      redis.del(token);
+      return true;
+    }
+  }
+  /**
+   * 关闭redis连接
+   */
+  static async quit(){
+    return new Promise((resolve,reject)=>{
+      redis.quit().then(rs=>{
+        if(!rs){
+          throw Error(rs);
+        }
+        console.log(rs);
       })
     })
   }
