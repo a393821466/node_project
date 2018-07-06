@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'development' // production || development
 const config = {
+  //基础配置
+  PORT: 3000,
   //数据库配置
   sqlConfig: {
     host: 'localhost',

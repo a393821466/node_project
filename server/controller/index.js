@@ -1,10 +1,10 @@
 const users = require("./user/");
 const admin = require("./admin/");
 module.exports = {
-  //注册登录api
-  usersLogin: users.loginApi,
-  userRegister: users.registerApi,
-  userLogout: users.logoutApi,
+  //前台api
+  usersLogin: users.loginApi, //登录
+  userRegister: users.registerApi, //注册
+  userLogout: users.logoutApi, //退出
   //后台api
   addUsers: admin.addUserApi, //添加用户
   delUsers: admin.delUserApi, //批量删除用户

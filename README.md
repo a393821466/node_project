@@ -1,5 +1,41 @@
-## 1.登录系统:
-* 登录
+## 项目是个只返回API、无前端页面:
 
-## Project
-### 1.images
+1. 整个项目的文件夹结构
+>server 整个程序主文件夹
+>>config 程序配置文件夹
+>>controller 逻辑处理文件夹 (控制器)
+>>>admin  后台api逻辑处理文件夹
+>>>user  前台api逻辑处理文件夹
+>>middleware 辅助中间件
+>>models 数据层处理
+>>public 静态资源处理
+>>>swagger swagger文档 (还开始未整理)
+>>router 路由中间件
+>>>amdin 后台路由
+>>>user 前态路由
+>>test 单元测试 (还未开始处理)
+>>utils 工具包
+=========================================================================
+
+2. 完成度
+* 前台API
+  * 登录  API地址 /login
+  * 注册  API地址 /register
+  * 退出  API地址 /logout
+
+* 后台API
+  * 用户管理
+    * 新增用户 API地址 /api/userManagement
+    * 更新用户信息 API地址 /api/userUpdate
+    * 删除用户(支持单个或多个删除) API地址 /api/userDelete
+    * 所有用户和按条件查询合并 API地址 /api/userSearch
+    * 单个用户 API地址 /api/findSingleUser
+    * 所有用户 API地址 /api/findAllUser
+
+`更多内容，敬请期待!`
+
+=========================================================================
+3. 项目运行
+  * yarn  (安装必需模块)
+  * yarn inst (初始化项目及测试数据库等工具连接)
+  * yarn start (启动项目)
