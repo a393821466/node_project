@@ -1,8 +1,8 @@
-const db = require("../../../models/createDB");
+const db = require("../../sql/single_table_DB");
+const sqls = require("../../sql/connect").do;
 const md5 = require("../../../middleware/md5");
 const cfg = require("../../../config/config");
 const validate = require("../../../utils/validate");
-const sqls = require("../../../models/connect").do;
 const configdb = cfg.db_sql;
 
 class adminUser {
@@ -155,11 +155,11 @@ class adminUser {
       ctx.error(500, '参数错误,id没传');
     }
     let findUser = await db.findData(configdb.live_user, "id", id);
-    if(!findUser){
+    if (!findUser) {
       ctx.error(500, '抱歉,系统开了个小差');
     }
     let passwords = !password ? findUser[0].password : md5(md5(password) + 'maple'),
-    groupIds = !groupId ? findUser[0].groupId : groupId,
+      groupIds = !groupId ? findUser[0].groupId : groupId,
       nicenames = !nicename ? findUser[0].nicename : nicename,
       avators = !avator ? findUser[0].avator : avator,
       phones = !phone ? findUser[0].phone : phone,
@@ -169,11 +169,11 @@ class adminUser {
       valName = ["password", "groupId", "nicename", "avator", "phone", "qq", "status", "roomId"],
       value = [passwords, groupIds, nicenames, avators, phones, qqs, statuss, roomIds,]
     let updateDB = await db.upDatedata(configdb.live_user, valName, value, id)
-    if(!updateDB){
-      ctx.error(500,'更新失败');
+    if (!updateDB) {
+      ctx.error(500, '更新失败');
     }
-    ctx.body={
-      code:true
+    ctx.body = {
+      code: true
     }
   }
 }

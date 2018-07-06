@@ -1,7 +1,7 @@
 const initConfig = require("../config/config");
-const db = require("../models/createDB");
+const db = require("../models/sql/single_table_DB");
 const md5 = require("../middleware/md5");
-const mysql = require("../models/connect");
+const mysql = require("../models/sql/connect");
 const redis = require("../redis");
 const administrator = initConfig.administrator;
 class init {
@@ -19,19 +19,19 @@ class init {
   }
   //等待方法执行
   static async connectInit() {
-    try{
+    try {
       await init.isInsertAdmin();
       await init.testRedisConnect();
       mysql.quit();
       redis.quit();
       console.log("哟西，初始化成功,试试启动项目吧!");
-    }catch(e){
+    } catch (e) {
       console.log("初始化失败,请检查mysql、redis配置是否正确");
     }
   }
   //判断超级管理员是否存在,如果不存在就走if进入下一个方法
   static async isInsertAdmin() {
-    const findAdmin = await db.findData(initConfig.db_sql.live_user,"username", administrator.username);
+    const findAdmin = await db.findData(initConfig.db_sql.live_user, "username", administrator.username);
     if (findAdmin.length == 0 && findAdmin) {
       this.insertAdmins().then(ret => {
         console.log(ret);

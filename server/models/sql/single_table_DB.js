@@ -1,10 +1,9 @@
 const sqls = require("./connect").do;
-const md5 = require("../middleware/md5");
-const initConfig = require("../config/config");
+const initConfig = require("../../config/config");
 class dbOperating {
   //插入语句
   static async insertData(value) {
-    let _sql = "insert into live_user(username,password,groupId,nicename,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+    let _sql = "insert into live_user(username,password,groupId,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     return sqls(_sql, value);
   }
   //查询单个数据

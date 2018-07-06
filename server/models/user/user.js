@@ -1,4 +1,4 @@
-const db = require("../../models/createDB");
+const db = require("../sql/single_table_DB");
 const md5 = require("../../middleware/md5");
 const configName = require("../../config/config").checkList;
 const uuid = require("uuid/v1");
@@ -13,7 +13,7 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
-    let finUser = await db.findData(fig.live_user,"username", username);
+    let finUser = await db.findData(fig.live_user, "username", username);
     if (finUser.length <= 0) {
       ctx.error("用户不存在");
     } else {
@@ -48,6 +48,8 @@ class user {
       groupId: 1,
       status: 0,
       statusId: 1,
+      merchant: query.merchant,
+      roomId: query.roomId,
       create_time: Date.now()
     }
     //关键字禁止注册
@@ -55,12 +57,12 @@ class user {
       ctx.error('不能使用该用户名注册!');
     }
     //注册逻辑
-    let findUser = await db.findData(fig.live_user, "username",user.username);
+    let findUser = await db.findData(fig.live_user, "username", user.username);
     if (findUser.length <= 0) {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
       } else {
-        let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", "", user.status, user.statusId, "", "", "", "", user.create_time];
+        let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", user.merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
         let insertData = await db.insertData(data);
         ctx.body = {
           code: true
@@ -75,12 +77,12 @@ class user {
    * 如果带有token就把它传入到redis方法
    */
   static async userLogout(ctx) {
-    if(ctx.request.header['authorization']){
-      let uid=ctx.request.header['authorization'];
-      let del=await redis.delToken(uid);
-      if(del){
-        ctx.body={
-          code:true
+    if (ctx.request.header['authorization']) {
+      let uid = ctx.request.header['authorization'];
+      let del = await redis.delToken(uid);
+      if (del) {
+        ctx.body = {
+          code: true
         }
       }
     }

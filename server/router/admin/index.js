@@ -1,5 +1,5 @@
 const Router = require("koa-router");
-const apiUser = require("../../controller/");
+const apiUser = require("../../models/");
 const checkToken = require('../../redis').authToken;
 const adminApi = new Router({
   prefix: '/api'
