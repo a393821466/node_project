@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 09 日 13:11
+-- 生成日期: 2018 年 07 月 09 日 18:56
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `live_merchant`
@@ -90,19 +90,26 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=112 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=124 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
 INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `avator`, `status`, `statusId`, `roomId`, `phone`, `qq`, `superior_user`, `create_time`) VALUES
-(99, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, '1531128271549'),
-(110, 'lili22245112', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139549152'),
+(99, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', NULL, NULL, 1, 1, NULL, NULL, '85029642', NULL, '1531128271549'),
+(115, 'a1343332', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153047153'),
 (109, 'lili22245', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139546453'),
 (108, 'lili2224', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139544335'),
 (107, 'lili222', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139540234'),
-(111, 'aaa2312', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139554203');
+(119, 'aaa222432', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153074102'),
+(116, 'a432432', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153061886'),
+(117, 'a4xxaa', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153065196'),
+(118, '342aaa', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153069698'),
+(120, 'aaasdxwe', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153077732'),
+(121, 'asx2422', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153083373'),
+(122, 'awww23214', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153087125'),
+(123, 'asww2242', 'UkI668l+MPIkcKs+FVBv5g==', '', '', '', 0, 1, NULL, '', '', '', '1531153091482');
 
 -- --------------------------------------------------------
 
@@ -115,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -126,8 +133,15 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (8, 107, 9),
 (9, 108, 9),
 (10, 109, 9),
-(11, 110, 9),
-(12, 111, 9);
+(16, 115, 9),
+(18, 117, 9),
+(17, 116, 9),
+(20, 119, 9),
+(19, 118, 9),
+(21, 120, 9),
+(22, 121, 9),
+(23, 122, 9),
+(24, 123, 9);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

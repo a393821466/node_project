@@ -1,5 +1,5 @@
-const sql = require('../../sql/connect').do;
-const db = require('../../sql/single_table_DB');
+const merchantDB = require('../../sql/manageMent/merchant');
+
 class MerchantCode {
   //新增品牌
   static async addMerchant(ctx) {
@@ -8,11 +8,11 @@ class MerchantCode {
     if (!merchant) {
       ctx.error(500, '品牌未填写');
     }
-    let findData = await db.findData("live_merchant", "merchant", merchant);
+    let findData = await merchantDB.findMerchant("merchant", merchant);
     if (findData.length > 0) {
       ctx.error(500, '品牌已存在');
     }
-    let addMerchantCode = await sql(`insert into live_merchant(merchant,create_time) values(?,?)`, [merchant, createTime]);
+    let addMerchantCode = await merchantDB.innsertMerchant([merchant, createTime]);
     if (!addMerchantCode) {
       ctx.error(500, '新增品牌出错了')
     }
@@ -26,7 +26,7 @@ class MerchantCode {
     let merchantCode = !ctx.query.merchant ? "" : ctx.query.merchant;
     let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
     let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
-    let findMerchantCode = await db.blurryFind('live_merchant', ['merchant'], merchantCode, '', '', '', '', '', '', page, size);
+    let findMerchantCode = await merchantDB.blurryFind(merchantCode, page, size);
     if (!findMerchantCode) {
       ctx.error(500, "服务器繁忙，请稍后再试");
     }
@@ -39,7 +39,7 @@ class MerchantCode {
   //删除品牌
   static async delMerchant(ctx) {
     let { id } = ctx.request.body;
-    let delMerchant = await db.deleBatch('live_merchant', id);
+    let delMerchant = await merchantDB.delMerchant(id);
     if (!delMerchant) {
       ctx.error(500, '系统繁忙，请稍后再试');
     }

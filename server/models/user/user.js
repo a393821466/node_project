@@ -1,10 +1,12 @@
-const db = require("../sql/single_table_DB");
+const User = require("../sql/manageMent/user");
+const Group=require("../sql/manageMent/group");
+const Usergroup=require("../sql/manageMent/userGroup");
 const md5 = require("../../middleware/md5");
 const configName = require("../../config/config").checkList;
 const sqls = require("../sql/connect").do;
 const uuid = require("uuid/v1");
 const redis = require("../../redis");
-// const createToken = require("../../middleware/createToken.js");
+
 const fig = require("../../config/config").db_sql;
 class user {
   /**
@@ -14,7 +16,7 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
-    let finUser = await db.findData(fig.live_user, "username", username);
+    let finUser = await User.findUsername("username", username);
     if (finUser.length <= 0) {
       ctx.error("用户不存在");
     } else {
@@ -57,18 +59,21 @@ class user {
       ctx.error('不能使用该用户名注册!');
     }
     //注册逻辑
-    let findUser = await db.findData(fig.live_user, "username", user.username);
+    let findUser = await User.findUsername("username", user.username);
     if (findUser.length <= 0) {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
       } else {
-        let findUserGroup = await db.findData("live_group", "id", 9);
+        let findUserGroup = await Group.findGroup("id", 9);
         if (findUserGroup.length == 0) {
           ctx.error(500, "没有该用户组");
         }
         let val = [user.username, md5(md5(user.password) + 'maple'), "", merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
-        let addUsername = await sqls(`insert into live_user(username,password,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)`, val)
-        let addUserGroup = await sqls(`insert into live_usergroup(userid,groupid) values(?,?)`, [addUsername.insertId, findUserGroup[0].id])
+        let addUsername = await User.innsertUsername(val);
+        let addUserGroup = await Usergroup.innsertGroup([addUsername.insertId, findUserGroup[0].id])
+        if(!addUserGroup){
+          ctx.error(500,"插入用户组失败");
+        }
         ctx.body = {
           statusCode: true
         }

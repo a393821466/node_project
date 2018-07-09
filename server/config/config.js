@@ -33,13 +33,6 @@ const config = {
     "status": 1,
     "statusId": 1,
     "create_time": Date.now()
-  },
-  //数据表
-  db_sql: {
-    live_user: "live_user",
-    live_group: "live_group",
-    live_merchant: "live_merchant",
-    live_usergroup: "live_usergroup"
   }
 }
 

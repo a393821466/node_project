@@ -14,6 +14,6 @@ module.exports = {
   searchUser: admin.searchUserApi, //关键字搜索
   updateUser: admin.updateUserApi, //用户信息更新
   findSingle: admin.findSingleApi, //查找单个用户
-  findAll: admin.findUserAllApi, //查找所有用户
+  //findAll: admin.findUserAllApi, //查找所有用户
   addGroup: admin.addUserGroupApi  //添加用户组
 }

@@ -13,7 +13,7 @@ adminApi.post('/addMerchant', checkToken, apiUser.addMerchant) //新增merchant
   .del('/userDelete', checkToken, apiUser.delUsers) //删除用户
   .get('/userSearch', checkToken, apiUser.searchUser) //搜索关键字
   .get('/findSingleUser', checkToken, apiUser.findSingle) //查询单个
-  .get('/findAllUser', checkToken, apiUser.findAll) //查询一堆
+  //.get('/findAllUser', checkToken, apiUser.findAll) //查询一堆
   .post('/addUserGroup', checkToken, apiUser.addGroup) //添加用户组
 
 

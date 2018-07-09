@@ -1,4 +1,3 @@
-const db = require("../../sql/single_table_DB");
 const sqls = require("../../sql/connect").do;
 
 class userGroup {

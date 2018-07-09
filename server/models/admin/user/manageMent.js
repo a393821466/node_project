@@ -1,6 +1,6 @@
-const db = require("../../sql/single_table_DB");
-const dbs = require("../../sql/much_table_DB");
-const sqls = require("../../sql/connect").do;
+const User = require("../../sql/manageMent/user");
+const Group = require("../../sql/manageMent/group");
+const Usergroup = require("../../sql/manageMent/userGroup");
 const md5 = require("../../../middleware/md5");
 const cfg = require("../../../config/config");
 const validate = require("../../../utils/validate");
@@ -40,23 +40,20 @@ class adminUser {
     if (cfg.checkList.indexOf(data.username) !== -1) {
       ctx.error(500, '不能使用该用户名注册');
     }
-    let findUsername = await db.findData(configdb.live_user, 'username', data.username);
+    let findUsername = await User.findUsername('username', data.username);
     if (findUsername.length > 0) {
       ctx.error(500, '用户名已存在');
     }
-    let findUserGroup = await db.findData("live_group", "id", data.groupId);
+    let findUserGroup = await Group.findGroup("id", data.groupId);
     if (findUserGroup.length == 0) {
       ctx.error(500, "没有该用户组");
     }
     if (findUserGroup[0].power) {
       ctx.error(500, "该用户组已禁止入驻用户");
     }
-    let val = [data.username, md5(md5(data.password) + 'maple'), data.nicename, '', data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time];
-    let addUsername = await sqls(`insert into live_user(username,password,nicename,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?)`, val)
-    let addUserGroup = await sqls(`insert into live_usergroup(userid,groupid) values(?,?)`, [addUsername.insertId, findUserGroup[0].id])
-    if (!addUsername) {
-      ctx.error(500, "必填项未填写");
-    }
+    let val = [data.username, md5(md5(data.password) + 'maple'), data.nicename, '', '', data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time];
+    let addUsername = await User.innsertUsername(val);
+    await Usergroup.innsertGroup([addUsername.insertId, findUserGroup[0].id])
     ctx.body = {
       statusCode: true
     }
@@ -70,13 +67,10 @@ class adminUser {
   static async delUser(ctx) {
     let ids = ctx.request.body.id;
     if (!ids) {
-      ctx.error(500, '没有可删除的');
+      ctx.error(500, '参数id不正确');
     }
-
-    let delBatch = await dbs.much_del(ids);
-    if (!delBatch || delBatch.insertId == 0) {
-      ctx.error(500, '删除出错了');
-    }
+    await User.delUsername(ids);
+    await Usergroup.delGroup(ids);
     ctx.body = {
       statusCode: true
     }
@@ -96,11 +90,11 @@ class adminUser {
     let create_time = !ctx.query.create_time ? "" : ctx.query.create_time;
     let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
     let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
-    let table = ['username', 'groupId', 'nicename', 'status', 'roomId', 'superior_user', 'create_time'];
-    let searchDB = await db.blurryFind(configdb.live_user, table, username, groupId, nicename, status, roomId, superior_user, create_time, page, size);
+
+    let searchDB = await User.blurryFind(username, nicename, status, roomId, superior_user, create_time, page, size);
     let counts = 0;
     if (!username && !groupId && !nicename && !status && !roomId && !superior_user && !create_time) {
-      let pageCount = await sqls(`select count(*) as count from ${configdb.live_user}`);
+      let pageCount = await User.userCount();
       counts = pageCount[0].count;
     } else {
       counts = searchDB.length;
@@ -131,11 +125,11 @@ class adminUser {
     if (!uId) {
       ctx.error(400, "参数错误");
     }
-    let findUser = await db.findData(configdb.live_user, "id", uId);
+    let findUser = await User.findUsername("id", uId);
     if (!findUser) {
       ctx.error(500, '抱歉,查询功能偷了一下懒');
     }
-    let finUsers = delete (findUser[0].password);
+    delete (findUser[0].password);
     ctx.body = {
       statusCode: true,
       value: findUser
@@ -143,24 +137,24 @@ class adminUser {
   }
 
   //查询所有用户信息(已合并到按条件查询功能)
-  static async findUserAll(ctx) {
-    let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
-    let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
-    let findAll = await db.blurryFind(configdb.live_user, page, size);
-    let pageCount = await sqls(`select count(*) as count from ${configdb.live_user}`);
-    // let pageSum = (pageCount[0].count + size - 1) / size;
-    let pageSum = Math.ceil(pageCount[0].count / size);
-    if (!findAll) {
-      ctx.error(500, '抱歉,查询功能偷了一下懒');
-    }
-    for (let i = 0; i < findAll.length; i++) {
-      delete (findAll[i].password)
-    }
-    ctx.body = {
-      statusCode: true,
-      value: findAll
-    }
-  }
+  // static async findUserAll(ctx) {
+  //   let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
+  //   let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
+  //   let findAll = await db.blurryFind(configdb.live_user, page, size);
+  //   let pageCount = await sqls(`select count(*) as count from ${configdb.live_user}`);
+  //   // let pageSum = (pageCount[0].count + size - 1) / size;
+  //   let pageSum = Math.ceil(pageCount[0].count / size);
+  //   if (!findAll) {
+  //     ctx.error(500, '抱歉,查询功能偷了一下懒');
+  //   }
+  //   for (let i = 0; i < findAll.length; i++) {
+  //     delete (findAll[i].password)
+  //   }
+  //   ctx.body = {
+  //     statusCode: true,
+  //     value: findAll
+  //   }
+  // }
 
   //更新用户信息
   static async updateUser(ctx) {
@@ -168,21 +162,20 @@ class adminUser {
     if (!id) {
       ctx.error(500, '参数错误,id没传');
     }
-    let findUser = await db.findData(configdb.live_user, "id", id);
+    let findUser = await User.findUsername("id", id);
     if (!findUser) {
       ctx.error(500, '抱歉,系统开了个小差');
     }
     let passwords = !password ? findUser[0].password : md5(md5(password) + 'maple'),
-      groupIds = !groupId ? findUser[0].groupId : groupId,
+      groupIds = !groupId ? "" : groupId,
       nicenames = !nicename ? findUser[0].nicename : nicename,
       avators = !avator ? findUser[0].avator : avator,
       phones = !phone ? findUser[0].phone : phone,
       qqs = !qq ? findUser[0].qq : qq,
       statuss = !status ? findUser[0].status : status,
       roomIds = !roomId ? findUser[0].roomId : roomId,
-      valName = ["password", "groupId", "nicename", "avator", "phone", "qq", "status", "roomId"],
-      value = [passwords, groupIds, nicenames, avators, phones, qqs, statuss, roomIds,]
-    let updateDB = await db.upDatedata(configdb.live_user, valName, value, id)
+      value = [passwords, nicenames, avators, phones, qqs, statuss, roomIds,]
+    let updateDB = await User.updateUser(value, id)
     if (!updateDB) {
       ctx.error(500, '更新失败');
     }
