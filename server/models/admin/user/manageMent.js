@@ -1,4 +1,5 @@
 const db = require("../../sql/single_table_DB");
+const dbs = require("../../sql/much_table_DB");
 const sqls = require("../../sql/connect").do;
 const md5 = require("../../../middleware/md5");
 const cfg = require("../../../config/config");
@@ -36,16 +37,28 @@ class adminUser {
     if (valid) {
       ctx.error(500, valid);
     }
-    let findUsername = await db.findData(configdb.live_user, "username", data.username);
+    if (cfg.checkList.indexOf(data.username) !== -1) {
+      ctx.error(500, '不能使用该用户名注册');
+    }
+    let findUsername = await db.findData(configdb.live_user, 'username', data.username);
     if (findUsername.length > 0) {
       ctx.error(500, '用户名已存在');
     }
-    let addUsername = await db.insertData([data.username, md5(md5(data.password) + 'maple'), data.groupId, data.nicename, "", data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time])
+    let findUserGroup = await db.findData("live_group", "id", data.groupId);
+    if (findUserGroup.length == 0) {
+      ctx.error(500, "没有该用户组");
+    }
+    if (findUserGroup[0].power) {
+      ctx.error(500, "该用户组已禁止入驻用户");
+    }
+    let val = [data.username, md5(md5(data.password) + 'maple'), data.nicename, '', data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time];
+    let addUsername = await sqls(`insert into live_user(username,password,nicename,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?)`, val)
+    let addUserGroup = await sqls(`insert into live_usergroup(userid,groupid) values(?,?)`, [addUsername.insertId, findUserGroup[0].id])
     if (!addUsername) {
       ctx.error(500, "必填项未填写");
     }
     ctx.body = {
-      code: true
+      statusCode: true
     }
   }
 
@@ -59,12 +72,13 @@ class adminUser {
     if (!ids) {
       ctx.error(500, '没有可删除的');
     }
-    let delBatch = await db.deleBatch(configdb.live_user, ids);
-    if (!delBatch) {
+
+    let delBatch = await dbs.much_del(ids);
+    if (!delBatch || delBatch.insertId == 0) {
       ctx.error(500, '删除出错了');
     }
     ctx.body = {
-      code: true
+      statusCode: true
     }
   }
 
@@ -99,7 +113,7 @@ class adminUser {
       delete (searchDB[i].password)
     }
     ctx.body = {
-      code: true,
+      statusCode: true,
       value: searchDB,
       page: page,
       pageSize: size,
@@ -123,7 +137,7 @@ class adminUser {
     }
     let finUsers = delete (findUser[0].password);
     ctx.body = {
-      code: true,
+      statusCode: true,
       value: findUser
     }
   }
@@ -143,7 +157,7 @@ class adminUser {
       delete (findAll[i].password)
     }
     ctx.body = {
-      code: true,
+      statusCode: true,
       value: findAll
     }
   }
@@ -173,7 +187,7 @@ class adminUser {
       ctx.error(500, '更新失败');
     }
     ctx.body = {
-      code: true
+      statusCode: true
     }
   }
 }

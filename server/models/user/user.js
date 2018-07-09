@@ -1,6 +1,7 @@
 const db = require("../sql/single_table_DB");
 const md5 = require("../../middleware/md5");
 const configName = require("../../config/config").checkList;
+const sqls = require("../sql/connect").do;
 const uuid = require("uuid/v1");
 const redis = require("../../redis");
 // const createToken = require("../../middleware/createToken.js");
@@ -41,14 +42,13 @@ class user {
    */
   static async userRegister(ctx) {
     let query = ctx.request.body;
+    let merchant = !ctx.request.header['merchant'] ? '' : ctx.request.header['merchant'];
     let user = {
       username: query.username,
       password: query.password,
       comfPassword: query.comfPassword,
-      groupId: 1,
       status: 0,
       statusId: 1,
-      merchant: query.merchant,
       roomId: query.roomId,
       create_time: Date.now()
     }
@@ -62,10 +62,15 @@ class user {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
       } else {
-        let data = [user.username, md5(md5(user.password) + 'maple'), user.groupId, "", user.merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
-        let insertData = await db.insertData(data);
+        let findUserGroup = await db.findData("live_group", "id", 9);
+        if (findUserGroup.length == 0) {
+          ctx.error(500, "没有该用户组");
+        }
+        let val = [user.username, md5(md5(user.password) + 'maple'), "", merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
+        let addUsername = await sqls(`insert into live_user(username,password,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)`, val)
+        let addUserGroup = await sqls(`insert into live_usergroup(userid,groupid) values(?,?)`, [addUsername.insertId, findUserGroup[0].id])
         ctx.body = {
-          code: true
+          statusCode: true
         }
       }
     } else {
@@ -82,7 +87,7 @@ class user {
       let del = await redis.delToken(uid);
       if (del) {
         ctx.body = {
-          code: true
+          statusCode: true
         }
       }
     }

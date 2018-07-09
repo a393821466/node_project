@@ -1,6 +1,7 @@
 const Redis = require('ioredis');
-const redisConfig = require("./config/config").redisConfig;
+const cfg = require("./config/config");
 const formartDate = require("./utils/formatDate");
+const redisConfig = cfg.redisConfig;
 const redis = new Redis(redisConfig);
 
 class ioredisConfig {
@@ -99,12 +100,23 @@ class ioredisConfig {
     }
   }
   /**
+   * 对品牌验证merchantCode
+   */
+  static async Merchant(ctx, next) {
+    if (!cfg.Merchant) {
+      if (!ctx.request.header['merchant']) {
+        ctx.error(500, '品牌参数不正确');
+      }
+    }
+    await next();
+  }
+  /**
    * 关闭redis连接
    */
-  static async quit(){
-    return new Promise((resolve,reject)=>{
-      redis.quit().then(rs=>{
-        if(!rs){
+  static async quit() {
+    return new Promise((resolve, reject) => {
+      redis.quit().then(rs => {
+        if (!rs) {
           throw Error(rs);
         }
         console.log(rs);

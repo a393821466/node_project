@@ -1,11 +1,6 @@
 const sqls = require("./connect").do;
 const initConfig = require("../../config/config");
 class dbOperating {
-  //插入语句
-  static async insertData(value) {
-    let _sql = "insert into live_user(username,password,groupId,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    return sqls(_sql, value);
-  }
   //查询单个数据
   static async findData(db, fieId, value) {
     let _sql = `select * from ${db} where ${fieId}="${value}"`;
@@ -80,7 +75,7 @@ class dbOperating {
   }
   //更新用户多字段数据
   static async upDatedata(db, table, value, id) {
-    let _sql = `update ${db} set ${table[0]}=?,${table[1]}=?,${table[2]}=?,${table[3]}=?,${table[4]}=?,${table[5]}=? ,${table[6]}=?,${table[7]}=? where id=${id}`
+    let _sql = `update ${db} set ${table[0]}=?,${table[1]}=?,${table[2]}=?,${table[3]}=?,${table[4]}=?,${table[5]}=? ,${table[6]}=? where id=${id}`
     return sqls(_sql, value)
   }
 }
