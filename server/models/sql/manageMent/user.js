@@ -24,7 +24,7 @@ const delUsername = (ids) => {
 }
 
 //选择查询
-const blurryFind = (val1, val3, val4, val5, val6,val7, page, size) => {
+const blurryFind = (val1, val3, val4, val5, val6, val7, page, size) => {
   let _sql = `select * from live_user where 1=1 `;
   let arr = [];
   if (val1 != "") {
@@ -76,7 +76,7 @@ const userCount = () => {
 //更新
 const updateUser = (value, id) => {
   let _sql = `update live_user set password=?,nicename=?,avator=?,phone=?,qq=? ,status=?,roomId=? where id=${id}`;
-  return sqls(_sql,value);
+  return sqls(_sql, value);
 }
 //单个级联删除
 // const delUserAndGroup = (idx) => {

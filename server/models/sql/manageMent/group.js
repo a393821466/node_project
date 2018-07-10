@@ -6,6 +6,13 @@ const findGroup = (fieId, value) => {
   return sqls(_sql)
 }
 
+//插入用户组
+const innsertGroup = (val) => {
+  let _sql = `insert into live_group(name, introduce, merchant, icon,power, create_time) values(?,?,?,?,?,?)`;
+  return sqls(_sql, val);
+}
+
 module.exports = {
-  findGroup
+  findGroup,
+  innsertGroup
 }

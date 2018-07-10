@@ -2,12 +2,18 @@ const Redis = require('ioredis');
 const cfg = require("./config/config");
 const formartDate = require("./utils/formatDate");
 const redisConfig = cfg.redisConfig;
-const redis = new Redis(redisConfig);
+const redis = new Redis({
+  redisConfig,
+  retryStrategy: function (times) {
+    var delay = Math.min(times * 50, 2000);
+    return delay;
+  }
+});
 
 class ioredisConfig {
-  constructor() {
-    // this.users = {};
-  }
+  // constructor() {
+  // this.users = {};
+  // }
   /**
    * 该方法主要是验证redis是否连接成功
    */
@@ -51,7 +57,7 @@ class ioredisConfig {
       let token = ctx.request.header['authorization'];
       let verifyToken = await redis.get(token);
       let createTime = !verifyToken ? ctx.error(401, "token不存在") : formartDate(Date.now(), JSON.parse(verifyToken).tokenCreate);
-      if (createTime > 10800) {
+      if (createTime > cfg.EXPIRE) {
         redis.del(token);
         ctx.error(401, "token已失效");
       }
@@ -100,7 +106,7 @@ class ioredisConfig {
     }
   }
   /**
-   * 对品牌验证merchantCode
+   * 对merchant品牌验证(未完成)
    */
   static async Merchant(ctx, next) {
     if (!cfg.Merchant) {

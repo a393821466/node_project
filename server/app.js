@@ -7,7 +7,7 @@ const path = require("path");
 const app = new Koa();
 
 //错误处理
-const errorMiddleware = require("./middleware/httpErr").errorMiddleware;
+const errorMiddleware = require("./utils/httpErr").errorMiddleware;
 //路由导出
 const userRouter = router.userRouter;
 const userAdmin = router.adminRouter;

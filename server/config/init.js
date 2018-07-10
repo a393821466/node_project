@@ -1,7 +1,9 @@
 const initConfig = require("../config/config");
 const sql = require("../models/sql/connect").do;
-const db = require("../models/sql/single_table_DB");
-const md5 = require("../middleware/md5");
+const User = require("../models/sql/manageMent/user");
+const Group = require("../models/sql/manageMent/group");
+const Usergroup = require("../models/sql/manageMent/userGroup");
+const md5 = require("../utils/md5");
 const mysql = require("../models/sql/connect");
 const redis = require("../redis");
 const administrator = initConfig.administrator;
@@ -32,7 +34,7 @@ class init {
   }
   //判断超级管理员是否存在
   static async isInsertAdmin() {
-    const findAdmin = await db.findData(initConfig.db_sql.live_user, "username", administrator.username);
+    const findAdmin = await User.findUsername("username", administrator.username);
     if (findAdmin.length == 0 && findAdmin) {
       let findAdminUser = await this.insertAdmins();
       let addNewGroup = await this.adminAddGroup(findAdminUser.insertId);
@@ -50,7 +52,7 @@ class init {
       try {
         let createTime = Date.now();
         let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.status, administrator.statusId, createTime];
-        let addADmin = sql(`insert into ${initConfig.db_sql.live_user}(username, password,nicename, status, statusId, create_time) values(?,?,?,?,?,?)`, adminUser)
+        let addADmin = sql(`insert into live_user(username, password,nicename, status, statusId, create_time) values(?,?,?,?,?,?)`, adminUser)
         resolve(addADmin);
       } catch (e) {
         reject("超级管理员创建失败");
@@ -59,16 +61,16 @@ class init {
   }
   //超级管理员加入分组
   static async adminAddGroup(uid) {
-    const findGroup = await db.findData(initConfig.db_sql.live_group, "name", "超级管理员");
+    const findGroup = await Group.findGroup("name", "超级管理员");
     if (findGroup.length > 0) {
       console.log("超级管理员组已存在");
       return;
     }
-    const newAddGroup = await sql(`insert into ${initConfig.db_sql.live_group}(name, introduce, merchant, icon,power, create_time) values(?,?,?,?,?,?)`, initConfig.adminPrmission);
+    const newAddGroup = await Group.innsertGroup(initConfig.adminPrmission);
     if (!newAddGroup) {
       console.log("超级管理员组初始化失败");
     }
-    let addGroup = await sql(`insert into ${initConfig.db_sql.live_usergroup}(userid, groupid) values(?,?)`, [uid, newAddGroup.insertId]);
+    let addGroup = await Usergroup.innsertGroup([uid, newAddGroup.insertId]);
     if (addGroup) {
       console.log("初始化项目成功");
     }

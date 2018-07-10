@@ -12,7 +12,7 @@ class userGroup {
     }
     let createTime = Date.now();
     let data = [name, introduce, '', icon, '', createTime];
-    let addUserGroup = sqls(`insert into live_group(name,introduce,'',icon,power,create_time) values(?,?,?,?,?,?)`, data);
+    let addUserGroup = sqls(`insert into live_group(name,introduce,merchant,icon,power,create_time) values(?,?,?,?,?,?)`, data);
     if (!addUserGroup) {
       ctx.error(500, '添加用户组出错了');
     }

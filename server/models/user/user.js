@@ -1,7 +1,7 @@
 const User = require("../sql/manageMent/user");
-const Group=require("../sql/manageMent/group");
-const Usergroup=require("../sql/manageMent/userGroup");
-const md5 = require("../../middleware/md5");
+const Group = require("../sql/manageMent/group");
+const Usergroup = require("../sql/manageMent/userGroup");
+const md5 = require("../../utils/md5");
 const configName = require("../../config/config").checkList;
 const sqls = require("../sql/connect").do;
 const uuid = require("uuid/v1");
@@ -71,8 +71,8 @@ class user {
         let val = [user.username, md5(md5(user.password) + 'maple'), "", merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
         let addUsername = await User.innsertUsername(val);
         let addUserGroup = await Usergroup.innsertGroup([addUsername.insertId, findUserGroup[0].id])
-        if(!addUserGroup){
-          ctx.error(500,"插入用户组失败");
+        if (!addUserGroup) {
+          ctx.error(500, "插入用户组失败");
         }
         ctx.body = {
           statusCode: true

@@ -28,5 +28,8 @@
     "dev": "node start.js",
     "start": "nodemon start.js",
     "inst": "node server/config/init.js"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.12"
   }
 }
