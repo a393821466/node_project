@@ -1,6 +1,6 @@
 const MerchanCodes = require("./user/merchantCode");
 const UserManage = require("./user/manageMent");
-const UserGroup = require("./user/userGourp");
+const UserGroup = require("./user/gourp");
 
 module.exports = {
   //用户管理

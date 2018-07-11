@@ -1,21 +1,27 @@
 const sqls = require("../connect").do;
 
-//查找用户名
-const findMerchant = (merchant, value) => {
-  let _sql = `select * from live_merchant where ${merchant}="${value}"`;
-  return sqls(_sql)
+//查询code
+const findCode = (value) => {
+  let _sql = `select * from live_merchant where code=?`;
+  return sqls(_sql, value)
+}
+
+//查询merchant和code
+const findMerchant = (value) => {
+  let _sql = `select * from live_merchant where merchant=? or code=?`;
+  return sqls(_sql, value)
 }
 
 //插入品牌
 const innsertMerchant = (value) => {
-  let _sql = `insert into live_merchant(merchant,create_time) values(?,?)`;
+  let _sql = `insert into live_merchant(merchant,code,create_time) values(?,?,?)`;
   return sqls(_sql, value);
 }
 
 //品牌删除
-const delMerchant = (ids) => {
-  let _sql = `delete from live_merchant where id = ?`;
-  return sqls(_sql, ids)
+const delMerchant = (code) => {
+  let _sql = `delete m,d from live_merchant m inner join live_domain d on m.code = d.code where m.code=?`
+  return sqls(_sql, code)
 }
 
 //查找品牌
@@ -33,6 +39,7 @@ const blurryFind = (val1, page, size) => {
 }
 
 module.exports = {
+  findCode,
   findMerchant,
   innsertMerchant,
   blurryFind,

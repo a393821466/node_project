@@ -40,7 +40,7 @@ class adminUser {
     if (cfg.checkList.indexOf(data.username) !== -1) {
       ctx.error(500, '不能使用该用户名注册');
     }
-    let findUsername = await User.findUsername('username', data.username);
+    let findUsername = await User.validateUser([data.username, md5(md5(data.password) + 'maple')]);
     if (findUsername.length > 0) {
       ctx.error(500, '用户名已存在');
     }
@@ -125,7 +125,7 @@ class adminUser {
     if (!uId) {
       ctx.error(400, "参数错误");
     }
-    let findUser = await User.findUsername("id", uId);
+    let findUser = await User.findUsername(uId);
     if (!findUser) {
       ctx.error(500, '抱歉,查询功能偷了一下懒');
     }
@@ -162,7 +162,7 @@ class adminUser {
     if (!id) {
       ctx.error(500, '参数错误,id没传');
     }
-    let findUser = await User.findUsername("id", id);
+    let findUser = await User.findUsername(id);
     if (!findUser) {
       ctx.error(500, '抱歉,系统开了个小差');
     }

@@ -30,6 +30,7 @@
     "inst": "node server/config/init.js"
   },
   "dependencies": {
-    "bunyan": "^1.8.12"
+    "bunyan": "^1.8.12",
+    "koa-json": "^2.0.2"
   }
 }

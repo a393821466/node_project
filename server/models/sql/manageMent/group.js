@@ -1,9 +1,15 @@
 const sqls = require("../connect").do;
 
 //查找groupId
-const findGroup = (fieId, value) => {
-  let _sql = `select * from live_group where ${fieId}="${value}"`;
-  return sqls(_sql)
+const findGroup = (type, value) => {
+  let _sql = '';
+  if (type == 'id') {
+    _sql = `select * from live_group where id=?`
+  }
+  if (type == 'name') {
+    _sql = `select * from live_group where name=?`
+  }
+  return sqls(_sql, value)
 }
 
 //插入用户组

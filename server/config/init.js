@@ -23,8 +23,8 @@ class init {
   //等待方法执行
   static async connectInit() {
     try {
-      await init.isInsertAdmin();
       await init.testRedisConnect();
+      await init.isInsertAdmin();
       mysql.quit();
       redis.quit();
     } catch (e) {
@@ -32,9 +32,14 @@ class init {
       console.log("初始化失败,请检查mysql、redis配置是否正确");
     }
   }
+  //验证redis连接
+  static async testRedisConnect() {
+    let r = await redis.redisClient();
+    console.log(r);
+  }
   //判断超级管理员是否存在
   static async isInsertAdmin() {
-    const findAdmin = await User.findUsername("username", administrator.username);
+    const findAdmin = await User.validateUser([administrator.username, md5(md5(administrator.password) + 'maple')]);
     if (findAdmin.length == 0 && findAdmin) {
       let findAdminUser = await this.insertAdmins();
       let addNewGroup = await this.adminAddGroup(findAdminUser.insertId);
@@ -72,13 +77,8 @@ class init {
     }
     let addGroup = await Usergroup.innsertGroup([uid, newAddGroup.insertId]);
     if (addGroup) {
-      console.log("初始化项目成功");
+      console.log("项目初始化成功");
     }
-  }
-  //验证redis连接
-  static async testRedisConnect() {
-    let r = await redis.redisClient();
-    console.log(r);
   }
 }
 //初始化方法

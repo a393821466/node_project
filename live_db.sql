@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 10 日 14:23
+-- 生成日期: 2018 年 07 月 11 日 12:33
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -23,6 +23,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `live_domain`
+--
+
+CREATE TABLE IF NOT EXISTS `live_domain` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '域名ID',
+  `domainlink` varchar(60) NOT NULL COMMENT '域名',
+  `code` varchar(48) NOT NULL COMMENT '品牌code',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+
+--
+-- 转存表中的数据 `live_domain`
+--
+
+INSERT INTO `live_domain` (`id`, `domainlink`, `code`) VALUES
+(14, '', 'dele88'),
+(15, '', 'dele88'),
+(13, '', 'dele');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `live_group`
 --
 
@@ -36,16 +59,17 @@ CREATE TABLE IF NOT EXISTS `live_group` (
   `create_time` varchar(64) NOT NULL COMMENT '用户组创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- 转存表中的数据 `live_group`
 --
 
 INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`, `create_time`) VALUES
-(11, '超级管理员', '你们都是我小弟', '', '', 1, '1531224331931'),
+(13, '超级管理员', '你们都是我小弟', '', '', 1, '1531289500415'),
 (9, '普通用户', '按时打卡时间', 'dele', NULL, 0, '1531134247120'),
-(8, '管理员', '按时打卡时间', 'dele', NULL, 0, '1531132635173');
+(8, '管理员', '按时打卡时间', 'dele', NULL, 0, '1531132635173'),
+(14, '助理', '我勒个擦', 'dele88', NULL, 0, '1531310827706');
 
 -- --------------------------------------------------------
 
@@ -60,14 +84,15 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- 转存表中的数据 `live_merchant`
 --
 
 INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `create_time`) VALUES
-(4, 'dele', '', '1531121705870');
+(14, '得乐77', 'dele', '1531292982132'),
+(15, '得乐88', 'dele88', '1531307235024');
 
 -- --------------------------------------------------------
 
@@ -91,19 +116,23 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=128 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
 INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `avator`, `status`, `statusId`, `roomId`, `phone`, `qq`, `superior_user`, `create_time`) VALUES
-(118, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, '1531224332097'),
+(126, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, '1531289500576'),
 (110, 'lili22245112', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139549152'),
 (109, 'lili22245', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139546453'),
 (108, 'lili2224', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139544335'),
 (107, 'lili222', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139540234'),
-(111, 'aaa2312', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139554203');
+(119, 'admin5542', 'jrGAqhl4nzar/dlRelu0+w==', '死鬼', 'dele', '', 0, 1, NULL, '', '', '', '1531280840227'),
+(111, 'aaa2312', 'su0eb66xQWdctWrd/spi8Q==', NULL, NULL, '', 0, 1, NULL, NULL, NULL, NULL, '1531139554203'),
+(120, 'admin5243', 'jrGAqhl4nzar/dlRelu0+w==', NULL, '', '', 0, 1, NULL, NULL, NULL, NULL, '1531281551071'),
+(121, 'admin5234', 'jrGAqhl4nzar/dlRelu0+w==', NULL, '', '', 0, 1, NULL, NULL, NULL, NULL, '1531283934303'),
+(127, 'a123456', 'UkI668l+MPIkcKs+FVBv5g==', NULL, '', '', 0, 1, NULL, NULL, NULL, NULL, '1531310660238');
 
 -- --------------------------------------------------------
 
@@ -116,19 +145,23 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
 --
 
 INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
-(13, 118, 11),
+(19, 126, 13),
+(14, 119, 9),
 (8, 107, 9),
 (9, 108, 9),
 (10, 109, 9),
 (11, 110, 9),
-(12, 111, 9);
+(12, 111, 9),
+(15, 120, 8),
+(16, 121, 8),
+(20, 127, 8);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

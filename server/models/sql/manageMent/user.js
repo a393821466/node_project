@@ -1,9 +1,15 @@
 const sqls = require("../connect").do;
 //查找用户名
-const findUsername = (username, value) => {
-  let _sql = `select * from live_user where ${username}="${value}"`;
-  return sqls(_sql)
+const findUsername = (value) => {
+  let _sql = `select * from live_user where id=?`;
+  return sqls(_sql, value)
 }
+//验证用户名密码
+const validateUser = (value) => {
+  let _sql = `select * from live_user where username=? and password=?`;
+  return sqls(_sql, value)
+}
+
 //插入用户
 const innsertUsername = (val) => {
   let _sql = `insert into live_user(username,password,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)`;
@@ -80,8 +86,8 @@ const updateUser = (value, id) => {
 }
 //单个级联删除
 // const delUserAndGroup = (idx) => {
-//   let _sql = `delete live_user,live_usergroup from live_user left join live_usergroup on live_user.id = live_usergroup.userid where live_user.id=${idx}`
-//   return sqls(_sql)
+// let _sql = `delete live_user,live_usergroup from live_user left join live_usergroup on live_user.id = live_usergroup.userid where live_user.id=${idx}`
+// return sqls(_sql)
 // }
 
 //单个删除
@@ -92,6 +98,7 @@ const updateUser = (value, id) => {
 
 module.exports = {
   findUsername,
+  validateUser,
   innsertUsername,
   delUsername,
   // delUserAndGroup,

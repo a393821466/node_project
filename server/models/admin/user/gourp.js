@@ -1,18 +1,20 @@
-const sqls = require("../../sql/connect").do;
+const groups = require("../../sql/manageMent/group");
 
-class userGroup {
+class group {
   static async addGroup(ctx) {
+    let merchant = ctx.request.header['merchant'];
     let { name, introduce, icon } = ctx.request.body;
+
     if (!name) {
       ctx.error(500, '用户组名称还未填写');
     }
-    let findGroup = await db.findData("live_group", "name", name);
+    let findGroup = await groups.findGroup("name", name);
     if (findGroup.length > 0) {
       ctx.error(500, '用户组名称已存在');
     }
     let createTime = Date.now();
-    let data = [name, introduce, '', icon, '', createTime];
-    let addUserGroup = sqls(`insert into live_group(name,introduce,merchant,icon,power,create_time) values(?,?,?,?,?,?)`, data);
+    let data = [name, introduce, merchant, icon, '', createTime];
+    let addUserGroup = await groups.innsertGroup(data);
     if (!addUserGroup) {
       ctx.error(500, '添加用户组出错了');
     }
@@ -22,4 +24,4 @@ class userGroup {
   }
 }
 
-module.exports = userGroup;
+module.exports = group;

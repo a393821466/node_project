@@ -17,7 +17,7 @@ const config = {
     port: 6379
     // password:''
   },
-  EXPIRE: 10800, // redis的token生存时间 3h,1*60*60
+  EXPIRE: 10800, // redis的token生存时间 3h,3*60*60
   checkList: ['name', 'email', 'admin', 'administrator'], //禁止其它用户以这些用户名注册
 
   //日志
