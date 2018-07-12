@@ -1,6 +1,7 @@
 const Redis = require('ioredis');
 const cfg = require("./config/config");
 const formartDate = require("./utils/formatDate");
+// const findUser = require("./models/sql/manageMent/user");
 const Merchant = require("./models/sql/manageMent/merchant");
 const uuid = require("uuid/v1");
 const redisConfig = cfg.redisConfig;
@@ -120,14 +121,12 @@ class ioredisConfig {
   }
 
   /**
-   * 对merchant品牌验证
+   * 对登录后中间件品牌验证
    */
-  static async Merchant(ctx, next) {
-    // let token = ctx.request.header['authorization'];
-    // if(!token){
-    //   let user = await redis.get(token);
-    //   let validateAdmin = JSON.parse(user).value[0].username;
-    // }
+  static async LoginMerchant(ctx, next) {
+    let token = ctx.request.header['authorization'];
+    let user = await redis.get(token);
+    let validateAdmin = JSON.parse(user).value[0].username;
     if (validateAdmin !== cfg.administrator.username) {
       let code = ctx.request.header['merchant'];
       if (!code) {
@@ -137,6 +136,18 @@ class ioredisConfig {
       if (findMerchants.length == 0) {
         ctx.error(500, '品牌参数错误');
       }
+    }
+    await next();
+  }
+
+  /**
+   * 未登录中间件品牌验证
+   */
+  static async noLoginMerchant(ctx, next) {
+    let code = ctx.request.header['merchant'];
+    let findMerchants = !code ? "" : await Merchant.findCode(code);
+    if (findMerchants.length == 0) {
+      ctx.error(500, "品牌参数错误");
     }
     await next();
   }

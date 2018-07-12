@@ -1,12 +1,12 @@
 const User = require("../sql/manageMent/user");
 const Group = require("../sql/manageMent/group");
 const Usergroup = require("../sql/manageMent/userGroup");
+const merchants = require("../sql/manageMent/merchant");
 const md5 = require("../../utils/md5");
 const configName = require("../../config/config").checkList;
 const sqls = require("../sql/connect").do;
 const redis = require("../../redis");
-
-const fig = require("../../config/config").db_sql;
+const cfg = require("../../config/config").administrator;
 class user {
   /**
    *  登录中间件
@@ -15,19 +15,23 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
+    let code = ctx.request.header['merchant'];
     if (!username || !password) {
       ctx.error(500, "用户名或密码不能为空");
     }
     let finUser = await User.validateUser([username, md5(md5(password) + 'maple')]);
     if (finUser.length <= 0) {
       ctx.error(403, "用户名不正确或密码错误");
-    } else {
-      let data = await redis.uidToken(finUser);
-      ctx.body = JSON.parse(data);
     }
+    let findMerchants = !code ? "" : await merchants.findCode(code);
+    if (finUser[0].username !== cfg.username && (!code || findMerchants.length == 0)) {
+      ctx.error(500, "品牌参数不正确");
+    }
+    let data = await redis.uidToken(finUser);
+    ctx.body = JSON.parse(data);
   }
   /**
-   *  登录中间件
+   *  注册中间件
    *  @param {username} 用户名 
    *  @param {password} 密码 
    *  @param {comfPassword} 确认密码 
@@ -39,7 +43,7 @@ class user {
    */
   static async userRegister(ctx) {
     let query = ctx.request.body;
-    let merchant = !ctx.request.header['merchant'] ? '' : ctx.request.header['merchant'];
+    let merchant = ctx.request.header['merchant'];
     let user = {
       username: query.username,
       password: query.password,
@@ -78,6 +82,7 @@ class user {
     }
   }
   /**
+   *  @param {String} id
    * 判断头部authorization内是否带token,
    * 如果带有token就把它传入到redis方法
    */

@@ -1,5 +1,5 @@
 const merchantDB = require('../../sql/manageMent/merchant');
-const UpdateCode = require('../../sql/manageMent/domain');
+const insercode = require('../../sql/manageMent/domain');
 
 class MerchantCode {
   /**
@@ -16,12 +16,13 @@ class MerchantCode {
     let findData = await merchantDB.findMerchant([merchant, code]);
     if (findData.length > 0) {
       ctx.error(500, '品牌名或品牌别名已存在');
+      return;
     }
     let addMerchantCode = await merchantDB.innsertMerchant([merchant, code, createTime]);
     if (!addMerchantCode) {
       ctx.error(500, '系统繁忙,请稍后再试')
     }
-    await UpdateCode.updateCode(code);
+    await insercode.insertCode(code);
     ctx.body = {
       statusCode: true
     }
