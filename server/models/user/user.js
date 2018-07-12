@@ -82,9 +82,13 @@ class user {
    * 如果带有token就把它传入到redis方法
    */
   static async userLogout(ctx) {
+    let { id } = ctx.request.body;
+    if (!id) {
+      ctx.error(400, '参数有误');
+    }
     if (ctx.request.header['authorization']) {
-      let uid = ctx.request.header['authorization'];
-      let del = await redis.delToken(uid);
+      let token = ctx.request.header['authorization'];
+      let del = await redis.delToken(id, token);
       if (del) {
         ctx.body = {
           statusCode: true

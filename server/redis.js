@@ -111,19 +111,24 @@ class ioredisConfig {
    * 删除redis的token
    * @param {String} token 
    */
-  static async delToken(token) {
+  static async delToken(id, token) {
     if (token) {
+      redis.del(id);
       redis.del(token);
       return true;
     }
   }
 
   /**
-   * 对merchant品牌验证(未完成)
+   * 对merchant品牌验证
    */
   static async Merchant(ctx, next) {
-    let admin = ctx.request.body.username;
-    if (admin !== cfg.administrator.username) {
+    // let token = ctx.request.header['authorization'];
+    // if(!token){
+    //   let user = await redis.get(token);
+    //   let validateAdmin = JSON.parse(user).value[0].username;
+    // }
+    if (validateAdmin !== cfg.administrator.username) {
       let code = ctx.request.header['merchant'];
       if (!code) {
         ctx.error(500, '品牌参数不能为空');
@@ -136,6 +141,12 @@ class ioredisConfig {
     await next();
   }
 
+  /**
+   * 删除验证
+   */
+  static async delId(token) {
+    return redis.get(token);
+  }
   /**
    * 关闭redis连接
    */

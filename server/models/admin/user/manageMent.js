@@ -4,7 +4,7 @@ const Usergroup = require("../../sql/manageMent/userGroup");
 const md5 = require("../../../utils/md5");
 const cfg = require("../../../config/config");
 const validate = require("../../../utils/validate");
-const configdb = cfg.db_sql;
+const redis=require("../../../redis").delId;
 
 class adminUser {
   static getInstance() {
@@ -66,6 +66,12 @@ class adminUser {
    */
   static async delUser(ctx) {
     let ids = ctx.request.body.id;
+    let token = ctx.request.header['authorization'];
+    let findUser=await redis(token);
+    let params=JSON.parse(findUser).value[0].id;
+    if(ids.indexOf(params)>-1){
+      ctx.error(500,'不能删除自己');
+    }
     if (!ids) {
       ctx.error(500, '参数id不正确');
     }
