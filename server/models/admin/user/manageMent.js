@@ -20,6 +20,7 @@ class adminUser {
    */
   static async addUser(ctx) {
     let query = ctx.request.body;
+    let code = ctx.request.header['merchant'];
     let data = {
       username: query.username,
       password: !query.password ? "123456" : query.password,

@@ -4,9 +4,16 @@ const findUsername = (value) => {
   let _sql = `select * from live_user where id=?`;
   return sqls(_sql, value)
 }
+
 //验证用户名密码
 const validateUser = (value) => {
   let _sql = `select * from live_user where username=? and password=?`;
+  return sqls(_sql, value)
+}
+
+//验证用户名密码和品牌
+const vaUserPswMerchant = (value) => {
+  let _sql = `select * from live_user where username=? and password=? and merchant=?`;
   return sqls(_sql, value)
 }
 
@@ -99,6 +106,7 @@ const updateUser = (value, id) => {
 module.exports = {
   findUsername,
   validateUser,
+  vaUserPswMerchant,
   innsertUsername,
   delUsername,
   // delUserAndGroup,

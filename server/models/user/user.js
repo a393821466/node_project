@@ -19,7 +19,7 @@ class user {
     if (!username || !password) {
       ctx.error(500, "用户名或密码不能为空");
     }
-    let finUser = await User.validateUser([username, md5(md5(password) + 'maple')]);
+    let finUser = await User.vaUserPswMerchant([username, md5(md5(password) + 'maple'),code]);
     if (finUser.length <= 0) {
       ctx.error(403, "用户名不正确或密码错误");
     }
@@ -27,7 +27,7 @@ class user {
     if (finUser[0].username !== cfg.username && (!code || findMerchants.length == 0)) {
       ctx.error(500, "品牌参数不正确");
     }
-    let data = await redis.uidToken(finUser);
+    let data = await redis.uidToken(code,finUser);
     ctx.body = JSON.parse(data);
   }
   /**

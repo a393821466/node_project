@@ -38,7 +38,7 @@ class ioredisConfig {
    * @param {String} uid 
    * @param {Object} v 
    */
-  static async uidToken(v) {
+  static async uidToken(code,v) {
     let id = await redis.get(v[0].id);
     let uid = !id ? '' : JSON.parse(id).token;
     if (!id) {
@@ -51,6 +51,7 @@ class ioredisConfig {
           nicename: v[0].nicename,
         }],
         token: uid,
+        merchant:code,
         tokenCreate: Date.now()
       };
       await redis.set(uid, JSON.stringify(user));
