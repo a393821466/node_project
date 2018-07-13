@@ -1,20 +1,26 @@
 const groups = require("../../sql/manageMent/group");
-
+const redis = require("../../../redis");
+const Merchant = require("../../sql/manageMent/merchant");
 class group {
   static async addGroup(ctx) {
-    let merchant = ctx.request.header['merchant'];
-    let { name, introduce, icon } = ctx.request.body;
-
-    if (!name) {
-      ctx.error(500, '用户组名称还未填写');
+     token = ctx.request.header['authorization'],
+      getUserMsg = await redis.getUser(token),
+      userMessage = JSON.parse(getUserMsg),
+      { groupname, introduce, icon } = ctx.request.body;
+    if (!groupname) {
+      ctx.error(500, '组名称未填写');
     }
-    let findGroup = await groups.findGroup("name", name);
+    let findMessage = await Merchant.findCode(userMessage.merchant);
+    if (findMessage.length == 0) {
+      ctx.error(500, "没有该品牌");
+    }
+    let findGroup = await groups.findGroup("name", [groupname, userMessage.merchant]);
     if (findGroup.length > 0) {
       ctx.error(500, '用户组名称已存在');
     }
-    let createTime = Date.now();
-    let data = [name, introduce, merchant, icon, '', createTime];
-    let addUserGroup = await groups.innsertGroup(data);
+    let createTime = Date.now(),
+     data = [groupname, introduce, userMessage.merchant, icon, '', createTime],
+     addUserGroup = await groups.innsertGroup(data);
     if (!addUserGroup) {
       ctx.error(500, '添加用户组出错了');
     }

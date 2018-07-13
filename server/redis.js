@@ -38,7 +38,7 @@ class ioredisConfig {
    * @param {String} uid 
    * @param {Object} v 
    */
-  static async uidToken(code,v) {
+  static async uidToken(code, v) {
     let id = await redis.get(v[0].id);
     let uid = !id ? '' : JSON.parse(id).token;
     if (!id) {
@@ -51,7 +51,7 @@ class ioredisConfig {
           nicename: v[0].nicename,
         }],
         token: uid,
-        merchant:code,
+        merchant: code,
         tokenCreate: Date.now()
       };
       await redis.set(uid, JSON.stringify(user));
@@ -65,16 +65,16 @@ class ioredisConfig {
    */
   static async authToken(ctx, next) {
     if (ctx.request.header['authorization']) {
-      let token = ctx.request.header['authorization'];
-      let verifyToken = await redis.get(token);
-      let userMsg = JSON.parse(verifyToken);
-      let createTime = !verifyToken ? ctx.error(401, 'token不存在') : formartDate(Date.now(), userMsg.tokenCreate);
+      let token = ctx.request.header['authorization'],
+        verifyToken = await redis.get(token),
+        userMsg = JSON.parse(verifyToken),
+        createTime = !verifyToken ? ctx.error(401, 'token不存在') : formartDate(Date.now(), userMsg.tokenCreate);
       if (createTime > cfg.EXPIRE) {
         redis.del(token);
         redis.del(userMsg.value[0].id);
         ctx.error(401, 'token已失效');
       }
-      console.log(createTime);
+      // console.log(createTime);
       let updateTokens = await ioredisConfig.updateToken(token);
       if (updateTokens) {
         await next();
@@ -89,18 +89,19 @@ class ioredisConfig {
    * @param {String} token 
    */
   static async updateToken(token) {
-    let updateMsg = await redis.get(token);
-    let upUser = JSON.parse(updateMsg);
-    let updateUser = {
-      value: [{
-        id: upUser.value[0].id,
-        username: upUser.value[0].username,
-        groupId: upUser.value[0].groupId,
-        nicename: upUser.value[0].nicename,
-      }],
-      token: upUser.token,
-      tokenCreate: Date.now()
-    }
+    let updateMsg = await redis.get(token),
+    upUser = JSON.parse(updateMsg),
+      updateUser = {
+        value: [{
+          id: upUser.value[0].id,
+          username: upUser.value[0].username,
+          groupId: upUser.value[0].groupId,
+          nicename: upUser.value[0].nicename,
+        }],
+        merchant: upUser.merchant,
+        token: upUser.token,
+        tokenCreate: Date.now()
+      };
     return new Promise((resolve, reject) => {
       redis.set(upUser.token, JSON.stringify(updateUser)).then(rs => {
         if (rs) resolve(rs);
@@ -125,9 +126,9 @@ class ioredisConfig {
    * 对登录后中间件品牌验证
    */
   static async LoginMerchant(ctx, next) {
-    let token = ctx.request.header['authorization'];
-    let user = await redis.get(token);
-    let validateAdmin = JSON.parse(user).value[0].username;
+    let token = ctx.request.header['authorization'],
+      user = await redis.get(token),
+      validateAdmin = JSON.parse(user).value[0].username;
     if (validateAdmin !== cfg.administrator.username) {
       let code = ctx.request.header['merchant'];
       if (!code) {
@@ -154,9 +155,9 @@ class ioredisConfig {
   }
 
   /**
-   * 删除验证
+   * 获取用户信息
    */
-  static async delId(token) {
+  static async getUser(token) {
     return redis.get(token);
   }
   /**

@@ -4,7 +4,7 @@ const Usergroup = require("../../sql/manageMent/userGroup");
 const md5 = require("../../../utils/md5");
 const cfg = require("../../../config/config");
 const validate = require("../../../utils/validate");
-const redis=require("../../../redis").delId;
+const redis = require("../../../redis").getUser;
 
 class adminUser {
   static getInstance() {
@@ -19,21 +19,21 @@ class adminUser {
    * QQ、开户人、创建时间 
    */
   static async addUser(ctx) {
-    let query = ctx.request.body;
-    let code = ctx.request.header['merchant'];
-    let data = {
-      username: query.username,
-      password: !query.password ? "123456" : query.password,
-      groupId: query.groupId,
-      nicename: query.nicename,
-      status: query.status,
-      statusId: query.statusId,
-      roomId: query.roomId,
-      phone: query.phone,
-      qq: query.qq,
-      superior_user: query.superior_user,
-      create_time: Date.now()
-    }
+    let query = ctx.request.body,
+      data = {
+        username: query.username,
+        password: !query.password ? "123456" : query.password,
+        groupId: query.groupId,
+        nicename: query.nicename,
+        status: query.status,
+        statusId: query.statusId,
+        roomId: query.roomId,
+        phone: query.phone,
+        code: query.merchant,
+        qq: query.qq,
+        superior_user: query.superior_user,
+        create_time: Date.now()
+      };
     let valid = await validate(data);
     if (valid) {
       ctx.error(500, valid);
@@ -41,18 +41,18 @@ class adminUser {
     if (cfg.checkList.indexOf(data.username) !== -1) {
       ctx.error(500, '不能使用该用户名注册');
     }
-    let findUsername = await User.validateUser([data.username, md5(md5(data.password) + 'maple')]);
+    let findUsername = await User.vaUserPswMerchant([data.username, md5(md5(data.password) + 'maple'), data.code]);
     if (findUsername.length > 0) {
       ctx.error(500, '用户名已存在');
     }
-    let findUserGroup = await Group.findGroup("id", data.groupId);
+    let findUserGroup = await Group.findGroup("id", [data.groupId, data.code]);
     if (findUserGroup.length == 0) {
       ctx.error(500, "没有该用户组");
     }
     if (findUserGroup[0].power) {
       ctx.error(500, "该用户组已禁止入驻用户");
     }
-    let val = [data.username, md5(md5(data.password) + 'maple'), data.nicename, '', '', data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time];
+    let val = [data.username, md5(md5(data.password) + 'maple'), data.nicename, data.code, '', data.status, data.statusId, data.roomId, data.phone, data.qq, data.superior_user, data.create_time];
     let addUsername = await User.innsertUsername(val);
     await Usergroup.innsertGroup([addUsername.insertId, findUserGroup[0].id])
     ctx.body = {
@@ -66,12 +66,12 @@ class adminUser {
    * 默认接收一个或多个id参数
    */
   static async delUser(ctx) {
-    let ids = ctx.request.body.id;
-    let token = ctx.request.header['authorization'];
-    let findUser=await redis(token);
-    let params=JSON.parse(findUser).value[0].id;
-    if(ids.indexOf(params)>-1){
-      ctx.error(500,'不能删除自己');
+    let ids = ctx.request.body.id,
+      token = ctx.request.header['authorization'],
+      findUser = await redis(token),
+      params = JSON.parse(findUser).value[0].id;
+    if (ids.indexOf(params) > -1) {
+      ctx.error(500, '不能删除自己');
     }
     if (!ids) {
       ctx.error(500, '参数id不正确');
@@ -88,15 +88,15 @@ class adminUser {
    * @param {username、groupId、nicename、status、roomId、superior_user} 用户名、用户组、昵称、是否审核、房间号、开户人 
    */
   static async searchUser(ctx) {
-    let username = !ctx.query.username ? "" : ctx.query.username;
-    let groupId = !ctx.query.groupId ? "" : ctx.query.groupId;
-    let nicename = !ctx.query.nicename ? "" : ctx.query.nicename;
-    let status = !ctx.query.status ? "" : ctx.query.status;
-    let roomId = !ctx.query.roomId ? "" : ctx.query.roomId;
-    let superior_user = !ctx.query.superior_user ? "" : ctx.query.superior_user;
-    let create_time = !ctx.query.create_time ? "" : ctx.query.create_time;
-    let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
-    let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
+    let username = !ctx.query.username ? "" : ctx.query.username,
+      groupId = !ctx.query.groupId ? "" : ctx.query.groupId,
+      nicename = !ctx.query.nicename ? "" : ctx.query.nicename,
+      status = !ctx.query.status ? "" : ctx.query.status,
+      roomId = !ctx.query.roomId ? "" : ctx.query.roomId,
+      superior_user = !ctx.query.superior_user ? "" : ctx.query.superior_user,
+      create_time = !ctx.query.create_time ? "" : ctx.query.create_time,
+      page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
 
     let searchDB = await User.blurryFind(username, nicename, status, roomId, superior_user, create_time, page, size);
     let counts = 0;

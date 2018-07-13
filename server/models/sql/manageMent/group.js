@@ -1,13 +1,13 @@
 const sqls = require("../connect").do;
 
-//查找groupId
+//查找用户组
 const findGroup = (type, value) => {
   let _sql = '';
   if (type == 'id') {
-    _sql = `select * from live_group where id=?`
+    _sql = `select * from live_group where id=? and merchant=?`
   }
   if (type == 'name') {
-    _sql = `select * from live_group where name=?`
+    _sql = `select * from live_group where name=? and merchant=?`
   }
   return sqls(_sql, value)
 }

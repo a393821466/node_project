@@ -1,7 +1,7 @@
 const User = require("../sql/manageMent/user");
 const Group = require("../sql/manageMent/group");
 const Usergroup = require("../sql/manageMent/userGroup");
-const merchants = require("../sql/manageMent/merchant");
+// const merchants = require("../sql/manageMent/merchant");
 const md5 = require("../../utils/md5");
 const configName = require("../../config/config").checkList;
 const sqls = require("../sql/connect").do;
@@ -15,19 +15,24 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
-    let code = ctx.request.header['merchant'];
+    let code = username == cfg.username ? "" : ctx.request.header['merchant'];
     if (!username || !password) {
       ctx.error(500, "用户名或密码不能为空");
     }
-    let finUser = await User.vaUserPswMerchant([username, md5(md5(password) + 'maple'),code]);
+    let finUser = "";
+    if (username === cfg.username) {
+      finUser = await User.validateUser([username, md5(md5(password) + 'maple')]);
+    } else {
+      finUser = await User.vaUserPswMerchant([username, md5(md5(password) + 'maple'), code]);
+    }
     if (finUser.length <= 0) {
-      ctx.error(403, "用户名不正确或密码错误");
+      ctx.error(403, "用户名或密码错误");
     }
-    let findMerchants = !code ? "" : await merchants.findCode(code);
-    if (finUser[0].username !== cfg.username && (!code || findMerchants.length == 0)) {
-      ctx.error(500, "品牌参数不正确");
-    }
-    let data = await redis.uidToken(code,finUser);
+    // let findMerchants = !code ? "" : await merchants.findCode(code);
+    // if (finUser[0].username !== cfg.username && (!code || findMerchants.length == 0)) {
+    //   ctx.error(500, "品牌参数不正确");
+    // }
+    let data = await redis.uidToken(code, finUser);
     ctx.body = JSON.parse(data);
   }
   /**

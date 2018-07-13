@@ -3,7 +3,7 @@ const insercode = require('../../sql/manageMent/domain');
 
 class MerchantCode {
   /**
-   * //添加品牌
+   * 添加品牌
    * @param {String} metchant 品牌名
    * @param {String} code  品牌别名
    */
@@ -34,10 +34,10 @@ class MerchantCode {
    * 注:只接收品牌名参数 
    */
   static async findMerchant(ctx) {
-    let merchantCode = !ctx.query.merchant ? "" : ctx.query.merchant;
-    let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
-    let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
-    let findMerchantCode = await merchantDB.blurryFind(merchantCode, page, size);
+    let merchantCode = !ctx.query.merchant ? "" : ctx.query.merchant,
+      page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
+      findMerchantCode = await merchantDB.blurryFind(merchantCode, page, size);
     if (!findMerchantCode) {
       ctx.error(500, "服务器繁忙，请稍后再试");
     }
