@@ -29,7 +29,7 @@ class adminUser {
         statusId: query.statusId,
         roomId: query.roomId,
         phone: query.phone,
-        code: query.merchant,
+        code: query.merchantCode,
         qq: query.qq,
         superior_user: query.superior_user,
         create_time: Date.now()

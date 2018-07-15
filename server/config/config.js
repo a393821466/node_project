@@ -26,11 +26,12 @@ const config = {
   },
   Merchant: false,
   //初始化超级管理员权限以及超级管理员账号密码
-  adminPrmission: ["超级管理员", "你们都是我小弟", "", "", 1, Date.now()],
+  adminPrmission: ["超级管理员", "你们都是我小弟", "system", "", 1, Date.now()],
   administrator: {
     "username": "admin",
     "password": "admin",
     "nicname": "沙拉嘿哟",
+    "merchant": "system",
     "status": 1,
     "statusId": 1,
     "create_time": Date.now()

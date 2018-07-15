@@ -4,9 +4,10 @@ const UserGroup = require("./user/gourp");
 
 module.exports = {
   //用户管理
-  addMerchantApi: MerchanCodes.addMerchant, //新增merchanCode
-  findMerchantApi: MerchanCodes.findMerchant, //查找merchanCode
-  delMerchantApi: MerchanCodes.delMerchant, //删除merchanCode
+  addMerchantApi: MerchanCodes.addMerchant, //新增品牌
+  findMerchantApi: MerchanCodes.findMerchant, //查找品牌
+  delMerchantApi: MerchanCodes.delMerchant, //删除品牌
+  updateMerchantApi:MerchanCodes.updateMerchantStatus,//更改品牌状态
   addUserApi: UserManage.addUser,//添加用户
   delUserApi: UserManage.delUser, //批量删除用户
   searchUserApi: UserManage.searchUser, //关键字搜索

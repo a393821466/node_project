@@ -8,7 +8,7 @@ class MerchantCode {
    * @param {String} code  品牌别名
    */
   static async addMerchant(ctx) {
-    let { merchant, code } = ctx.request.body;
+    let { merchant, code, status } = ctx.request.body;
     let createTime = Date.now();
     if (!merchant || !code) {
       ctx.error(500, '请输入品牌及品牌别名');
@@ -18,7 +18,7 @@ class MerchantCode {
       ctx.error(500, '品牌名或品牌别名已存在');
       return;
     }
-    let addMerchantCode = await merchantDB.innsertMerchant([merchant, code, createTime]);
+    let addMerchantCode = await merchantDB.innsertMerchant([merchant, code, status, createTime]);
     if (!addMerchantCode) {
       ctx.error(500, '系统繁忙,请稍后再试')
     }
@@ -44,6 +44,20 @@ class MerchantCode {
     ctx.body = {
       statusCode: true,
       value: findMerchantCode
+    }
+  }
+
+  /**
+   * 更改品牌状态
+   */
+  static async updateMerchantStatus(ctx){
+    let {status,id}=ctx.request.body;
+    let merchantStatus=await merchantDB.updateMerchant([status,id]);
+    if(!merchantStatus){
+      ctx.error(500,"系统繁忙，请稍后再试");
+    }
+    ctx.body={
+      statusCode:true
     }
   }
 

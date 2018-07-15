@@ -6,9 +6,10 @@ module.exports = {
   userRegister: users.registerApi, //注册
   userLogout: users.logoutApi, //退出
   //后台api
-  addMerchant: admin.addMerchantApi, //新增merchant
-  findMerchant: admin.findMerchantApi, //查找merchant
-  delMerchant: admin.delMerchantApi, //删除merchant
+  addMerchant: admin.addMerchantApi, //新增品牌
+  findMerchant: admin.findMerchantApi, //查找品牌
+  delMerchant: admin.delMerchantApi, //删除品牌
+  updateMerchant:admin.updateMerchantApi, //更新品牌状态
   addUsers: admin.addUserApi, //添加用户
   delUsers: admin.delUserApi, //批量删除用户
   searchUser: admin.searchUserApi, //关键字搜索

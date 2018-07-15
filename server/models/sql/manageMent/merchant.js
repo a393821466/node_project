@@ -14,7 +14,7 @@ const findMerchant = (value) => {
 
 //插入品牌
 const innsertMerchant = (value) => {
-  let _sql = `insert into live_merchant(merchant,code,create_time) values(?,?,?)`;
+  let _sql = `insert into live_merchant(merchant,code,status,create_time) values(?,?,?,?)`;
   return sqls(_sql, value);
 }
 
@@ -38,10 +38,16 @@ const blurryFind = (val1, page, size) => {
   return sqls(_sql, arr);
 }
 
+//更新品牌
+const updateMerchant=(value)=>{
+  let _sql=`update live_merchant set status=? where id=?`;
+  return sqls(_sql,value);
+}
 module.exports = {
   findCode,
   findMerchant,
   innsertMerchant,
   blurryFind,
-  delMerchant
+  delMerchant,
+  updateMerchant
 }

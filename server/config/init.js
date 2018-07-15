@@ -32,17 +32,19 @@ class init {
       console.log("初始化失败,请检查mysql、redis配置是否正确");
     }
   }
+
   //验证redis连接
   static async testRedisConnect() {
     let r = await redis.redisClient();
     console.log(r);
   }
+
   //判断超级管理员是否存在
   static async isInsertAdmin() {
     const findAdmin = await User.validateUser([administrator.username, md5(md5(administrator.password) + 'maple')]);
     if (findAdmin.length == 0 && findAdmin) {
       let findAdminUser = await this.insertAdmins();
-      let addNewGroup = await this.adminAddGroup(findAdminUser.insertId);
+      await this.adminAddGroup(findAdminUser.insertId);
     } else {
       if (findAdmin.syscall) {
         throw Error("数据库连接超时");
@@ -56,8 +58,8 @@ class init {
     return await new Promise((resolve, reject) => {
       try {
         let createTime = Date.now();
-        let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.status, administrator.statusId, createTime];
-        let addADmin = sql(`insert into live_user(username, password,nicename, status, statusId, create_time) values(?,?,?,?,?,?)`, adminUser)
+        let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.merchant, administrator.status, administrator.statusId, createTime];
+        let addADmin = sql(`insert into live_user(username, password,nicename,merchant, status, statusId, create_time) values(?,?,?,?,?,?,?)`, adminUser)
         resolve(addADmin);
       } catch (e) {
         reject("超级管理员创建失败");
@@ -66,7 +68,7 @@ class init {
   }
   //超级管理员加入分组
   static async adminAddGroup(uid) {
-    const findGroup = await Group.findGroup("name", "超级管理员");
+    const findGroup = await Group.findGroup("name", ["超级管理员", administrator.merchant]);
     if (findGroup.length > 0) {
       console.log("超级管理员组已存在");
       return;

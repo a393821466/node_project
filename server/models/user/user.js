@@ -4,7 +4,6 @@ const Usergroup = require("../sql/manageMent/userGroup");
 // const merchants = require("../sql/manageMent/merchant");
 const md5 = require("../../utils/md5");
 const configName = require("../../config/config").checkList;
-const sqls = require("../sql/connect").do;
 const redis = require("../../redis");
 const cfg = require("../../config/config").administrator;
 class user {
@@ -15,7 +14,7 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body;
-    let code = username == cfg.username ? "" : ctx.request.header['merchant'];
+    let code = username == cfg.username ? cfg.merchant : ctx.request.header['merchant'];
     if (!username || !password) {
       ctx.error(500, "用户名或密码不能为空");
     }
@@ -63,12 +62,12 @@ class user {
       ctx.error('不能使用该用户名注册!');
     }
     //注册逻辑
-    let findUser = await User.validateUser([user.username, md5(md5(user.password) + 'maple')]);
+    let findUser = await User.vaUserPswMerchant([user.username, md5(md5(user.password) + 'maple'), merchant]);
     if (findUser.length <= 0) {
       if (user.password !== user.comfPassword) {
         ctx.error("密码不匹配");
       } else {
-        let findUserGroup = await Group.findGroup("id", 9);
+        let findUserGroup = await Group.findGroup("name", ["普通会员",merchant]);
         if (findUserGroup.length == 0) {
           ctx.error(500, "没有该用户组");
         }

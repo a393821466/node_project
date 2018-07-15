@@ -90,7 +90,7 @@ class ioredisConfig {
    */
   static async updateToken(token) {
     let updateMsg = await redis.get(token),
-    upUser = JSON.parse(updateMsg),
+      upUser = JSON.parse(updateMsg),
       updateUser = {
         value: [{
           id: upUser.value[0].id,
@@ -127,16 +127,19 @@ class ioredisConfig {
    */
   static async LoginMerchant(ctx, next) {
     let token = ctx.request.header['authorization'],
+      code = ctx.request.header['merchant'],
       user = await redis.get(token),
-      validateAdmin = JSON.parse(user).value[0].username;
-    if (validateAdmin !== cfg.administrator.username) {
-      let code = ctx.request.header['merchant'];
+      validateAdmin = JSON.parse(user).merchant;
+    if (code !== cfg.administrator.merchant && validateAdmin !== cfg.administrator.merchant) {
       if (!code) {
-        ctx.error(500, '品牌参数不能为空');
+        ctx.error(500, '品牌参数不正确');
       }
       let findMerchants = await Merchant.findCode(code);
       if (findMerchants.length == 0) {
-        ctx.error(500, '品牌参数错误');
+        ctx.error(500, '请填写正确的品牌参数');
+      }
+      if (findMerchants[0].status == 0) {
+        ctx.error(500, "无权限访问")
       }
     }
     await next();
@@ -149,7 +152,10 @@ class ioredisConfig {
     let code = ctx.request.header['merchant'];
     let findMerchants = !code ? "" : await Merchant.findCode(code);
     if (findMerchants.length == 0) {
-      ctx.error(500, "品牌参数错误");
+      ctx.error(500, "品牌参数不正确");
+    }
+    if (findMerchants[0].status == 0) {
+      ctx.error(500, "无权限访问")
     }
     await next();
   }
@@ -167,9 +173,9 @@ class ioredisConfig {
     return new Promise((resolve, reject) => {
       redis.quit().then(rs => {
         if (!rs) {
-          throw Error(rs);
+          reject(rs);
         }
-        console.log(rs);
+        resolve(rs);
       })
     })
   }
