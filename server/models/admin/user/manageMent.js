@@ -15,8 +15,17 @@ class adminUser {
   }
 
   /**
-   * @param {username、password、groupId、nicename、status、statusId、roomId、phone、qq、superior_user、create_time} 用户名、密码、用户组、昵称、是否审核、是否可登陆、房间ID、手机
-   * QQ、开户人、创建时间 
+   * @param {String} username 用户名
+   * @param {String} password 密码
+   * @param {number} groupId 用户组id
+   * @param {String} nicename 名称
+   * @param {number} status 审核状态
+   * @param {number} statusId 是否可登录
+   * @param {String} roomId 房间id
+   * @param {String} phone 手机号
+   * @param {String} qq QQ
+   * @param {String} superior_user 开户人用户名 
+   * @param {String} create_time 用户创建时间
    */
   static async addUser(ctx) {
     let query = ctx.request.body,
@@ -62,7 +71,7 @@ class adminUser {
 
   /**
    * 批量删除用户
-   * @param {String} id 
+   * @param {array OR number} id 
    * 默认接收一个或多个id参数
    */
   static async delUser(ctx) {
@@ -85,7 +94,12 @@ class adminUser {
 
   /**
    * 可查全部、可输入查询条件,可根据以下参数查询
-   * @param {username、groupId、nicename、status、roomId、superior_user} 用户名、用户组、昵称、是否审核、房间号、开户人 
+   * @param {String} username 用户名
+   * @param {number} groupId 用户组
+   * @param {String} nicename 昵称
+   * @param {number} status 是否审核
+   * @param {String} roomId 房间号
+   * @param {String} superior_user 开户人用户名 
    */
   static async searchUser(ctx) {
     let username = !ctx.query.username ? "" : ctx.query.username,
@@ -124,7 +138,7 @@ class adminUser {
 
   /**
    * 查询单个用户信息
-   * @param {String} id
+   * @param {number} id
    * 只接收一个用户ID 
    */
   static async findSingleMsg(ctx) {
@@ -163,7 +177,18 @@ class adminUser {
   //   }
   // }
 
-  //更新用户信息
+  /**
+   * 更新用户信息
+   * @param {number} id 用户id
+   * @param {String} password 用户密码
+   * @param {number} groupId 用户所在组
+   * @param {String} nicename 昵称 用户昵称
+   * @param {String} avator  用户头像
+   * @param {String} phone 用户手机
+   * @param {String} qq QQ
+   * @param {number} status 审核状态
+   * @param {String} roomId 审核状态
+   */
   static async updateUser(ctx) {
     let { id, password, groupId, nicename, avator, phone, qq, status, roomId } = ctx.request.body;
     if (!id) {

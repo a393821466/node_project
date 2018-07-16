@@ -11,7 +11,7 @@ const app = new Koa();
 const errorMiddleware = require("./utils/httpErr").errorMiddleware;
 //路由导出
 const userRouter = router.userRouter;
-const userAdmin = router.adminRouter;
+const userManagement = router.userManagement;
 //加载静态资源
 app.use(koaStatic(path.join(__dirname, './public')));
 
@@ -24,6 +24,6 @@ app.use(bodyParser({
 
 app.use(errorMiddleware());
 app.use(userRouter.routes()).use(userRouter.allowedMethods());
-app.use(userAdmin.routes()).use(userAdmin.allowedMethods());
+app.use(userManagement.routes()).use(userManagement.allowedMethods());
 
 module.exports = app;

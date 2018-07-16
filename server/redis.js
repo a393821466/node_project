@@ -129,8 +129,8 @@ class ioredisConfig {
     let token = ctx.request.header['authorization'],
       code = ctx.request.header['merchant'],
       user = await redis.get(token),
-      validateAdmin = JSON.parse(user).merchant;
-    if (code !== cfg.administrator.merchant && validateAdmin !== cfg.administrator.merchant) {
+      validateAdmin = JSON.parse(user);
+    if (validateAdmin.value[0].username !== cfg.administrator.username && validateAdmin !== cfg.administrator.merchant) {
       if (!code) {
         ctx.error(500, '品牌参数不正确');
       }

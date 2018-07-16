@@ -1,7 +1,7 @@
 const userRouter = require("./user/");
-const adminRouter = require("./admin/");
+const userManagement = require("./admin/userManagement");
 
 module.exports = {
   userRouter,
-  adminRouter
+  userManagement
 };

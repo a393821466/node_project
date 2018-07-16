@@ -1,9 +1,7 @@
 const user = require("./user");
-const loginApi = user.userLogin;
-const registerApi = user.userRegister;
-const logoutApi=user.userLogout;
-module.exports = {
-  loginApi,
-  registerApi,
-  logoutApi
+const foreEnd = {
+  loginApi: user.userLogin,
+  registerApi: user.userRegister,
+  logoutApi: user.userLogout
 }
+module.exports = foreEnd;

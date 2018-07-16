@@ -18,7 +18,14 @@ const innsertGroup = (val) => {
   return sqls(_sql, val);
 }
 
+//更新用户组信息
+const updateGroup = (val) => {
+  let _sql = `update live_group set name=?, introduce=? ,icon=? ,create_time=? where id=?`;
+  return sqls(_sql, val);
+}
+
 module.exports = {
   findGroup,
-  innsertGroup
+  innsertGroup,
+  updateGroup
 }

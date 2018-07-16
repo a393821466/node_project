@@ -75,7 +75,7 @@ const blurryFind = (val1, val3, val4, val5, val6, val7, page, size) => {
     _sql += `and create_time like ? `
     arr.push(val7)
   }
-  _sql += `limit ?,?`;
+  _sql += `ORDER BY create_time,id limit ?,?`;
   arr.push((page - 1) * size, size);
   return sqls(_sql, arr);
 }
