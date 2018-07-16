@@ -74,11 +74,17 @@ class group {
     let params={
       id:!ctx.query.id?ctx.error(400,"参数id不正确"):ctx.query.id,
       page:!ctx.query.page?1:ctx.query.page,
-      pagesize:!ctx.query.pagesize?10:ctx.query.pagesize
+      pagesize:!ctx.query.pagesize?10:parseInt(ctx.query.pagesize)
     }
-    let data=[id,(params.page - 1) * params.pagesize,params.pagesize]
+    let data=[params.id,(params.page - 1) * params.pagesize,params.pagesize];
+
     return await userGroup.findGroupUser(data).then(rs=>{
-      console.log(rs);
+      ctx.body={
+        statusCode:true,
+        value:rs
+      }
+    }).catch(xhr=>{
+      ctx.error();
     })
   }
 }

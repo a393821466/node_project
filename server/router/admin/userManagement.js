@@ -9,7 +9,7 @@ router
   //超级管理员操作功能
   .post('/userApi/addMerchant', checkToken, checkMerchant, apiUser.addMerchantApi) //新增品牌
   .get('/userApi/findMerchant', checkToken, checkMerchant, apiUser.findMerchantApi) //查找品牌
-  .del('/userApi/delMerchant', checkToken, checkMerchant, apiUser.delMerchantApi) //删除品牌
+  .del('/userApi/delMerchant', checkToken, checkMerchant, apiUser.delMerchantApi) //删除品牌(先删除用户在删除用户组，然后才是品牌)
   .post('/userApi/updateMerchant', checkToken, checkMerchant, apiUser.updateMerchantApi)//更新品牌状态
   //超级管理员及品牌管理员，品牌成员操作功能
   .post('/userApi/userManagement', checkToken, checkMerchant, apiUser.addUserApi) //添加用户

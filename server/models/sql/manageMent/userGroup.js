@@ -28,5 +28,6 @@ const delGroup = (ids) => {
 
 module.exports = {
   innsertGroup,
+  findGroupUser,
   delGroup
 }
