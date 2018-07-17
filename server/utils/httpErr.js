@@ -6,7 +6,7 @@ let errorMiddleware = () => {
           message = code;
           code = 500;
         }
-        ctx.throw(code || 500, message || '服务器错误');
+        ctx.throw(code || 500, message || '服务器繁忙,请稍后在试');
       };
       await next();
     } catch (e) {

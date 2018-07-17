@@ -1,4 +1,6 @@
 const merchantDB = require('../../sql/manageMent/merchant');
+const findUser = require('../../sql/manageMent/user');
+const findGroup = require('../../sql/manageMent/group');
 const insercode = require('../../sql/manageMent/domain');
 
 class MerchantCode {
@@ -50,14 +52,14 @@ class MerchantCode {
   /**
    * 更改品牌状态
    */
-  static async updateMerchantStatus(ctx){
-    let {status,id}=ctx.request.body;
-    let merchantStatus=await merchantDB.updateMerchant([status,id]);
-    if(!merchantStatus){
-      ctx.error(500,"系统繁忙，请稍后再试");
+  static async updateMerchantStatus(ctx) {
+    let { status, id } = ctx.request.body;
+    let merchantStatus = await merchantDB.updateMerchant([status, id]);
+    if (!merchantStatus) {
+      ctx.error(500, "系统繁忙，请稍后再试");
     }
-    ctx.body={
-      statusCode:true
+    ctx.body = {
+      statusCode: true
     }
   }
 
@@ -68,6 +70,16 @@ class MerchantCode {
    */
   static async delMerchant(ctx) {
     let { code } = ctx.request.body;
+    await findUser.findUserMerchant(code).then(rs => {
+      if (rs.length > 0) {
+        ctx.error(500, '该品牌还有用户存在');
+      }
+    })
+    await findGroup.findGroupMerchant(code).then(rs => {
+      if (rs.length > 0) {
+        ctx.error(500, '该品牌还有用户组存在');
+      }
+    })
     let delMerchant = await merchantDB.delMerchant(code);
     if (!delMerchant) {
       ctx.error(500, '系统繁忙，请稍后再试');

@@ -7,8 +7,9 @@ const innsertGroup = (value) => {
 }
 
 //链表查询组成员
-const findGroupUser = (val) => {
-  let _sql = `SELECT u.* FROM live_user u,live_usergroup ug where u.id=ug.userid and ug.groupid=? ORDER BY create_time,id limit ?,?`
+const findGroupUser = (n, val) => {
+  let v = n == 'limit' ? ' ORDER BY create_time,id limit ?,?' : "";
+  let _sql = `SELECT u.* FROM live_user u,live_usergroup ug where u.id=ug.userid and ug.groupid=? ${v}`
   return sqls(_sql, val);
 }
 

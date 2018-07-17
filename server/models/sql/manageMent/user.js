@@ -5,6 +5,12 @@ const findUsername = (value) => {
   return sqls(_sql, value)
 }
 
+//查找用户品牌
+const findUserMerchant = (value) => {
+  let _sql = `select * from live_group g,live_user u where g.merchant=u.merchant and u.merchant=?`;
+  return sqls(_sql, value)
+}
+
 //验证用户名密码
 const validateUser = (value) => {
   let _sql = `select * from live_user where username=? and password=?`;
@@ -105,6 +111,7 @@ const updateUser = (value, id) => {
 
 module.exports = {
   findUsername,
+  findUserMerchant,
   validateUser,
   vaUserPswMerchant,
   innsertUsername,
