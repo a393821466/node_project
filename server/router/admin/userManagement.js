@@ -1,6 +1,6 @@
 const router = require("koa-router")();
 const apiUser = require("../../models/admin/user");
-const redis = require('../../redis');
+const redis = require('../../middleware/middleware_redis');
 const checkToken = redis.authToken;
 const checkMerchant = redis.LoginMerchant;
 
@@ -14,7 +14,7 @@ router
   //超级管理员及品牌管理员，品牌成员操作功能
   .post('/userApi/addUserGroup', checkToken,checkMerchant, apiUser.addUserGroupApi) //添加用户组
   .post('/userApi/updateGroup', checkToken,checkMerchant, apiUser.updateGroupApi) //修改用户组信息
-  .get('/userApi/findGroupUser',checkToken,checkMerchant, apiUser.findGroupApi) //查询某个组
+  .get('/userApi/findGroupUser',checkToken,checkMerchant, apiUser.findGroupApi) //查询某个组成员
   .del('/userApi/delGroupUser',checkToken,checkMerchant,apiUser.delGroupApi) //删除用户组
   .post('/userApi/userManagement', checkToken, checkMerchant, apiUser.addUserApi) //添加用户
   .post('/userApi/userUpdate', checkToken, checkMerchant, apiUser.updateUserApi)  //更新用户信息

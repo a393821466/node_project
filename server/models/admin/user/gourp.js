@@ -1,7 +1,7 @@
-const groups = require("../../sql/manageMent/group");
-const userGroup = require("../../sql/manageMent/userGroup");
+const groups = require('../../sql/manageMent/group')
+const userGroup = require('../../sql/manageMent/userGroup')
 // const redis = require("../../../redis");
-const Merchant = require("../../sql/manageMent/merchant");
+const Merchant = require('../../sql/manageMent/merchant')
 class group {
   /**
    * 添加用户组
@@ -14,26 +14,26 @@ class group {
     // let token = ctx.request.header['authorization'],
     //   getUserMsg = await redis.getUser(token),
     //   userMessage = JSON.parse(getUserMsg),
-    let { groupname, merchantCode, introduce, icon } = ctx.request.body;
+    let { groupname, merchantCode, introduce, icon } = ctx.request.body
     if (!groupname) {
-      ctx.error(500, '组名称未填写');
+      ctx.error(500, '组名称未填写')
     }
-    let findMessage = await Merchant.findCode(merchantCode);
+    let findMessage = await Merchant.findCode(merchantCode)
     if (findMessage.length == 0) {
-      ctx.error(500, "没有该品牌");
+      ctx.error(500, '没有该品牌')
     }
-    let findGroup = await groups.findGroup("name", [groupname, merchantCode]);
+    let findGroup = await groups.findGroup('name', [groupname, merchantCode])
     if (findGroup.length > 0) {
-      ctx.error(500, '用户组名称已存在');
+      ctx.error(500, '用户组名称已存在')
     }
     let createTime = Date.now(),
       data = [groupname, introduce, merchantCode, icon, '', createTime],
-      addUserGroup = await groups.innsertGroup(data);
+      addUserGroup = await groups.innsertGroup(data)
     if (!addUserGroup) {
-      ctx.error();
+      ctx.error()
     }
     ctx.body = {
-      statusCode: true,
+      statusCode: true
     }
   }
   /**
@@ -45,14 +45,14 @@ class group {
    * @param {String} icon 用户组图标
    */
   static async upDateGroup(ctx) {
-    let { id, merchantCode, groupname, introduce, icon } = ctx.request.body;
-    if (!id) {
-      ctx.error(400, '参数id不正确');
+    let { id, merchantCode, groupname, introduce, icon } = ctx.request.body
+    if (!id || !merchantCode) {
+      ctx.error(400, '参数不正确')
     }
-    let findGroup = await groups.findGroup("name", [groupname, merchantCode]);
+    let findGroup = await groups.findGroup('name', [groupname, merchantCode])
     if (findGroup.length > 0) {
       if (findGroup[0].name == groupname) {
-        ctx.error(500, '用户组名称已存在');
+        ctx.error(500, '用户组名称已存在')
       }
     }
     let data = {
@@ -61,13 +61,23 @@ class group {
       icon: !icon ? findGroup[0].icon : icon,
       create_time: Date.now()
     }
-    return groups.updateGroup([data.groupname, data.introduce, data.icon, data.create_time, id]).then(rs => {
-      ctx.body = {
-        statusCode: true
-      }
-    }).catch(xhr => {
-      ctx.error();
-    })
+
+    return groups
+      .updateGroup([
+        data.groupname,
+        data.introduce,
+        data.icon,
+        data.create_time,
+        id
+      ])
+      .then(rs => {
+        ctx.body = {
+          statusCode: true
+        }
+      })
+      .catch(xhr => {
+        ctx.error()
+      })
   }
 
   /**
@@ -75,39 +85,45 @@ class group {
    */
   static async findGroupUser(ctx) {
     let params = {
-      id: !ctx.query.id ? ctx.error(400, "参数id不正确") : ctx.query.id,
+      id: !ctx.query.id ? ctx.error(400, '参数id不正确') : ctx.query.id,
       page: !ctx.query.page ? 1 : ctx.query.page,
       pagesize: !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
     }
-    let data = [params.id, (params.page - 1) * params.pagesize, params.pagesize];
-    return await userGroup.findGroupUser("limit", data).then(rs => {
-      ctx.body = {
-        statusCode: true,
-        value: rs
-      }
-    }).catch(xhr => {
-      ctx.error();
-    })
+    let data = [params.id, (params.page - 1) * params.pagesize, params.pagesize]
+    return await userGroup
+      .findGroupUser('limit', data)
+      .then(rs => {
+        ctx.body = {
+          statusCode: true,
+          value: rs
+        }
+      })
+      .catch(xhr => {
+        ctx.error()
+      })
   }
 
   /**
    * 删除用户组
    */
   static async delUserGroup(ctx) {
-    let ids = ctx.request.body.id;
-    if (!ids) ctx.error(500, '参数id不能为空');
-    let findGrousUser = await userGroup.findGroupUser("", ids);
+    let ids = ctx.request.body.id
+    if (!ids) ctx.error(400, '参数id不正确')
+    let findGrousUser = await userGroup.findGroupUser('', ids)
     if (findGrousUser.length > 0) {
-      ctx.error(500, '需删除组下面所属用户');
+      ctx.error(500, '需删除组下面所属用户')
     }
-    return await groups.delGroup(ids).then(rs => {
-      ctx.body = {
-        statusCode: true
-      }
-    }).catch(xhr => {
-      ctx.error();
-    })
+    return await groups
+      .delGroup(ids)
+      .then(rs => {
+        ctx.body = {
+          statusCode: true
+        }
+      })
+      .catch(xhr => {
+        ctx.error()
+      })
   }
 }
 
-module.exports = group;
+module.exports = group

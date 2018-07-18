@@ -1,183 +1,41 @@
-const Redis = require('ioredis');
-const cfg = require("./config/config");
-const formartDate = require("./utils/formatDate");
-// const findUser = require("./models/sql/manageMent/user");
-const Merchant = require("./models/sql/manageMent/merchant");
-const uuid = require("uuid/v1");
-const redisConfig = cfg.redisConfig;
+const Redis = require('ioredis')
+const cfg = require('./config/config')
+const redisConfig = cfg.redisConfig
 const redis = new Redis({
   redisConfig,
-  retryStrategy: function (times) {
-    var delay = Math.min(times * 50, 2000);
-    return delay;
+  retryStrategy: function(times) {
+    var delay = Math.min(times * 50, 2000)
+    return delay
   }
-});
+})
 
-class ioredisConfig {
-  // constructor() {
-  // this.users = {};
-  // }
-  /**
-   * 该方法主要是验证redis是否连接成功
-   */
-  static redisClient() {
+const redisConfigs = {
+  redisClient() {
     return new Promise((resolve, reject) => {
       redis.ping().then(v => {
         if (v !== 'PONG') {
-          reject('redis连接失败');
+          reject('redis连接失败')
         }
-        resolve('redis连接成功');
-      });
-    })
-  }
-
-  /**
-   * 判断如果有token就不会再刷新,直到失效或退出
-   * uid是登录后生成的uuid，作为token登录令牌
-   * v是登录后返回的数据，拿到这里面来组装生成token
-   * @param {String} uid 
-   * @param {Object} v 
-   */
-  static async uidToken(code, v) {
-    let id = await redis.get(v[0].id);
-    let uid = !id ? '' : JSON.parse(id).token;
-    if (!id) {
-      uid = uuid();
-      let user = {
-        value: [{
-          id: v[0].id,
-          username: v[0].username,
-          groupId: v[0].groupId,
-          nicename: v[0].nicename,
-        }],
-        token: uid,
-        merchant: code,
-        tokenCreate: Date.now()
-      };
-      await redis.set(uid, JSON.stringify(user));
-      await redis.set(v[0].id, JSON.stringify({ token: user.token, tokenCreate: user.tokenCreate }));
-    }
-    return redis.get(uid);
-  }
-
-  /**
-   * 验证token中间件
-   */
-  static async authToken(ctx, next) {
-    if (ctx.request.header['authorization']) {
-      let token = ctx.request.header['authorization'],
-        verifyToken = await redis.get(token),
-        userMsg = JSON.parse(verifyToken),
-        createTime = !verifyToken ? ctx.error(401, 'token不存在') : formartDate(Date.now(), userMsg.tokenCreate);
-      if (createTime > cfg.EXPIRE) {
-        redis.del(token);
-        redis.del(userMsg.value[0].id);
-        ctx.error(401, 'token已失效');
-      }
-      // console.log(createTime);
-      let updateTokens = await ioredisConfig.updateToken(token);
-      if (updateTokens) {
-        await next();
-      }
-    } else {
-      ctx.error(401, '没有token');
-    }
-  }
-
-  /**
-   * 更新token
-   * @param {String} token 
-   */
-  static async updateToken(token) {
-    let updateMsg = await redis.get(token),
-      upUser = JSON.parse(updateMsg),
-      updateUser = {
-        value: [{
-          id: upUser.value[0].id,
-          username: upUser.value[0].username,
-          groupId: upUser.value[0].groupId,
-          nicename: upUser.value[0].nicename,
-        }],
-        merchant: upUser.merchant,
-        token: upUser.token,
-        tokenCreate: Date.now()
-      };
-    return new Promise((resolve, reject) => {
-      redis.set(upUser.token, JSON.stringify(updateUser)).then(rs => {
-        if (rs) resolve(rs);
-        reject('出错了');
+        resolve('redis连接成功')
       })
     })
-  }
+  },
 
-  /**
-   * 删除redis的token
-   * @param {String} token 
-   */
-  static async delToken(id, token) {
-    if (token) {
-      redis.del(id);
-      redis.del(token);
-      return true;
-    }
-  }
-
-  /**
-   * 对登录后中间件品牌验证
-   */
-  static async LoginMerchant(ctx, next) {
-    let token = ctx.request.header['authorization'],
-      code = ctx.request.header['merchant'],
-      user = await redis.get(token),
-      validateAdmin = JSON.parse(user);
-    if (validateAdmin.value[0].username !== cfg.administrator.username && validateAdmin !== cfg.administrator.merchant) {
-      if (!code) {
-        ctx.error(500, '品牌参数不正确');
-      }
-      let findMerchants = await Merchant.findCode(code);
-      if (findMerchants.length == 0) {
-        ctx.error(500, '请填写正确的品牌参数');
-      }
-      if (findMerchants[0].status == 0) {
-        ctx.error(500, "无权限访问")
-      }
-    }
-    await next();
-  }
-
-  /**
-   * 未登录中间件品牌验证
-   */
-  static async noLoginMerchant(ctx, next) {
-    let code = ctx.request.header['merchant'];
-    let findMerchants = !code ? "" : await Merchant.findCode(code);
-    if (findMerchants.length == 0) {
-      ctx.error(500, "品牌参数不正确");
-    }
-    if (findMerchants[0].status == 0) {
-      ctx.error(500, "无权限访问")
-    }
-    await next();
-  }
-
-  /**
-   * 获取用户信息
-   */
-  static async getUser(token) {
-    return redis.get(token);
-  }
   /**
    * 关闭redis连接
    */
-  static async quit() {
+  quit() {
     return new Promise((resolve, reject) => {
       redis.quit().then(rs => {
         if (!rs) {
-          reject(rs);
+          reject(rs)
         }
-        resolve(rs);
+        resolve(rs)
       })
     })
   }
 }
-module.exports = ioredisConfig;
+module.exports = {
+  redis,
+  redisConfigs
+}

@@ -4,7 +4,7 @@ const Usergroup = require("../sql/manageMent/userGroup");
 // const merchants = require("../sql/manageMent/merchant");
 const md5 = require("../../utils/md5");
 const configName = require("../../config/config").checkList;
-const redis = require("../../redis");
+const redis = require("../../middleware/middleware_redis");
 const cfg = require("../../config/config").administrator;
 class user {
   /**
@@ -69,7 +69,7 @@ class user {
       } else {
         let findUserGroup = await Group.findGroup("name", ["普通会员",merchant]);
         if (findUserGroup.length == 0) {
-          ctx.error(500, "没有该用户组");
+          ctx.error(500, "没有找到用户组");
         }
         let val = [user.username, md5(md5(user.password) + 'maple'), "", merchant, "", user.status, user.statusId, user.roomId, "", "", "", user.create_time];
         let addUsername = await User.innsertUsername(val);

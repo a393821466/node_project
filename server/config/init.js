@@ -5,7 +5,7 @@ const Group = require("../models/sql/manageMent/group");
 const Usergroup = require("../models/sql/manageMent/userGroup");
 const md5 = require("../utils/md5");
 const mysql = require("../models/sql/connect");
-const redis = require("../redis");
+const redis = require("../redis").redisConfigs;
 const administrator = initConfig.administrator;
 class init {
   /**
