@@ -33,7 +33,7 @@ const config = {
     "nicname": "沙拉嘿哟",
     "merchant": "system",
     "status": 1,
-    "statusId": 1,
+    "frozenStatus": 1,
     "create_time": Date.now()
   }
 }

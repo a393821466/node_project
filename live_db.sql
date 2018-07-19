@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 18 日 12:27
+-- 生成日期: 2018 年 07 月 19 日 14:54
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -119,29 +119,30 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `merchant` varchar(32) DEFAULT NULL,
   `avator` text COMMENT '用户头像',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态(1:审核,0:未审核)',
-  `statusId` int(11) NOT NULL DEFAULT '1' COMMENT '是否可以登录(1:可登录,0:不可登录)',
+  `f_status` int(11) NOT NULL DEFAULT '1' COMMENT '是否可以登录(0:限时冻结,1:可登录,-1:永久状态)',
+  `a_status` int(11) NOT NULL DEFAULT '1' COMMENT '是否可以发言(0:限时禁言,1:可发言,-1:永久禁言)',
   `roomId` int(11) DEFAULT NULL COMMENT '房间号',
-  `phone` varchar(16) DEFAULT NULL COMMENT '手机号',
-  `qq` varchar(16) DEFAULT NULL COMMENT 'QQ',
-  `superior_user` varchar(60) DEFAULT NULL COMMENT '开户人',
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=160 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=163 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
-INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `avator`, `status`, `statusId`, `roomId`, `phone`, `qq`, `superior_user`, `create_time`) VALUES
-(151, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', NULL, 1, 1, NULL, NULL, NULL, NULL, '1531809775409'),
-(152, 'admin666', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, NULL, '', '', '', '1531810215026'),
-(159, 'a222222', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, NULL, '', '', '', '1531916381062'),
-(154, 'adm34356', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, NULL, '', '', '', '1531810234274'),
-(155, 'ad335543', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, NULL, '', '', '', '1531810240413'),
-(156, 'a23435534', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, NULL, '', '', '', '1531810245077'),
-(157, 'a111222', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, NULL, '', '', '', '1531810249616'),
-(158, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '苗人凤666', 'sony', '', 1, 1, NULL, NULL, NULL, NULL, '1531903386879');
+INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
+(151, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', NULL, 1, 1, 1, NULL, '1531809775409'),
+(152, 'admin666', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810215026'),
+(159, 'a222222', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531916381062'),
+(154, 'adm34356', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810234274'),
+(155, 'ad335543', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810240413'),
+(156, 'a23435534', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810245077'),
+(157, 'a111222', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810249616'),
+(158, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '苗人凤666', 'sony', '', 1, 1, 1, NULL, '1531903386879'),
+(160, 'a2222223', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, ''),
+(161, 'a2225262', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531991306422'),
+(162, 'a222252624', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531993607954');
 
 -- --------------------------------------------------------
 
@@ -154,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=53 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -168,7 +169,28 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (48, 155, 28),
 (49, 156, 28),
 (50, 157, 28),
-(51, 158, 35);
+(51, 158, 35),
+(53, 160, 40),
+(54, 161, 40),
+(55, 162, 40);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `live_usersubset`
+--
+
+CREATE TABLE IF NOT EXISTS `live_usersubset` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `userid` bigint(20) NOT NULL COMMENT '用户id',
+  `phone` varchar(16) DEFAULT NULL COMMENT '手机号码',
+  `qq` varchar(16) DEFAULT NULL COMMENT 'qq',
+  `superior_user` varchar(60) DEFAULT NULL COMMENT '开户人',
+  `anexcuse_time` varchar(64) DEFAULT NULL COMMENT '禁言时间',
+  `freeze_time` varchar(64) DEFAULT NULL COMMENT '冻结时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

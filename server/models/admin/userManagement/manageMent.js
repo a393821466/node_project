@@ -20,7 +20,7 @@ class adminUser {
    * @param {number} groupId 用户组id
    * @param {String} nicename 名称
    * @param {number} status 审核状态
-   * @param {number} statusId 是否可登录
+   * @param {number} frozenStatus 是否可登录
    * @param {String} roomId 房间id
    * @param {String} phone 手机号
    * @param {String} qq QQ
@@ -35,7 +35,7 @@ class adminUser {
         groupId: query.groupId,
         nicename: query.nicename,
         status: query.status,
-        statusId: query.statusId,
+        frozenStatus: query.frozenstatus,
         roomId: query.roomId,
         phone: query.phone,
         code: query.merchantCode,
@@ -72,7 +72,7 @@ class adminUser {
       data.code,
       '',
       data.status,
-      data.statusId,
+      data.frozenStatus,
       data.roomId,
       data.phone,
       data.qq,

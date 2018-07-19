@@ -7,12 +7,14 @@
   "author": "maple.p <maple.p@anvo.com>",
   "license": "MIT",
   "devDependencies": {
+    "bunyan": "^1.8.12",
     "eslint": "^5.0.1",
     "ioredis": "^3.2.2",
     "jsonwebtoken": "^8.3.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-convert": "^1.2.0",
+    "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "koa-static-cache": "^5.1.2",
@@ -22,8 +24,6 @@
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "mysql": "^2.15.0",
-    "bunyan": "^1.8.12",
-    "koa-json": "^2.0.2",
     "nodemon": "^1.17.5"
   },
   "scripts": {
@@ -31,6 +31,5 @@
     "start": "nodemon start.js",
     "inst": "node server/config/init.js"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -58,8 +58,8 @@ class init {
     return await new Promise((resolve, reject) => {
       try {
         let createTime = Date.now();
-        let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.merchant, administrator.status, administrator.statusId, createTime];
-        let addADmin = sql(`insert into live_user(username, password,nicename,merchant, status, statusId, create_time) values(?,?,?,?,?,?,?)`, adminUser)
+        let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.merchant, administrator.status, administrator.frozenStatus, createTime];
+        let addADmin = sql(`insert into live_user(username, password,nicename,merchant, status, frozenstatus, create_time) values(?,?,?,?,?,?,?)`, adminUser)
         resolve(addADmin);
       } catch (e) {
         reject("超级管理员创建失败");

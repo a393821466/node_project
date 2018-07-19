@@ -1,10 +1,12 @@
-const redis=require("../redis").redis;
+const redis = require('../redis').redis
 const cfg = require('../config/config')
+const moment = require('moment')
+require('moment/locale/zh-cn')
 const formartDate = require('../utils/formatDate')
 // const findUser = require("./models/sql/manageMent/user");
 const Merchant = require('../models/sql/manageMent/merchant')
 const uuid = require('uuid/v1')
-const userLog = require('./middleware_log')
+const logMsg = require('../log')
 
 class redis_middleware {
   /**
@@ -14,7 +16,7 @@ class redis_middleware {
    * @param {String} uid
    * @param {Object} v
    */
-  static async uidToken(code, v) {
+  static async uidToken(code, v, ips) {
     let id = await redis.get(v[0].id)
     let uid = !id ? '' : JSON.parse(id).token
     if (!id) {
@@ -25,7 +27,8 @@ class redis_middleware {
             id: v[0].id,
             username: v[0].username,
             groupId: v[0].groupId,
-            nicename: v[0].nicename
+            nicename: v[0].nicename,
+            ip: ips
           }
         ],
         token: uid,
@@ -42,7 +45,12 @@ class redis_middleware {
         })
       )
     }
-    userLog(v[0].username, { time: Date.now(), action: '登陆成功' })
+    await logMsg.info({
+      name: v[0].username,
+      ip: ips,
+      time: moment().format('YYYY-MM-DD HH:mm:ss'),
+      action: '用户登陆'
+    })
     return redis.get(uid)
   }
 
@@ -86,7 +94,8 @@ class redis_middleware {
             id: upUser.value[0].id,
             username: upUser.value[0].username,
             groupId: upUser.value[0].groupId,
-            nicename: upUser.value[0].nicename
+            nicename: upUser.value[0].nicename,
+            ip: upUser.value[0].ip
           }
         ],
         merchant: upUser.merchant,
@@ -107,8 +116,6 @@ class redis_middleware {
    */
   static async delToken(id, token) {
     if (token) {
-      let users = await redis.get(id)
-      userLog(JSON.parse(users).username, { time: Date.now(), action: '登出' })
       redis.del(id)
       redis.del(token)
       return true

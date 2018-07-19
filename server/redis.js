@@ -1,8 +1,7 @@
 const Redis = require('ioredis')
 const cfg = require('./config/config')
 const redisConfig = cfg.redisConfig
-const redis = new Redis({
-  redisConfig,
+const redis = new Redis(redisConfig, {
   retryStrategy: function(times) {
     var delay = Math.min(times * 50, 2000)
     return delay

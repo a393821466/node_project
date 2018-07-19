@@ -25,7 +25,7 @@ const vaUserPswMerchant = (value) => {
 
 //插入用户
 const innsertUsername = (val) => {
-  let _sql = `insert into live_user(username,password,nicename,merchant,avator,status,statusId,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)`;
+  let _sql = `insert into live_user(username,password,nicename,merchant,avator,status,frozenStatus,roomId,phone,qq,superior_user,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?)`;
   return sqls(_sql, val);
 }
 //删除用户
