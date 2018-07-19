@@ -1,7 +1,7 @@
 const User = require('../sql/manageMent/user')
 const Group = require('../sql/manageMent/group')
 const Usergroup = require('../sql/manageMent/userGroup')
-// const merchants = require("../sql/manageMent/merchant");
+const UserSubset = require("../sql/manageMent/usersubset");
 const md5 = require('../../utils/md5')
 const util = require('../../utils/utils')
 const configName = require('../../config/config').checkList
@@ -37,12 +37,8 @@ class user {
     if (finUser.length <= 0) {
       ctx.error(403, '用户名或密码错误')
     }
-    // let findMerchants = !code ? "" : await merchants.findCode(code);
-    // if (finUser[0].username !== cfg.username && (!code || findMerchants.length == 0)) {
-    //   ctx.error(500, "品牌参数不正确");
-    // }
     let data = await redis.uidToken(code, finUser, ip)
-    ctx.body = JSON.parse(data)
+    ctx.body = typeof data == "string" ? JSON.parse(data) : data
   }
   /**
    *  注册中间件
@@ -63,13 +59,14 @@ class user {
       password: query.password,
       comfPassword: query.comfPassword,
       status: 0,
-      frozenStatus: 1,
+      f_status: 1,
+      a_status: 1,
       roomId: query.roomId,
       create_time: Date.now()
     }
     //关键字禁止注册
     if (configName.indexOf(user.username) !== -1) {
-      ctx.error('不能使用该用户名注册!')
+      ctx.error('不能使用该用户名注册')
     }
     //注册逻辑
     let findUser = await User.vaUserPswMerchant([
@@ -77,45 +74,35 @@ class user {
       md5(md5(user.password) + 'maple'),
       merchant
     ])
-    if (findUser.length <= 0) {
-      if (user.password !== user.comfPassword) {
-        ctx.error('密码不匹配')
-      } else {
-        let findUserGroup = await Group.findGroup('name', [
-          '普通会员',
-          merchant
-        ])
-        if (findUserGroup.length == 0) {
-          ctx.error(500, '没有找到用户组')
-        }
-        let val = [
-          user.username,
-          md5(md5(user.password) + 'maple'),
-          '',
-          merchant,
-          '',
-          user.status,
-          user.frozenStatus,
-          user.roomId,
-          '',
-          '',
-          '',
-          user.create_time
-        ]
-        let addUsername = await User.innsertUsername(val)
-        let addUserGroup = await Usergroup.innsertGroup([
-          addUsername.insertId,
-          findUserGroup[0].id
-        ])
-        if (!addUserGroup) {
-          ctx.error(500, '插入用户组失败')
-        }
-        ctx.body = {
-          statusCode: true
-        }
-      }
-    } else {
+    if (findUser.length > 0) {
       ctx.error('用户名已存在')
+    }
+    if (user.password !== user.comfPassword) {
+      ctx.error('密码不匹配')
+    }
+    let findUserGroup = await Group.findGroup('name', [
+      '普通会员',
+      merchant
+    ])
+    if (findUserGroup.length == 0) {
+      ctx.error(500, '没有找到用户组')
+    }
+    let val = [user.username, md5(md5(user.password) + 'maple'), '', merchant, '', user.status, user.f_status, user.a_status, user.roomId, user.create_time]
+    await User.innsertUsername(val).then(result => {
+      return result
+    }).then(result => {
+      Usergroup.innsertGroup([
+        result.insertId,
+        findUserGroup[0].id
+      ])
+      return result
+    }).then(result => {
+      UserSubset.subsetInsert([result.insertId, "", "", "", 0, 0])
+    }).catch(er => {
+      ctx.error(er)
+    })
+    ctx.body = {
+      statusCode: true
     }
   }
   /**

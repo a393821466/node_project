@@ -1,20 +1,11 @@
-let group = {
-  0: 'user',
-  1: 'administrators',
-  2: 'admin',
-  3: 'lecturer',
-  4: 'assistant',
-  5: 'vip1',
-  6: 'vip2',
-  7: 'vip3',
-  8: 'vip4',
-  9: 'vip5',
-  10: 'vip6',
-  11: 'vip7',
-  12: 'tourist'
+const status = {
+  't1001':{code:500,message:"此用户为待审核状态"},
+  't1002':{code:500,message:"此用户已被永久冻结"},
+  't1003':{code:500,message:"此用户已被永久禁言"},
+  't1004':{code:500,message:"此用户暂时被冻结"},
+  't1005':{code:500,message:"此用户暂时被禁言"}
 }
-//双向设置
-for (const prop in group) {
-  const value = group[prop]
-  group[value] = Number(prop)
+
+module.exports = {
+  status
 }

@@ -1,9 +1,9 @@
 const redis = require('../redis').redis
 const cfg = require('../config/config')
+const permission = require('../config/permission').status;
 const moment = require('moment')
-require('moment/locale/zh-cn')
+// require('moment/locale/zh-cn')
 const formartDate = require('../utils/formatDate')
-// const findUser = require("./models/sql/manageMent/user");
 const Merchant = require('../models/sql/manageMent/merchant')
 const uuid = require('uuid/v1')
 const logMsg = require('../log')
@@ -35,8 +35,8 @@ class redis_middleware {
         merchant: code,
         tokenCreate: Date.now()
       }
-      await redis.set(uid, JSON.stringify(user))
-      await redis.set(
+      redis.set(uid, JSON.stringify(user))
+      redis.set(
         v[0].id,
         JSON.stringify({
           username: v[0].username,
@@ -51,7 +51,27 @@ class redis_middleware {
       time: moment().format('YYYY-MM-DD HH:mm:ss'),
       action: '用户登陆'
     })
-    return redis.get(uid)
+    return redis_middleware.authFreezeAnban(v[0].status, v[0].f_status, v[0].a_status).then(rs => {
+      if (rs) {
+        return redis.get(uid)
+      }
+    }).catch(er => {
+      return er;
+    })
+  }
+
+  /** 
+   * 用户是否冻结或禁言
+  */
+  static async authFreezeAnban(s, f, a) {
+    return new Promise((resolve, reject) => {
+      if (s == 0) reject(permission.t1001);
+      if (f == -1) reject(permission.t1002);
+      if (a == -1) reject(permission.t1003);
+      if (f == 0) reject(permission.t1004);
+      if (a == 0) reject(permission.t1005);
+      resolve(true);
+    })
   }
 
   /**
