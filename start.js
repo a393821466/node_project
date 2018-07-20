@@ -1,12 +1,16 @@
-const http = require('http');
-const app = require("./server/app");
-const log=require("./server/log");
-const PORT = require("./server/config/config").PORT;
+const http = require('http')
+const app = require('./server/app')
+const cfg = require('./server/config/config')
+
 //监听端口
-http.createServer(app.callback()).listen(PORT,'0.0.0.0',err=>{
-  if(err){
-    log.error(err);
-    return console.log(`http server init error: ${err.message}`);
+const port =
+  process.env.NODE_ENV == 'development'
+    ? cfg.development.port
+    : cfg.production.port
+http.createServer(app.callback()).listen(port, '0.0.0.0', err => {
+  if (err) {
+    // log.error(err);
+    return console.log(`http server init error: ${err.message}`)
   }
-  console.log(`http server listen at port: ${PORT}`)
-});
+  console.log(`http server listen at port: ${port}`)
+})

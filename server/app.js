@@ -5,6 +5,7 @@ const koaStatic = require('koa-static')
 // const views = require('koa-views');
 const path = require('path')
 const json = require('koa-json')
+const logger = require('./log')
 const app = new Koa()
 
 //异常处理

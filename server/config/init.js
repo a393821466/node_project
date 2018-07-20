@@ -1,87 +1,105 @@
-const initConfig = require("../config/config");
-const sql = require("../models/sql/connect").do;
-const User = require("../models/sql/manageMent/user");
-const Group = require("../models/sql/manageMent/group");
-const Usergroup = require("../models/sql/manageMent/userGroup");
-const md5 = require("../utils/md5");
-const mysql = require("../models/sql/connect");
-const redis = require("../redis").redisConfigs;
-const administrator = initConfig.administrator;
+const initConfig = require('../config/config')
+const sql = require('../models/sql/connect').do
+const User = require('../models/sql/manageMent/user')
+const Group = require('../models/sql/manageMent/group')
+const Usergroup = require('../models/sql/manageMent/userGroup')
+const md5 = require('../utils/md5')
+const mysql = require('../models/sql/connect')
+const redis = require('../redis').redisConfigs
+const administrator = initConfig.administrator
 class init {
   /**
    * 单例方法
    */
   static getInstance() {
     if (!init.instance) {
-      init.instance = new init();
+      init.instance = new init()
     }
-    return init.instance;
+    return init.instance
   }
   constructor() {
-    init.connectInit();
+    init.connectInit()
   }
   //等待方法执行
   static async connectInit() {
     try {
-      await init.testRedisConnect();
-      await init.isInsertAdmin();
-      mysql.quit();
-      redis.quit();
+      await init.testRedisConnect()
+      await init.isInsertAdmin()
+      mysql.quit()
+      redis.quit()
     } catch (e) {
-      console.log(e);
-      console.log("初始化失败,请检查mysql、redis配置是否正确");
+      console.log(e)
+      console.log('初始化失败,请检查mysql、redis配置是否正确')
     }
   }
 
   //验证redis连接
   static async testRedisConnect() {
-    let r = await redis.redisClient();
-    console.log(r);
+    let r = await redis.redisClient()
+    console.log(r)
   }
 
   //判断超级管理员是否存在
   static async isInsertAdmin() {
-    const findAdmin = await User.validateUser([administrator.username, md5(md5(administrator.password) + 'maple')]);
+    const findAdmin = await User.validateUser([
+      administrator.username,
+      md5(md5(administrator.password) + 'maple')
+    ])
     if (findAdmin.length == 0 && findAdmin) {
-      let findAdminUser = await this.insertAdmins();
-      await this.adminAddGroup(findAdminUser.insertId);
+      let findAdminUser = await this.insertAdmins()
+      await this.adminAddGroup(findAdminUser.insertId)
     } else {
       if (findAdmin.syscall) {
-        throw Error("数据库连接超时");
-        return;
+        throw Error('数据库连接超时')
+        return
       }
-      console.log("超级管理员已存在");
+      console.log('超级管理员已存在')
     }
   }
   //创建超级管理员
   static async insertAdmins() {
     return await new Promise((resolve, reject) => {
       try {
-        let createTime = Date.now();
-        let adminUser = [administrator.username, md5(md5(administrator.password) + 'maple'), administrator.nicname, administrator.merchant, administrator.status, administrator.frozenStatus, createTime];
-        let addADmin = sql(`insert into live_user(username, password,nicename,merchant, status, frozenstatus, create_time) values(?,?,?,?,?,?,?)`, adminUser)
-        resolve(addADmin);
+        let createTime = Date.now()
+        let adminUser = [
+          administrator.username,
+          md5(md5(administrator.password) + 'maple'),
+          administrator.nicname,
+          administrator.merchant,
+          administrator.status,
+          administrator.f_status,
+          administrator.a_status,
+          createTime
+        ]
+        let addADmin = sql(
+          `insert into live_user(username, password,nicename,merchant, status, f_status,a_status, create_time) values(?,?,?,?,?,?,?)`,
+          adminUser
+        )
+        resolve(addADmin)
       } catch (e) {
-        reject("超级管理员创建失败");
+        reject('超级管理员创建失败')
       }
     })
   }
   //超级管理员加入分组
   static async adminAddGroup(uid) {
-    const findGroup = await Group.findGroup("name", ["超级管理员", administrator.merchant]);
+    const findGroup = await Group.findGroup('name', [
+      '超级管理员',
+      administrator.merchant
+    ])
     if (findGroup.length > 0) {
-      console.log("超级管理员组已存在");
-      return;
+      console.log('超级管理员组已存在')
+      return
     }
-    const newAddGroup = await Group.innsertGroup(initConfig.adminPrmission);
+    const newAddGroup = await Group.innsertGroup(initConfig.adminPrmission)
     if (!newAddGroup) {
-      console.log("超级管理员组初始化失败");
+      console.log('超级管理员组初始化失败')
     }
-    let addGroup = await Usergroup.innsertGroup([uid, newAddGroup.insertId]);
+    let addGroup = await Usergroup.innsertGroup([uid, newAddGroup.insertId])
     if (addGroup) {
-      console.log("项目初始化成功");
+      console.log('项目初始化成功')
     }
   }
 }
 //初始化方法
-init.getInstance();
+init.getInstance()

@@ -1,20 +1,20 @@
 const mysql = require('mysql')
 const config = require('../../config/config').sqlConfig
-const log = require('../../log')
+const logger = require('../../log')
 pool = mysql.createPool(config)
 //数据库连接池
-exports.do =function(sql, data) {
+exports.do = function(sql, data) {
   return new Promise((resolve, reject) => {
     this.getConnection((err, connection) => {
       if (err) {
-        log.error({ message: err.message })
+        logger.error({ message: err.message })
         reject(err)
         return
       }
       connection.query(sql, data, (err, rows) => {
         if (err) {
-          reject(err);
-          return;
+          reject(err)
+          return
         }
         resolve(rows)
         connection.release()

@@ -1,3 +1,5 @@
+const moment = require('moment')
+require('moment/locale/zh-cn')
 //取ip地址
 const getIp = req => {
   return (
@@ -7,7 +9,13 @@ const getIp = req => {
     req.socket.remoteAddress
   )
 }
-
+//公共方法
+const common = {
+  now(t) {
+    return moment().format(t)
+  }
+}
 module.exports = {
-  getIp
+  getIp,
+  common
 }
