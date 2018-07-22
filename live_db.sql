@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 19 日 14:54
+-- 生成日期: 2018 年 07 月 22 日 19:37
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=163 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=171 ;
 
 --
 -- 转存表中的数据 `live_user`
@@ -142,7 +142,11 @@ INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `
 (158, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '苗人凤666', 'sony', '', 1, 1, 1, NULL, '1531903386879'),
 (160, 'a2222223', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, ''),
 (161, 'a2225262', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531991306422'),
-(162, 'a222252624', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531993607954');
+(162, 'a222252624', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531993607954'),
+(167, 'admin811', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029047887'),
+(168, 'admin821', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029210120'),
+(169, 'admi555', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029241844'),
+(170, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '', 'oppo', '', 1, 1, 1, NULL, '1532282533415');
 
 -- --------------------------------------------------------
 
@@ -155,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -172,7 +176,11 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (51, 158, 35),
 (53, 160, 40),
 (54, 161, 40),
-(55, 162, 40);
+(55, 162, 40),
+(56, 167, 38),
+(57, 168, 38),
+(58, 169, 38),
+(59, 170, 40);
 
 -- --------------------------------------------------------
 
@@ -186,11 +194,23 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `phone` varchar(16) DEFAULT NULL COMMENT '手机号码',
   `qq` varchar(16) DEFAULT NULL COMMENT 'qq',
   `superior_user` varchar(60) DEFAULT NULL COMMENT '开户人',
-  `anexcuse_time` varchar(64) DEFAULT NULL COMMENT '禁言时间',
-  `freeze_time` varchar(64) DEFAULT NULL COMMENT '冻结时间',
+  `start_anexcuse_time` varchar(64) DEFAULT '0' COMMENT '禁言开始时间',
+  `end_anexcuse_time` varchar(64) DEFAULT '0' COMMENT '禁言结束时间',
+  `start_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结开始时间',
+  `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- 转存表中的数据 `live_usersubset`
+--
+
+INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `start_anexcuse_time`, `end_anexcuse_time`, `start_freeze_time`, `end_freeze_time`) VALUES
+(1, 167, '', '', '', '0', '0', '0', '0'),
+(2, 168, '', '', '', '0', '0', '0', '0'),
+(3, 169, '', '', '', '0', '0', '0', '0'),
+(4, 170, '', '', '', '0', '0', '0', '0');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
