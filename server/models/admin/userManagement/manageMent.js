@@ -6,7 +6,7 @@ const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
 const redis = require('../../../redis').getUser
-
+const formart=require('../../../utils/tool');
 class adminUser {
   static getInstance() {
     if (!this.instance) {
@@ -49,7 +49,11 @@ class adminUser {
         end_freeze: !query.end_freeze ? 0 : query.end_freeze,
         create_time: Date.now()
       }
-      console.log(data.start_anexcuse,data.end_anexcuse,data.start_freeze,data.end_freeze);
+
+      let time1=data.start_anexcuse;
+      let time2=data.end_anexcuse;
+      let sum=parseInt(time2-time1);
+      console.log(sum);
     // let valid = await validate(data)
     // if (valid) {
     //   ctx.error(500, valid)

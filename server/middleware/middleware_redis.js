@@ -3,8 +3,7 @@ const cfg = require('../config/config')
 const permission = require('../config/permission').status
 const Merchant = require('../models/sql/manageMent/merchant')
 const userLog = require('../middleware/middleware_user')
-const formartDate = require('../utils/formatDate')
-const moment = require('../utils/utils').common
+const formartDate = require('../utils/tool')
 const uuid = require('uuid/v1')
 // const logger = require('../middleware/middleware_log')
 
@@ -45,8 +44,16 @@ class redis_middleware {
         })
       )
     }
+    let tokenSurvive = !id
+      ? ''
+      : formartDate.newTimeAndOldTime(Date.now(), JSON.parse(id).tokenCreate)
+    //是否存在该用户，如果存在，判断时间是否过期，如果过期就清除，否则登陆成功(未完成)
+      if (tokenSurvive > cfg.EXPIRE) {
+      redis.del(uid)
+      redis.del(v[0].id)
+    }
     await userLog(v[0].username, {
-      time: moment.now('YYYY-MM-DD H:mm:ss'),
+      time: formartDate.now('YYYY-MM-DD H:mm:ss'),
       ip: ips,
       action: '登陆成功'
     })
@@ -77,7 +84,7 @@ class redis_middleware {
   }
 
   /**
-   * 验证token中间件
+   * 校验token组件
    */
   static async authToken(ctx, next) {
     if (ctx.request.header['authorization']) {
@@ -86,7 +93,7 @@ class redis_middleware {
         userMsg = JSON.parse(verifyToken),
         createTime = !verifyToken
           ? ctx.error(401, 'token不存在')
-          : formartDate(Date.now(), userMsg.tokenCreate)
+          : formartDate.newTimeAndOldTime(Date.now(), userMsg.tokenCreate)
       if (createTime > cfg.EXPIRE) {
         redis.del(token)
         redis.del(userMsg.value[0].id)

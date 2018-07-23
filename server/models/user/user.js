@@ -3,7 +3,7 @@ const Group = require('../sql/manageMent/group')
 const Usergroup = require('../sql/manageMent/userGroup')
 const UserSubset = require("../sql/manageMent/usersubset")
 const md5 = require('../../utils/md5')
-const util = require('../../utils/utils')
+const utils = require('../../utils/tool')
 const configName = require('../../config/config').checkList
 const redis = require('../../middleware/middleware_redis')
 const cfg = require('../../config/config').administrator
@@ -15,7 +15,7 @@ class user {
    */
   static async userLogin(ctx) {
     let { username, password } = ctx.request.body
-    let ip = util.getIp(ctx.request)
+    let ip = utils.getIp(ctx.request)
     let code =
       username == cfg.username ? cfg.merchant : ctx.request.header['merchant']
     if (!username || !password) {

@@ -1,6 +1,6 @@
 const bunyan = require('bunyan')
 const path = require('path')
-const moment = require('../utils/utils').common
+const moment = require('../utils/tool')
 /**
  * 记录用户轨迹
  * @param {String} name 用户名
