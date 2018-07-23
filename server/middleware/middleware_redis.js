@@ -18,7 +18,18 @@ class redis_middleware {
   static async uidToken(code, v, ips) {
     let id = await redis.get(v[0].id)
     let uid = !id ? '' : JSON.parse(id).token
+    let tokenSurvive = !id
+      ? ''
+      : formartDate.newTimeAndOldTime(Date.now(), JSON.parse(id).tokenCreate)
+    if (tokenSurvive > cfg.EXPIRE) {
+      redis.del(uid)
+      redis.del(v[0].id)
+      tokenSurvives();
+    }
     if (!id) {
+      tokenSurvives();
+    }
+    function tokenSurvives(){
       uid = uuid()
       let user = {
         value: [
@@ -43,14 +54,6 @@ class redis_middleware {
           tokenCreate: user.tokenCreate
         })
       )
-    }
-    let tokenSurvive = !id
-      ? ''
-      : formartDate.newTimeAndOldTime(Date.now(), JSON.parse(id).tokenCreate)
-    //是否存在该用户，如果存在，判断时间是否过期，如果过期就清除，否则登陆成功(未完成)
-      if (tokenSurvive > cfg.EXPIRE) {
-      redis.del(uid)
-      redis.del(v[0].id)
     }
     await userLog(v[0].username, {
       time: formartDate.now('YYYY-MM-DD H:mm:ss'),
@@ -100,7 +103,7 @@ class redis_middleware {
         ctx.status = 401
         ctx.error(401, 'token已失效')
       }
-      // console.log(createTime);
+      console.log(createTime);
       let updateTokens = await redis_middleware.updateToken(token)
       if (updateTokens) {
         await next()

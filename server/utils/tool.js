@@ -18,7 +18,7 @@ module.exports = {
   },
   //把2018-07-25T16:00:00.000Z时间格式转换时间戳
   timeFormart(t) {
-    const formart = Date.parse(new Date(t))
+    let formart = Date.parse(new Date(t))
     formart = formart / 1000
     return formart
   },

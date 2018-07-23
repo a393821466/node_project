@@ -97,7 +97,7 @@ class user {
       ])
       return result
     }).then(result => {
-      UserSubset.subsetInsert([result.insertId, "", "", "", 0, 0, 0, 0])
+      UserSubset.subsetInsert([result.insertId, "", "", "", 0, 0])
     }).catch(er => {
       ctx.error(er)
     })

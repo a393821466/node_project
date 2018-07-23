@@ -6,7 +6,7 @@ const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
 const redis = require('../../../redis').getUser
-const formart=require('../../../utils/tool');
+const formartDate=require('../../../utils/tool');
 class adminUser {
   static getInstance() {
     if (!this.instance) {
@@ -43,16 +43,12 @@ class adminUser {
         phone: query.phone,
         qq: query.qq,
         superior_user: query.superior_user,
-        start_anexcuse: !query.start_anexcuse ? 0 : query.start_anexcuse,
         end_anexcuse: !query.end_anexcuse ? 0 : query.end_anexcuse,
-        start_freeze: !query.start_freeze ? 0 : query.start_freeze,
         end_freeze: !query.end_freeze ? 0 : query.end_freeze,
         create_time: Date.now()
       }
-
-      let time1=data.start_anexcuse;
-      let time2=data.end_anexcuse;
-      let sum=parseInt(time2-time1);
+      let time1=data.end_anexcuse;
+      let sum=formartDate.timeFormart(new Date())>=formartDate.timeFormart(time1)
       console.log(sum);
     // let valid = await validate(data)
     // if (valid) {
