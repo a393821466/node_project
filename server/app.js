@@ -25,6 +25,15 @@ app.use(
   })
 )
 
+//中间件时间，信息，方法打印
+app.use(async(ctx, next) =>{
+  const start=Date.now();
+  await next();
+  const ms=Date.now()-start;
+  const message = `${ctx.method} ${ctx.url} - ${ms}ms ${ctx.status}`
+  console.log(message);
+});
+
 app.use(errorMiddleware())
 app.use(userRouter.routes()).use(userRouter.allowedMethods())
 app.use(userSetting.routes()).use(userSetting.allowedMethods())

@@ -33,7 +33,9 @@ class user {
         md5(md5(password) + 'maple'),
         code
       ])
+      console.log(finUser)
     }
+    console.log(code);
     if (finUser.length <= 0) {
       ctx.error(403, '用户名或密码错误')
     }

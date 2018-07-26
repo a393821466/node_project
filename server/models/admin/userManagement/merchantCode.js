@@ -41,10 +41,10 @@ class MerchantCode {
    * 注:只接收品牌名参数
    */
   static async findMerchant(ctx) {
-    let merchantCode = !ctx.query.merchant ? '' : ctx.query.merchant,
-      page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
-      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
-      findMerchantCode = await merchantDB.blurryFind(merchantCode, page, size)
+    let merchant = !ctx.query.merchant ? '' : ctx.query.merchant,
+      code = !ctx.query.code ? '' : ctx.query.code,
+      status = !ctx.query.status ? 0 : ctx.query.status,
+      findMerchantCode = await merchantDB.blurryFind(merchant, code, status)
     if (!findMerchantCode) {
       ctx.error(500, '服务器繁忙，请稍后再试')
     }

@@ -25,7 +25,7 @@ const delMerchant = code => {
 }
 
 //查找品牌
-const blurryFind = (val1, page, size) => {
+const blurryFind = (val1, val2, val3) => {
   let _sql = `select * from live_merchant where 1=1 `
   let arr = []
   if (val1 != '') {
@@ -33,8 +33,16 @@ const blurryFind = (val1, page, size) => {
     _sql += `and merchant like ? `
     arr.push(val1)
   }
-  _sql += `limit ?,?`
-  arr.push((page - 1) * size, size)
+  if (val2 != '') {
+    val2 = '%' + val2 + '%'
+    _sql += `and code like ? `
+    arr.push(val2)
+  }
+  if (val3 != '') {
+    val3 = '%' + val3 + '%'
+    _sql += `and status like ? `
+    arr.push(val3)
+  }
   return sqls(_sql, arr)
 }
 

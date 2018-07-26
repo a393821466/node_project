@@ -1,12 +1,12 @@
 const User = require('../../sql/manageMent/user')
 const Group = require('../../sql/manageMent/group')
 const Usergroup = require('../../sql/manageMent/userGroup')
-const UserSubset = require("../../sql/manageMent/usersubset")
+const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
 const redis = require('../../../redis').getUser
-const formartDate=require('../../../utils/tool');
+const formartDate = require('../../../utils/tool')
 class adminUser {
   static getInstance() {
     if (!this.instance) {
@@ -35,7 +35,7 @@ class adminUser {
         password: !query.password ? '123456' : query.password,
         groupId: query.groupId,
         nicename: query.nicename,
-        code: query.merchantCode,
+        code: query.code,
         status: query.status,
         f_status: query.f_status,
         a_status: query.a_status,
@@ -43,60 +43,65 @@ class adminUser {
         phone: query.phone,
         qq: query.qq,
         superior_user: query.superior_user,
-        end_anexcuse: !query.end_anexcuse ? 0 : query.end_anexcuse,
-        end_freeze: !query.end_freeze ? 0 : query.end_freeze,
+        end_anexcuse: !query.end_anexcuse
+          ? 0
+          : formartDate.timeFormart(query.end_anexcuse),
+        end_freeze: !query.end_freeze
+          ? 0
+          : formartDate.timeFormart(query.end_freeze),
         create_time: Date.now()
       }
-      let time1=data.end_anexcuse;
-      let sum=formartDate.timeFormart(new Date())>=formartDate.timeFormart(time1)
-      console.log(sum);
-    // let valid = await validate(data)
-    // if (valid) {
-    //   ctx.error(500, valid)
-    // }
-    // if (cfg.checkList.indexOf(data.username) !== -1) {
-    //   ctx.error(500, '不能使用该用户名注册')
-    // }
-    // let findUsername = await User.vaUserPswMerchant([
-    //   data.username,
-    //   md5(md5(data.password) + 'maple'),
-    //   data.code
-    // ])
-    // if (findUsername.length > 0) {
-    //   ctx.error(500, '用户名已存在')
-    // }
-    // let findUserGroup = await Group.findGroup('id', [data.groupId, data.code])
-    // if (findUserGroup.length == 0) {
-    //   ctx.error(500, '没有该用户组')
-    // }
-    // if (findUserGroup[0].power) {
-    //   ctx.error(500, '该用户组已禁止入驻用户')
-    // }
-    // let val = [
-    //   data.username,
-    //   md5(md5(data.password) + 'maple'),
-    //   data.nicename,
-    //   data.code,
-    //   '',
-    //   data.status,
-    //   data.f_status,
-    //   data, a_status,
-    //   data.roomId,
-    //   data.create_time
-    // ]
-    // await User.innsertUsername(val).then(result => {
-    //   return result;
-    // }).then(result => {
-    //   Usergroup.innsertGroup([result.insertId, findUserGroup[0].id]);
-    //   return result;
-    // }).then(result => {
-    //   UserSubset.subsetInsert([result.insertId, data.phone, data.qq, data.superior_user, data.start_anexcuse, data.end_anexcuse, data.start_freeze, data.end_freeze])
-    // }).catch(er => {
-    //   ctx.error(er)
-    // })
-    // ctx.body = {
-    //   statusCode: true
-    // }
+    // let time1 = data.end_anexcuse
+    // let sum = formartDate.timeFormart(new Date()) >= time1
+    // console.log(sum)
+
+    let valid = await validate(data)
+    if (valid) {
+      ctx.error(500, valid)
+    }
+    if (cfg.checkList.indexOf(data.username) !== -1) {
+      ctx.error(500, '不能使用该用户名注册')
+    }
+    let findUsername = await User.vaUserPswMerchant([
+      data.username,
+      md5(md5(data.password) + 'maple'),
+      data.code
+    ])
+    if (findUsername.length > 0) {
+      ctx.error(500, '用户名已存在')
+    }
+    let findUserGroup = await Group.findGroup('id', [data.groupId, data.code])
+    if (findUserGroup.length == 0) {
+      ctx.error(500, '没有该用户组')
+    }
+    if (findUserGroup[0].power) {
+      ctx.error(500, '该用户组已禁止入驻用户')
+    }
+    let val = [
+      data.username,
+      md5(md5(data.password) + 'maple'),
+      data.nicename,
+      data.code,
+      '',
+      data.status,
+      data.f_status,
+      data.a_status,
+      data.roomId,
+      data.create_time
+    ]
+    await User.innsertUsername(val).then(result => {
+      return result;
+    }).then(result => {
+      Usergroup.innsertGroup([result.insertId, findUserGroup[0].id]);
+      return result;
+    }).then(result => {
+      UserSubset.subsetInsert([result.insertId, data.phone, data.qq, data.superior_user, data.end_anexcuse,  data.end_freeze])
+    }).catch(er => {
+      ctx.error(er)
+    })
+    ctx.body = {
+      statusCode: true
+    }
   }
 
   /**
@@ -255,8 +260,8 @@ class adminUser {
       ctx.error(500, '抱歉,系统开了个小差')
     }
     let passwords = !password
-      ? findUser[0].password
-      : md5(md5(password) + 'maple'),
+        ? findUser[0].password
+        : md5(md5(password) + 'maple'),
       nicenames = !nicename ? findUser[0].nicename : nicename,
       avators = !avator ? findUser[0].avator : avator,
       phones = !phone ? findUser[0].phone : phone,
