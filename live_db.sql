@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 22 日 19:37
+-- 生成日期: 2018 年 07 月 26 日 20:10
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `live_domain` (
   `code` varchar(48) NOT NULL COMMENT '品牌code',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `live_domain`
@@ -43,7 +43,8 @@ INSERT INTO `live_domain` (`id`, `domainlink`, `code`) VALUES
 (22, '', 'apple'),
 (23, '', 'huawei'),
 (24, '', 'sony'),
-(25, '', 'oppo');
+(25, '', 'oppo'),
+(27, '', 'taobao');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `live_group` (
   `create_time` varchar(64) NOT NULL COMMENT '用户组创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
 
 --
 -- 转存表中的数据 `live_group`
@@ -76,7 +77,8 @@ INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`
 (35, '管理员', '索尼大法集团', 'sony', NULL, 0, '1531891823822'),
 (39, '管理员', 'oppo科技', 'oppo', 'saa', 0, '1531916248916'),
 (38, '普通会员', '索尼大法集团', 'sony', NULL, 0, '1531916132050'),
-(36, '讲师', '索尼大法集团', 'sony', 'saa', 0, '1531902724704');
+(36, '讲师', '索尼大法集团', 'sony', 'saa', 0, '1531902724704'),
+(41, '管理员', '淘宝111', 'taobao', '13131', 0, '1532635232610');
 
 -- --------------------------------------------------------
 
@@ -92,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `live_merchant`
@@ -103,7 +105,8 @@ INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) 
 (22, '苹果', 'apple', 1, '1531814405064'),
 (23, '华为', 'huawei', 0, '1531819604041'),
 (24, '索尼', 'sony', 1, '1531888488498'),
-(25, 'oppo', 'oppo', 1, '1531915582708');
+(25, 'oppo', 'oppo', 1, '1531915582708'),
+(27, ' 淘宝电商平台', 'taobao', 0, '1532633659023');
 
 -- --------------------------------------------------------
 
@@ -125,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=171 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=173 ;
 
 --
 -- 转存表中的数据 `live_user`
@@ -139,14 +142,12 @@ INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `
 (155, 'ad335543', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810240413'),
 (156, 'a23435534', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810245077'),
 (157, 'a111222', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'samsung', '', 0, 1, 1, NULL, '1531810249616'),
-(158, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '苗人凤666', 'sony', '', 1, 1, 1, NULL, '1531903386879'),
 (160, 'a2222223', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, ''),
 (161, 'a2225262', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531991306422'),
 (162, 'a222252624', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531993607954'),
-(167, 'admin811', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029047887'),
-(168, 'admin821', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029210120'),
-(169, 'admi555', 'J/pxBuzR2StTyENGpkemJg==', '', 'sony', '', 0, 1, 1, NULL, '1532029241844'),
-(170, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '', 'oppo', '', 1, 1, 1, NULL, '1532282533415');
+(172, 'admin54343', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'taobao', '', 1, 1, 1, NULL, '1532635585325'),
+(170, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '', 'oppo', '', 1, 1, 1, NULL, '1532282533415'),
+(171, 'a8658145', 'UkI668l+MPIkcKs+FVBv5g==', '', 'oppo', '', 0, 1, 1, NULL, '1532630528864');
 
 -- --------------------------------------------------------
 
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -180,7 +181,9 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (56, 167, 38),
 (57, 168, 38),
 (58, 169, 38),
-(59, 170, 40);
+(59, 170, 40),
+(60, 171, 40),
+(61, 172, 41);
 
 -- --------------------------------------------------------
 
@@ -194,23 +197,23 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `phone` varchar(16) DEFAULT NULL COMMENT '手机号码',
   `qq` varchar(16) DEFAULT NULL COMMENT 'qq',
   `superior_user` varchar(60) DEFAULT NULL COMMENT '开户人',
-  `start_anexcuse_time` varchar(64) DEFAULT '0' COMMENT '禁言开始时间',
   `end_anexcuse_time` varchar(64) DEFAULT '0' COMMENT '禁言结束时间',
-  `start_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结开始时间',
   `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- 转存表中的数据 `live_usersubset`
 --
 
-INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `start_anexcuse_time`, `end_anexcuse_time`, `start_freeze_time`, `end_freeze_time`) VALUES
-(1, 167, '', '', '', '0', '0', '0', '0'),
-(2, 168, '', '', '', '0', '0', '0', '0'),
-(3, 169, '', '', '', '0', '0', '0', '0'),
-(4, 170, '', '', '', '0', '0', '0', '0');
+INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `end_anexcuse_time`, `end_freeze_time`) VALUES
+(1, 167, '', '', '', '0', '0'),
+(2, 168, '', '', '', '0', '0'),
+(3, 169, '', '', '', '0', '0'),
+(4, 170, '', '', '', '0', '0'),
+(5, 171, '', '', '', '0', '0'),
+(6, 172, NULL, NULL, NULL, '0', '0');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
