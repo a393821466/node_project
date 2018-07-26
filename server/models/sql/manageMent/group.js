@@ -1,5 +1,5 @@
 const sqls = require("../connect").do;
-//查找用户组品牌
+//查找品牌内用户组
 const findGroupMerchant = (value) => {
   let _sql = `select * from live_group where merchant=?`;
   return sqls(_sql, value)

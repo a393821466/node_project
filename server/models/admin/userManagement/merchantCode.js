@@ -13,7 +13,7 @@ class MerchantCode {
     let { merchant, code, status } = ctx.request.body
     let createTime = Date.now()
     if (!merchant || !code) {
-      ctx.error(500, '请输入品牌及品牌别名')
+      ctx.error(400, '请输入品牌及品牌别名')
     }
     let findData = await merchantDB.findMerchant([merchant, code])
     if (findData.length > 0) {
@@ -55,14 +55,26 @@ class MerchantCode {
   }
 
   /**
-   * 更改品牌状态
+   * 更改品牌状态或名字
    */
   static async updateMerchantStatus(ctx) {
-    let { status, id } = ctx.request.body
-    let merchantStatus = await merchantDB.updateMerchant([status, id])
-    if (!merchantStatus) {
-      ctx.error(500, '系统繁忙，请稍后再试')
+    let { merchant, status, id } = ctx.request.body
+    if (!id) {
+      ctx.error(400, '参数错误')
     }
+    await merchantDB.findId(id).then(rs => {
+      let data = {
+        merchant: !merchant ? rs[0].merchant : merchant,
+        status: !status ? rs[0].status : status
+      }
+      return data;
+    }).then(result => {
+      merchantDB.updateMerchant([result.merchant, result.status, id]).then(res => {
+        if (!res) {
+          ctx.error(500, '系统繁忙，请稍后再试')
+        }
+      })
+    })
     ctx.body = {
       statusCode: true
     }
