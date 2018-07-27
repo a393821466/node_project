@@ -12,7 +12,7 @@ const userManageCenter = {
   searchUserApi: UserManage.searchUser, //关键字搜索
   updateUserApi: UserManage.updateUser, //更新用户信息
   findSingleApi: UserManage.findSingleMsg, //查找单个用户
-  //findUserAllApi: UserManage.findUserAll, //查找所有用户
+  UserStatusApi: UserManage.updateUserStatus, //更改用户状态
   addUserGroupApi: UserGroup.addGroup, //添加用户组
   updateGroupApi: UserGroup.upDateGroup, //修改用户组信息
   findGroupApi: UserGroup.findGroupUser, //查找组用户

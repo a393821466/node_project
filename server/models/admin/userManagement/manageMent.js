@@ -5,7 +5,7 @@ const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
-const redis = require('../../../redis').getUser
+const redis = require('../../../middleware/middleware_redis').getUser
 const formartDate = require('../../../utils/tool')
 class adminUser {
   static getInstance() {
@@ -27,6 +27,8 @@ class adminUser {
    * @param {String} qq QQ
    * @param {String} superior_user 开户人用户名
    * @param {String} create_time 用户创建时间
+   * @param {Number} end_anexcuse 禁言状态
+   * @param {Number} end_freeze 冻结状态
    */
   static async addUser(ctx) {
     let query = ctx.request.body,
@@ -37,18 +39,11 @@ class adminUser {
         nicename: query.nicename,
         code: query.code,
         status: query.status,
-        f_status: query.f_status,
-        a_status: query.a_status,
         roomId: query.roomId,
         phone: query.phone,
         qq: query.qq,
         superior_user: query.superior_user,
-        end_anexcuse: !query.end_anexcuse
-          ? 0
-          : formartDate.timeFormart(query.end_anexcuse),
-        end_freeze: !query.end_freeze
-          ? 0
-          : formartDate.timeFormart(query.end_freeze),
+        // formartDate.timeFormart(query.end_freeze),
         create_time: Date.now()
       }
     // let time1 = data.end_anexcuse
@@ -77,25 +72,14 @@ class adminUser {
     if (findUserGroup[0].power) {
       ctx.error(500, '该用户组已禁止入驻用户')
     }
-    let val = [
-      data.username,
-      md5(md5(data.password) + 'maple'),
-      data.nicename,
-      data.code,
-      '',
-      data.status,
-      data.f_status,
-      data.a_status,
-      data.roomId,
-      data.create_time
-    ]
+    let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,'',data.status,1,1,data.roomId,data.create_time]
     await User.innsertUsername(val).then(result => {
       return result;
     }).then(result => {
       Usergroup.innsertGroup([result.insertId, findUserGroup[0].id]);
       return result;
     }).then(result => {
-      UserSubset.subsetInsert([result.insertId, data.phone, data.qq, data.superior_user, data.end_anexcuse,  data.end_freeze])
+      UserSubset.subsetInsert([result.insertId, data.phone, data.qq, data.superior_user, 0,  0])
     }).catch(er => {
       ctx.error(er)
     })
@@ -134,39 +118,26 @@ class adminUser {
    * @param {String} nicename 昵称
    * @param {number} status 是否审核
    * @param {String} roomId 房间号
+   * @param {number} f_status 冻结状态(0:限时冻结,1:可登录,-1:永久状态)
+   * @param {number} a_status 禁言状态(0:限时禁言,1:可发言,-1:永久禁言)
    * @param {String} superior_user 开户人用户名
    */
   static async searchUser(ctx) {
     let username = !ctx.query.username ? '' : ctx.query.username,
-      groupId = !ctx.query.groupId ? '' : ctx.query.groupId,
+      // groupId = !ctx.query.groupId ? '' : ctx.query.groupId,
       nicename = !ctx.query.nicename ? '' : ctx.query.nicename,
       status = !ctx.query.status ? '' : ctx.query.status,
       roomId = !ctx.query.roomId ? '' : ctx.query.roomId,
+      f_status = !ctx.query.f_status ? '' : ctx.query.f_status,
+      a_status = !ctx.query.a_status ? '' : ctx.query.a_status,
       superior_user = !ctx.query.superior_user ? '' : ctx.query.superior_user,
-      create_time = !ctx.query.create_time ? '' : ctx.query.create_time,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
       size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
-
-    let searchDB = await User.blurryFind(
-      username,
-      nicename,
-      status,
-      roomId,
-      superior_user,
-      create_time,
-      page,
-      size
-    )
+    //查询数据库
+    let searchDB = await User.blurryFind(username,nicename,status,roomId,f_status,a_status,superior_user,page,size)
     let counts = 0
-    if (
-      !username &&
-      !groupId &&
-      !nicename &&
-      !status &&
-      !roomId &&
-      !superior_user &&
-      !create_time
-    ) {
+    if (!username &&!nicename &&!status &&!f_status&&!a_status&&!roomId &&!superior_user) {
+      //如果什么都没有，就查找全部
       let pageCount = await User.userCount()
       counts = pageCount[0].count
     } else {
@@ -196,7 +167,7 @@ class adminUser {
   static async findSingleMsg(ctx) {
     let uId = ctx.query.id
     if (!uId) {
-      ctx.error(400, '参数错误')
+      ctx.error(400, '参数id错误')
     }
     let findUser = await User.findUsername(uId)
     if (!findUser) {
@@ -209,51 +180,22 @@ class adminUser {
     }
   }
 
-  //查询所有用户信息(已合并到按条件查询功能)
-  // static async findUserAll(ctx) {
-  //   let page = !ctx.query.page ? 1 : parseInt(ctx.query.page);
-  //   let size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize);
-  //   let findAll = await db.blurryFind(configdb.live_user, page, size);
-  //   let pageCount = await sqls(`select count(*) as count from ${configdb.live_user}`);
-  //   // let pageSum = (pageCount[0].count + size - 1) / size;
-  //   let pageSum = Math.ceil(pageCount[0].count / size);
-  //   if (!findAll) {
-  //     ctx.error(500, '抱歉,查询功能偷了一下懒');
-  //   }
-  //   for (let i = 0; i < findAll.length; i++) {
-  //     delete (findAll[i].password)
-  //   }
-  //   ctx.body = {
-  //     statusCode: true,
-  //     value: findAll
-  //   }
-  // }
-
   /**
    * 更新用户信息
-   * @param {number} id 用户id
+   * @param {Number} id 用户id
    * @param {String} password 用户密码
-   * @param {number} groupId 用户所在组
+   * @param {Number} groupId 用户所在组
    * @param {String} nicename 昵称 用户昵称
    * @param {String} avator  用户头像
    * @param {String} phone 用户手机
    * @param {String} qq QQ
-   * @param {number} status 审核状态
-   * @param {String} roomId 审核状态
+   * @param {Number} status 审核状态
+   * @param {String} roomId 房间号
    */
   static async updateUser(ctx) {
-    let {
-      id,
-      password,
-      nicename,
-      avator,
-      phone,
-      qq,
-      status,
-      roomId
-    } = ctx.request.body
+    let {id,password,nicename,avator,phone,qq,status,roomId} = ctx.request.body
     if (!id) {
-      ctx.error(500, '参数错误,id没传')
+      ctx.error(400, '参数id错误')
     }
     let findUser = await User.findUsername(id)
     if (!findUser) {
@@ -268,13 +210,76 @@ class adminUser {
       qqs = !qq ? findUser[0].qq : qq,
       statuss = !status ? findUser[0].status : status,
       roomIds = !roomId ? findUser[0].roomId : roomId,
-      value = [passwords, nicenames, avators, phones, qqs, statuss, roomIds]
-    let updateDB = await User.updateUser(value, id)
-    if (!updateDB) {
-      ctx.error(500, '更新失败')
-    }
+      // end_anexcuses=!end_anexcuse? 0: formartDate.timeFormart(end_anexcuse),
+      // end_freezes=!end_freeze? 0:formartDate.timeFormart(end_freeze),
+      value = [passwords, nicenames, avators, statuss, roomIds,id]
+     
+      let userDit=await User.updateUser(value);
+      if(!userDit){
+        if(!rs){
+          ctx.error(500,'更新资料失败');
+        }
+      }
+    await UserSubset.updateTable([phones,qqs,id]);
     ctx.body = {
       statusCode: true
+    }
+  }
+
+  /**
+   * 更新用户状态
+   * @param {Number} id 用户id
+   * @param {Number} f_status 冻结状态
+   * @param {Number} a_status 禁言状态
+   * @param {Number} end_anexcuse 冻结时间
+   * @param {Number} end_freeze 禁言时间
+   */
+  static async updateUserStatus(ctx){
+    let query=ctx.request.body;
+    let ids=!query.id?ctx.error(400,'参数id错误'):query.id;
+    let findUser=await User.findUsername(ids);
+    if(!findUser){
+      ctx.error()
+    }
+    let data={
+      f_status:!query.f_status?findUser[0].f_status:query.f_status,
+      a_status:!query.a_status?findUser[0].f_status:query.a_status,
+      end_anexcuse:!query.end_anexcuse?0: formartDate.timeFormart(query.end_anexcuse),
+      end_freeze:!query.end_freeze?0:formartDate.timeFormart(query.end_freeze)
+    }
+    if(data.a_status==0 && !data.end_anexcuse){
+      ctx.error(500,'禁言时间为空');
+    }
+    if(data.f_status==0 && !data.end_freeze){
+      ctx.error(500,'冻结时间为空');
+    }
+    let BsetUser=()=>{
+      return new Promise((resolve,reject)=>{
+        UserSubset.findUserBset('findStatus',ids).then(rs=>{
+          if(!rs){
+            reject(rs)
+          }
+          resolve(rs);
+        })
+      })
+    }
+    BsetUser().then(result=>{
+      return true;
+    }).catch(err=>{
+      ctx.error(err);
+    })
+    await User.updateUserStatus([data.f_status,data.a_status,ids]).then(rs=>{
+      if(!rs){
+        ctx.error()
+      }
+      return true;
+    })
+    let SubsetUser=await UserSubset.updateUserTime([data.end_anexcuse,data.end_freeze,ids]);
+    if(!SubsetUser){
+      ctx.error();
+    }
+    ctx.body={
+      statusCode:true
     }
   }
 }

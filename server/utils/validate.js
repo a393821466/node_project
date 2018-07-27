@@ -17,24 +17,24 @@ module.exports = (json) => {
   if(!json.status){
     message='请选择是否需要审核'
   }
-  if(!json.f_status){
-    message='选择是否冻结状态'
-    return message;
-  }
-  if(json.f_status==0){
-    if(!json.end_freeze){
-      message='请设置冻结结束时间'
-      return message;
-    }
-  }
-  if(!json.a_status){
-    message='选择是否禁言状态'
-    return message;
-  }
-  if(json.a_status==0){
-    if(!json.end_anexcuse){
-      message='请设置禁言结束时间'
-      return message;
-    }
-  }
+  // if(!json.f_status){
+  //   message='选择是否冻结状态'
+  //   return message;
+  // }
+  // if(json.f_status==0){
+  //   if(!json.end_freeze){
+  //     message='请设置冻结结束时间'
+  //     return message;
+  //   }
+  // }
+  // if(!json.a_status){
+  //   message='选择是否禁言状态'
+  //   return message;
+  // }
+  // if(json.a_status==0){
+  //   if(!json.end_anexcuse){
+  //     message='请设置禁言结束时间'
+  //     return message;
+  //   }
+  // }
 }

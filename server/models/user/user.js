@@ -1,7 +1,7 @@
 const User = require('../sql/manageMent/user')
 const Group = require('../sql/manageMent/group')
 const Usergroup = require('../sql/manageMent/userGroup')
-const UserSubset = require("../sql/manageMent/usersubset")
+const UserSubset = require('../sql/manageMent/usersubset')
 const md5 = require('../../utils/md5')
 const utils = require('../../utils/tool')
 const configName = require('../../config/config').checkList
@@ -35,12 +35,11 @@ class user {
       ])
       console.log(finUser)
     }
-    console.log(code);
     if (finUser.length <= 0) {
       ctx.error(403, '用户名或密码错误')
     }
     let data = await redis.uidToken(code, finUser, ip)
-    ctx.body = typeof data == "string" ? JSON.parse(data) : data
+    ctx.body = typeof data == 'string' ? JSON.parse(data) : data
   }
   /**
    *  注册中间件
@@ -55,7 +54,7 @@ class user {
    */
   static async userRegister(ctx) {
     let query = ctx.request.body
-    let merchant = ctx.request.header['merchant']
+    let code = ctx.request.header['merchant']
     let user = {
       username: query.username,
       password: query.password,
@@ -74,7 +73,7 @@ class user {
     let findUser = await User.vaUserPswMerchant([
       user.username,
       md5(md5(user.password) + 'maple'),
-      merchant
+      code
     ])
     if (findUser.length > 0) {
       ctx.error('用户名已存在')
@@ -82,27 +81,36 @@ class user {
     if (user.password !== user.comfPassword) {
       ctx.error('密码不匹配')
     }
-    let findUserGroup = await Group.findGroup('name', [
-      '普通会员',
-      merchant
-    ])
+    let findUserGroup = await Group.findGroup('name', ['普通会员', code])
     if (findUserGroup.length == 0) {
       ctx.error(500, '没有找到用户组')
     }
-    let val = [user.username, md5(md5(user.password) + 'maple'), '', merchant, '', user.status, user.f_status, user.a_status, user.roomId, user.create_time]
-    await User.innsertUsername(val).then(result => {
-      return result
-    }).then(result => {
-      Usergroup.innsertGroup([
-        result.insertId,
-        findUserGroup[0].id
-      ])
-      return result
-    }).then(result => {
-      UserSubset.subsetInsert([result.insertId, "", "", "", 0, 0])
-    }).catch(er => {
-      ctx.error(er)
-    })
+    let val = [
+      user.username,
+      md5(md5(user.password) + 'maple'),
+      '',
+      code,
+      '',
+      user.status,
+      user.f_status,
+      user.a_status,
+      user.roomId,
+      user.create_time
+    ]
+    await User.innsertUsername(val)
+      .then(result => {
+        return result
+      })
+      .then(result => {
+        Usergroup.innsertGroup([result.insertId, findUserGroup[0].id])
+        return result
+      })
+      .then(result => {
+        UserSubset.subsetInsert([result.insertId, '', '', '', 0, 0])
+      })
+      .catch(er => {
+        ctx.error(er)
+      })
     ctx.body = {
       statusCode: true
     }

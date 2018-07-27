@@ -21,10 +21,10 @@ adminUser
   .del('/delGroupUser',checkToken,checkMerchant,apiUser.delGroupApi) //删除用户组
   .post('/userManagement', checkToken, checkMerchant, apiUser.addUserApi) //添加用户
   .post('/userUpdate', checkToken, checkMerchant, apiUser.updateUserApi)  //更新用户信息
+  .post('/userStatus',checkToken, checkMerchant, apiUser.UserStatusApi) //更新用户状态
   .del('/userDelete', checkToken,checkMerchant, apiUser.delUserApi) //删除用户
   .get('/userSearch', checkToken, checkMerchant, apiUser.searchUserApi) //搜索关键字
   .get('/findSingleUser', checkToken, apiUser.findSingleApi) //查询单个
-  //.get('/findAllUser', checkToken, apiUser.findAll) //查询一堆
   
 
 
