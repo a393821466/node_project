@@ -112,6 +112,7 @@ class user {
         ctx.error(er)
       })
     ctx.body = {
+      code:2001,
       statusCode: true
     }
   }
@@ -121,7 +122,7 @@ class user {
    * 如果带有token就把它传入到redis方法
    */
   static async userLogout(ctx) {
-    let { id } = ctx.request.body
+    let { id } = ctx.query
     if (!id) {
       ctx.error(400, '参数有误')
     }
@@ -130,6 +131,7 @@ class user {
       let del = await redis.delToken(id, token)
       if (del) {
         ctx.body = {
+          code:2001,
           statusCode: true
         }
       }

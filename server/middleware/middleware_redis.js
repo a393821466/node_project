@@ -1,10 +1,11 @@
 const redis = require('../redis').redis
 const cfg = require('../config/config')
-const permission = require('../config/permission').status
+const statusCode = require('../config/statusCode')
 const Merchant = require('../models/sql/manageMent/merchant')
 const userLog = require('../middleware/middleware_user')
 const formartDate = require('../utils/tool')
 const uuid = require('uuid/v1')
+
 // const logger = require('../middleware/middleware_log')
 
 class redis_middleware {
@@ -24,23 +25,22 @@ class redis_middleware {
     if (tokenSurvive > cfg.EXPIRE) {
       redis.del(uid)
       redis.del(v[0].id)
-      tokenSurvives();
+      tokenSurvives()
     }
     if (!id) {
-      tokenSurvives();
+      tokenSurvives()
     }
-    function tokenSurvives(){
+    function tokenSurvives() {
       uid = uuid()
       let user = {
-        value: [
-          {
-            id: v[0].id,
-            username: v[0].username,
-            groupId: v[0].groupId,
-            nicename: v[0].nicename,
-            ip: ips
-          }
-        ],
+        value: {
+          id: v[0].id,
+          username: v[0].username,
+          groupId: v[0].groupId,
+          nicename: v[0].nicename,
+          ip: ips
+        },
+        code:2001,
         token: uid,
         merchant: code,
         tokenCreate: Date.now()
@@ -77,11 +77,11 @@ class redis_middleware {
    */
   static async authFreezeAnban(s, f, a) {
     return new Promise((resolve, reject) => {
-      if (s == 0) reject(permission.t1001)
-      if (f == -1) reject(permission.t1002)
-      if (a == -1) reject(permission.t1003)
-      if (f == 0) reject(permission.t1004)
-      if (a == 0) reject(permission.t1005)
+      if (s == 0) reject(statusCode.t1001)
+      if (f == -1) reject(statusCode.t1002)
+      if (a == -1) reject(statusCode.t1003)
+      if (f == 0) reject(statusCode.t1004)
+      if (a == 0) reject(statusCode.t1005)
       resolve(true)
     })
   }
@@ -99,16 +99,17 @@ class redis_middleware {
           : formartDate.newTimeAndOldTime(Date.now(), userMsg.tokenCreate)
       if (createTime > cfg.EXPIRE) {
         redis.del(token)
-        redis.del(userMsg.value[0].id)
+        redis.del(userMsg.value.id)
         ctx.status = 401
         ctx.error(401, 'token已失效')
       }
-      console.log(createTime);
+      console.log(createTime)
       let updateTokens = await redis_middleware.updateToken(token)
       if (updateTokens) {
         await next()
       }
     } else {
+      ctx.status = 401
       ctx.error(401, '没有token')
     }
   }
@@ -121,15 +122,14 @@ class redis_middleware {
     let updateMsg = await redis.get(token),
       upUser = JSON.parse(updateMsg),
       updateUser = {
-        value: [
-          {
-            id: upUser.value[0].id,
-            username: upUser.value[0].username,
-            groupId: upUser.value[0].groupId,
-            nicename: upUser.value[0].nicename,
-            ip: upUser.value[0].ip
-          }
-        ],
+        value: {
+          id: upUser.value.id,
+          username: upUser.value.username,
+          groupId: upUser.value.groupId,
+          nicename: upUser.value.nicename,
+          ip: upUser.value.ip
+        },
+        code:2001,
         merchant: upUser.merchant,
         token: upUser.token,
         tokenCreate: Date.now()
@@ -163,18 +163,18 @@ class redis_middleware {
       user = await redis.get(token),
       validateAdmin = JSON.parse(user)
     if (
-      validateAdmin.value[0].username !== cfg.administrator.username &&
+      validateAdmin.value.username !== cfg.administrator.username &&
       validateAdmin !== cfg.administrator.merchant
     ) {
       if (!code) {
-        ctx.error(500, '品牌参数不正确')
+        ctx.error(400, '品牌参数不正确')
       }
       let findMerchants = await Merchant.findCode(code)
       if (findMerchants.length == 0) {
-        ctx.error(500, '请填写正确的品牌参数')
+        ctx.error(400, '请填写正确的品牌参数')
       }
       if (findMerchants[0].status == 0) {
-        ctx.error(500, '无权限访问')
+        ctx.error('无权限访问')
       }
     }
     await next()
@@ -187,10 +187,10 @@ class redis_middleware {
     let code = ctx.request.header['merchant']
     let findMerchants = !code ? '' : await Merchant.findCode(code)
     if (findMerchants.length == 0) {
-      ctx.error(500, '品牌参数不正确')
+      ctx.error(400, '品牌参数不正确')
     }
     if (findMerchants[0].status == 0) {
-      ctx.error(500, '无权限访问')
+      ctx.error('无权限访问')
     }
     await next()
   }

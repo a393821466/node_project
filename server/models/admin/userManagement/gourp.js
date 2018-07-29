@@ -1,6 +1,5 @@
 const groups = require('../../sql/manageMent/group')
 const userGroup = require('../../sql/manageMent/userGroup')
-// const redis = require("../../../redis");
 const Merchant = require('../../sql/manageMent/merchant')
 class group {
   /**
@@ -16,15 +15,15 @@ class group {
     //   userMessage = JSON.parse(getUserMsg),
     let { groupname, code, introduce, icon } = ctx.request.body
     if (!groupname) {
-      ctx.error(500, '组名称未填写')
+      ctx.error(400, '组名称未填写')
     }
     let findMessage = await Merchant.findCode(code)
     if (findMessage.length == 0) {
-      ctx.error(500, '没有该品牌')
+      ctx.error('没有该品牌')
     }
     let findGroup = await groups.findGroup('name', [groupname, code])
     if (findGroup.length > 0) {
-      ctx.error(500, '用户组名称已存在')
+      ctx.error('用户组名称已存在')
     }
     let createTime = Date.now(),
       data = [groupname, introduce, code, icon, '', createTime],
@@ -33,6 +32,7 @@ class group {
       ctx.error()
     }
     ctx.body = {
+      code:2001,
       statusCode: true
     }
   }
@@ -52,7 +52,7 @@ class group {
     let findGroup = await groups.findGroup('id', [id, code])
     if (findGroup.length > 0) {
       if (findGroup[0].name == groupname) {
-        ctx.error(500, '用户组名称已存在')
+        ctx.error('用户组名称已存在')
       }
     }
     let data = {
@@ -72,6 +72,7 @@ class group {
       ])
       .then(rs => {
         ctx.body = {
+          code:2001,
           statusCode: true
         }
       })
@@ -85,7 +86,7 @@ class group {
    */
   static async findGroupUser(ctx) {
     let params = {
-      id: !ctx.query.id ? ctx.error(400, '参数id不正确') : ctx.query.id,
+      id: !ctx.query.id ? ctx.error(statusCode.queryErr, '参数id不正确') : ctx.query.id,
       page: !ctx.query.page ? 1 : ctx.query.page,
       pagesize: !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
     }
@@ -94,6 +95,7 @@ class group {
       .findGroupUser('limit', data)
       .then(rs => {
         ctx.body = {
+          code:2001,
           statusCode: true,
           value: rs
         }
@@ -108,15 +110,16 @@ class group {
    */
   static async delUserGroup(ctx) {
     let ids = ctx.request.body.id
-    if (!ids) ctx.error(400, '参数id不正确')
+    if (!ids) ctx.error(statusCode.queryErr, '参数id不正确')
     let findGrousUser = await userGroup.findGroupUser('', ids)
     if (findGrousUser.length > 0) {
-      ctx.error(500, '需删除组下面所属用户')
+      ctx.error(statusCode.serverErr,'需删除组下面所属用户')
     }
     return await groups
       .delGroup(ids)
       .then(rs => {
         ctx.body = {
+          code:2001,
           statusCode: true
         }
       })

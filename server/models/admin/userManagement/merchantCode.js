@@ -17,7 +17,7 @@ class MerchantCode {
     }
     let findData = await merchantDB.findMerchant([merchant, code])
     if (findData.length > 0) {
-      ctx.error(500, '品牌名或品牌别名已存在')
+      ctx.error('品牌名或品牌别名已存在')
       return
     }
     let addMerchantCode = await merchantDB.innsertMerchant([
@@ -27,10 +27,11 @@ class MerchantCode {
       createTime
     ])
     if (!addMerchantCode) {
-      ctx.error(500, '系统繁忙,请稍后再试')
+      ctx.error('系统繁忙,请稍后再试')
     }
     await insercode.insertCode(code)
     ctx.body = {
+      code:2001,
       statusCode: true
     }
   }
@@ -46,10 +47,11 @@ class MerchantCode {
       status = !ctx.query.status ? 0 : ctx.query.status,
       findMerchantCode = await merchantDB.blurryFind(merchant, code, status)
     if (!findMerchantCode) {
-      ctx.error(500, '服务器繁忙，请稍后再试')
+      ctx.error('服务器繁忙，请稍后再试')
     }
     ctx.body = {
       statusCode: true,
+      code:2001,
       value: findMerchantCode
     }
   }
@@ -62,20 +64,26 @@ class MerchantCode {
     if (!id) {
       ctx.error(400, '参数错误')
     }
-    await merchantDB.findId(id).then(rs => {
-      let data = {
-        merchant: !merchant ? rs[0].merchant : merchant,
-        status: !status ? rs[0].status : status
-      }
-      return data;
-    }).then(result => {
-      merchantDB.updateMerchant([result.merchant, result.status, id]).then(res => {
-        if (!res) {
-          ctx.error(500, '系统繁忙，请稍后再试')
+    await merchantDB
+      .findId(id)
+      .then(rs => {
+        let data = {
+          merchant: !merchant ? rs[0].merchant : merchant,
+          status: !status ? rs[0].status : status
         }
+        return data
       })
-    })
+      .then(result => {
+        merchantDB
+          .updateMerchant([result.merchant, result.status, id])
+          .then(res => {
+            if (!res) {
+              ctx.error('系统繁忙，请稍后再试')
+            }
+          })
+      })
     ctx.body = {
+      code:2001,
       statusCode: true
     }
   }
@@ -89,19 +97,20 @@ class MerchantCode {
     let { code } = ctx.request.body
     await findUser.findUserMerchant(code).then(rs => {
       if (rs.length > 0) {
-        ctx.error(500, '该品牌还有用户存在')
+        ctx.error('该品牌还有用户存在')
       }
     })
     await findGroup.findGroupMerchant(code).then(rs => {
       if (rs.length > 0) {
-        ctx.error(500, '该品牌还有用户组存在')
+        ctx.error('该品牌还有用户组存在')
       }
     })
     let delMerchant = await merchantDB.delMerchant(code)
     if (!delMerchant) {
-      ctx.error(500, '系统繁忙，请稍后再试')
+      ctx.error('系统繁忙，请稍后再试')
     }
     ctx.body = {
+      code:2001,
       statusCode: true
     }
   }
