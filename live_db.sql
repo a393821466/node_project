@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 26 日 20:10
+-- 生成日期: 2018 年 07 月 30 日 18:24
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -107,6 +107,24 @@ INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) 
 (24, '索尼', 'sony', 1, '1531888488498'),
 (25, 'oppo', 'oppo', 1, '1531915582708'),
 (27, ' 淘宝电商平台', 'taobao', 0, '1532633659023');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `live_notice`
+--
+
+CREATE TABLE IF NOT EXISTS `live_notice` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '公告id',
+  `title` varchar(48) NOT NULL COMMENT '公告标题',
+  `types` int(11) NOT NULL COMMENT '公告类型(0:保持不变,1:弹窗,2:广告)',
+  `number` bigint(20) DEFAULT NULL COMMENT '编号',
+  `link` varchar(255) DEFAULT NULL COMMENT '链接',
+  `context` text NOT NULL COMMENT '公告内容',
+  `create_time` varchar(64) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
