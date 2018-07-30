@@ -12,7 +12,12 @@ let errorMiddleware = () => {
       await next()
     } catch (e) {
       let code = e.status || 500
-      let message = e.message || '服务器错误'
+      let message ='';
+      if(e.code!=='ECONNREFUSED'){
+        message = e.message || '服务器错误'
+      }else{
+        message = '数据库连接超时'
+      }
       ctx.response.body = { code, message }
     }
   }

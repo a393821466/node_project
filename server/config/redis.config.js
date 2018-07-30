@@ -1,5 +1,5 @@
 const Redis = require('ioredis')
-const cfg = require('./config/config')
+const cfg = require('./config')
 const redisConfig = cfg.redisConfig
 const redis = new Redis(redisConfig, {
   retryStrategy: function(times) {

@@ -1,5 +1,5 @@
 const router = require("koa-router")();
-const redisValidate = require('../../middleware/middleware_redis');
+const redisValidate = require('../../middleware/redis');
 const apiUser = require("../../models/user");
 const checkToken = redisValidate.authToken;
 const checkMerchant = redisValidate.LoginMerchant;

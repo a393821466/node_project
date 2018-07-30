@@ -7,7 +7,7 @@ const path = require('path')
 const app = new Koa()
 
 //异常处理
-const errorMiddleware = require('./middleware/middleware_http').errorMiddleware
+const errorMiddleware = require('./middleware/http_error').errorMiddleware
 //路由中间件
 const userRouter = router.userRouter
 const userSetting = router.systemSetting

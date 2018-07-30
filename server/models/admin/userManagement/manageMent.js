@@ -5,7 +5,7 @@ const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
-const redis = require('../../../middleware/middleware_redis').getUser
+const redis = require('../../../middleware/redis').getUser
 const statusCode=require('../../../config/statusCode')
 const formartDate = require('../../../utils/tool')
 class adminUser {

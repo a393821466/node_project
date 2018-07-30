@@ -5,7 +5,7 @@ const UserSubset = require('../sql/manageMent/usersubset')
 const md5 = require('../../utils/md5')
 const utils = require('../../utils/tool')
 const configName = require('../../config/config').checkList
-const redis = require('../../middleware/middleware_redis')
+const redis = require('../../middleware/redis')
 const cfg = require('../../config/config').administrator
 class user {
   /**
@@ -33,8 +33,8 @@ class user {
         md5(md5(password) + 'maple'),
         code
       ])
-      console.log(finUser)
     }
+    // console.log(finUser)
     if (finUser.length <= 0) {
       ctx.error(403, '用户名或密码错误')
     }

@@ -1,12 +1,12 @@
-const redis = require('../redis').redis
+const redis = require('../config/redis.config').redis
 const cfg = require('../config/config')
-const statusCode = require('../config/statusCode')
+// const statusCode = require('../config/statusCode')
+const sqlUser = require('../models/sql/manageMent/user')
+const end_time = require('../models/sql/manageMent/usersubset')
 const Merchant = require('../models/sql/manageMent/merchant')
-const userLog = require('../middleware/middleware_user')
+const userLog = require('../middleware/user_log')
 const formartDate = require('../utils/tool')
 const uuid = require('uuid/v1')
-
-// const logger = require('../middleware/middleware_log')
 
 class redis_middleware {
   /**
@@ -40,7 +40,7 @@ class redis_middleware {
           nicename: v[0].nicename,
           ip: ips
         },
-        code:2001,
+        code: 2001,
         token: uid,
         merchant: code,
         tokenCreate: Date.now()
@@ -61,7 +61,7 @@ class redis_middleware {
       action: '登陆成功'
     })
     return redis_middleware
-      .authFreezeAnban(v[0].status, v[0].f_status, v[0].a_status)
+      .authFreezeAnban(v)
       .then(rs => {
         if (rs) {
           return redis.get(uid)
@@ -75,13 +75,42 @@ class redis_middleware {
   /**
    * 用户是否冻结或禁言
    */
-  static async authFreezeAnban(s, f, a) {
+  static async authFreezeAnban(v) {
     return new Promise((resolve, reject) => {
-      if (s == 0) reject(statusCode.t1001)
-      if (f == -1) reject(statusCode.t1002)
-      if (a == -1) reject(statusCode.t1003)
-      if (f == 0) reject(statusCode.t1004)
-      if (a == 0) reject(statusCode.t1005)
+      if (v[0].status == 0)
+        reject({ code: 5001, message: '此用户为待审核状态' })
+      if (v[0].f_status == -1)
+        reject({ code: 5002, message: '此用户已被永久冻结' })
+      return end_time.findUserBset('findStatus', v[0].id).then(rs => {
+        let end_freeze =
+          rs[0].end_freeze_time - formartDate.timeFormart(new Date())
+        if (v[0].f_status == 0 && end_freeze >= 0) {
+          reject({
+            code: 5004,
+            message: `账号冻结状态,将在${Math.floor(end_freeze / 60)}分钟后解除`
+          })
+        }
+        if (v[0].f_status == 0 && end_freeze < 0) {
+          return sqlUser
+            .findUsername(v[0].id)
+            .then(result => {
+              return result[0].a_status
+            })
+            .then(res => {
+              sqlUser.updateUserStatus([1, res, v[0].id]).then(rs => {
+                resolve(true)
+              })
+            })
+            .catch(err => {
+              reject(err)
+            })
+        }
+        resolve(true)
+        // if (v[0].a_status == -1)
+        //   reject({ code: 5003, message: '此用户已被永久禁言' })
+        // if (v[0].a_status == 0)
+        //   reject({ code: 5005, message: '此用户暂时被禁言' })
+      })
       resolve(true)
     })
   }
@@ -129,7 +158,7 @@ class redis_middleware {
           nicename: upUser.value.nicename,
           ip: upUser.value.ip
         },
-        code:2001,
+        code: 2001,
         merchant: upUser.merchant,
         token: upUser.token,
         tokenCreate: Date.now()
