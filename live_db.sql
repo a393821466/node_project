@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 31 日 13:46
+-- 生成日期: 2018 年 07 月 31 日 19:50
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -88,7 +88,7 @@ INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`
 
 CREATE TABLE IF NOT EXISTS `live_menu` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '子级路由id',
-  `subId` bigint(20) NOT NULL,
+  `parent_id` bigint(20) NOT NULL,
   `name` varchar(48) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `live_menu` (
 -- 转存表中的数据 `live_menu`
 --
 
-INSERT INTO `live_menu` (`id`, `subId`, `name`) VALUES
+INSERT INTO `live_menu` (`id`, `parent_id`, `name`) VALUES
 (1, 0, '系统设置'),
 (2, 1, '新增设置'),
 (3, 1, '修改设置'),

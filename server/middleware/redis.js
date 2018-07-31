@@ -77,6 +77,9 @@ class redis_middleware {
    */
   static async authFreezeAnban(v) {
     return new Promise((resolve, reject) => {
+      if (v[0].merchant == cfg.administrator.merchant) {
+        resolve(true)
+      }
       if (v[0].status == 0)
         reject({ code: 5001, message: '此用户为待审核状态' })
       if (v[0].f_status == -1)

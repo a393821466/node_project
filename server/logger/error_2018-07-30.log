@@ -1,4 +1,0 @@
-{"name":"myapp","hostname":"SC-201807121532","pid":12904,"level":50,"message":"connect ECONNREFUSED 127.0.0.1:3306","msg":"","time":"2018-07-30T03:52:32.392Z","v":0}
-{"name":"myapp","hostname":"SC-201807121532","pid":8900,"level":50,"message":"connect ECONNREFUSED 127.0.0.1:3306","msg":"","time":"2018-07-30T03:54:20.430Z","v":0}
-{"name":"myapp","hostname":"SC-201807121532","pid":2672,"level":50,"message":"connect ECONNREFUSED 127.0.0.1:3306","msg":"","time":"2018-07-30T03:55:06.662Z","v":0}
-{"name":"myapp","hostname":"SC-201807121532","pid":3100,"level":50,"message":"connect ECONNREFUSED 127.0.0.1:3306","msg":"","time":"2018-07-30T03:56:22.406Z","v":0}
