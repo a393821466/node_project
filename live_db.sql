@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 30 日 18:24
+-- 生成日期: 2018 年 07 月 31 日 13:46
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -83,6 +83,34 @@ INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `live_menu`
+--
+
+CREATE TABLE IF NOT EXISTS `live_menu` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '子级路由id',
+  `subId` bigint(20) NOT NULL,
+  `name` varchar(48) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- 转存表中的数据 `live_menu`
+--
+
+INSERT INTO `live_menu` (`id`, `subId`, `name`) VALUES
+(1, 0, '系统设置'),
+(2, 1, '新增设置'),
+(3, 1, '修改设置'),
+(4, 1, '删除设置'),
+(5, 2, '修改密码'),
+(6, 2, '找回密码'),
+(7, 3, '家啊哈哈'),
+(8, 3, '嗡嗡嗡');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `live_merchant`
 --
 
@@ -122,6 +150,20 @@ CREATE TABLE IF NOT EXISTS `live_notice` (
   `link` varchar(255) DEFAULT NULL COMMENT '链接',
   `context` text NOT NULL COMMENT '公告内容',
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `live_privilege`
+--
+
+CREATE TABLE IF NOT EXISTS `live_privilege` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '权限id',
+  `groupid` bigint(20) NOT NULL COMMENT '用户组id',
+  `powerid` bigint(20) NOT NULL COMMENT '操作权id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -226,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
 --
 
 INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `end_anexcuse_time`, `end_freeze_time`) VALUES
-(1, 167, '', '', '', '0', '0'),
+(1, 151, '', '', '', '0', '0'),
 (2, 168, '', '', '', '0', '0'),
 (3, 169, '', '', '', '0', '0'),
 (4, 170, '', '', '', '0', '0'),
