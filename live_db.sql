@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 07 月 31 日 19:50
+-- 生成日期: 2018 年 08 月 01 日 12:50
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -87,26 +87,17 @@ INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`
 --
 
 CREATE TABLE IF NOT EXISTS `live_menu` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '子级路由id',
-  `parent_id` bigint(20) NOT NULL,
-  `name` varchar(48) NOT NULL,
+  `id` bigint(20) NOT NULL DEFAULT '0' COMMENT '子级路由id',
+  `parent_id` bigint(20) DEFAULT NULL,
+  `name` varchar(48) DEFAULT NULL,
+  `path` varchar(68) DEFAULT NULL COMMENT '路径',
+  `component` varchar(48) DEFAULT NULL COMMENT '视图',
+  `redirect` varchar(255) DEFAULT NULL COMMENT '重定向',
+  `title` varchar(32) DEFAULT NULL COMMENT '标题',
+  `icon` varchar(48) DEFAULT NULL COMMENT 'icon',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
-
---
--- 转存表中的数据 `live_menu`
---
-
-INSERT INTO `live_menu` (`id`, `parent_id`, `name`) VALUES
-(1, 0, '系统设置'),
-(2, 1, '新增设置'),
-(3, 1, '修改设置'),
-(4, 1, '删除设置'),
-(5, 2, '修改密码'),
-(6, 2, '找回密码'),
-(7, 3, '家啊哈哈'),
-(8, 3, '嗡嗡嗡');
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
