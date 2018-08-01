@@ -40,7 +40,7 @@ adminUser
   //查询单个用户
   .get('/findSingleUser', checkToken, apiUser.findSingleApi) 
   //添加导航
-  .post("/addMenu",checkToken, checkMerchant, apiUser.addMenuApi) 
+  .get("/findMenu", apiUser.getMenusApi) 
 
 
 module.exports = adminUser;

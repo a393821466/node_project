@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 01 日 12:50
+-- 生成日期: 2018 年 08 月 01 日 18:28
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -95,9 +95,26 @@ CREATE TABLE IF NOT EXISTS `live_menu` (
   `redirect` varchar(255) DEFAULT NULL COMMENT '重定向',
   `title` varchar(32) DEFAULT NULL COMMENT '标题',
   `icon` varchar(48) DEFAULT NULL COMMENT 'icon',
+  `hidden` tinyint(1) DEFAULT NULL COMMENT '导航是否显示',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `live_menu`
+--
+
+INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redirect`, `title`, `icon`, `hidden`) VALUES
+(1, 0, 'login', '/login', 'login/index', '', NULL, NULL, 1),
+(2, 0, '404', '/404', '404', NULL, NULL, NULL, 1),
+(3, 0, 'home', '/', 'Layout', '/home', NULL, NULL, 1),
+(4, 3, NULL, 'home', 'home/index', NULL, NULL, NULL, NULL),
+(5, 0, 'Example', '/admin/example', 'Layout', '/admin/example/table', 'Example', 'example', NULL),
+(6, 5, 'Table', 'table', 'table/index', NULL, 'Table', 'table', NULL),
+(7, 5, 'Tree', 'tree', 'tree/index', NULL, 'Tree', 'tree', NULL),
+(8, 0, 'nested', '/admin/nested', 'Layout', '/admin/nested/menu1', 'nested', 'nested', NULL),
+(9, 8, 'menu1', 'menu1', 'nested/menu1/index', NULL, 'menu1', NULL, NULL),
+(10, 0, NULL, '*', NULL, '/404', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 

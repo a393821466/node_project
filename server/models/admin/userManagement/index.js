@@ -18,7 +18,7 @@ const userManageCenter = {
   updateGroupApi: UserGroup.upDateGroup, //修改用户组信息
   findGroupApi: UserGroup.findGroupUser, //查找组用户
   delGroupApi: UserGroup.delUserGroup, //删除用户组
-  addMenuApi: Menus.addMenu //添加菜单
+  getMenusApi: Menus.getMenu //获取菜单
 }
 
 module.exports = userManageCenter
