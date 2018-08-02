@@ -86,7 +86,7 @@ class group {
    */
   static async findGroupUser(ctx) {
     let params = {
-      id: !ctx.query.id ? ctx.error(statusCode.queryErr, '参数id不正确') : ctx.query.id,
+      id: !ctx.query.id ? ctx.error(400, '参数id不正确') : ctx.query.id,
       page: !ctx.query.page ? 1 : ctx.query.page,
       pagesize: !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
     }
@@ -110,10 +110,10 @@ class group {
    */
   static async delUserGroup(ctx) {
     let ids = ctx.request.body.id
-    if (!ids) ctx.error(statusCode.queryErr, '参数id不正确')
+    if (!ids) ctx.error(400, '参数id不正确')
     let findGrousUser = await userGroup.findGroupUser('', ids)
     if (findGrousUser.length > 0) {
-      ctx.error(statusCode.serverErr,'需删除组下面所属用户')
+      ctx.error('需删除组下面所属用户')
     }
     return await groups
       .delGroup(ids)

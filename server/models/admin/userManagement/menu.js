@@ -2,7 +2,7 @@ const menuSql = require('../../sql/manageMent/menu')
 
 class menuManage {
   static async addMenu(ctx) {
-    let query = ctx.request.body;
+    let query = ctx.request.body
     // let params={
     //   parentName:!query.p_name?"":query.p_name, //如果一级菜单可以省略
     //   parentPath:!query.p_path?"":query.p_path, //如果一级菜单可以省略
@@ -25,7 +25,7 @@ class menuManage {
     // console.log(addParentMenu)
   }
   static async getMenu(ctx) {
-    let findMenuList = await menuSql.findMenuSub();
+    let findMenuList = await menuSql.findMenuSub()
     const temp_parent = { id: 0, meta: {}, children: [] } //新建id为null的对象做为森林的根
     let result = []
     let allMenu = findMenuList
@@ -36,14 +36,16 @@ class menuManage {
       let arrayList = []
       for (let i in allMenu) {
         if (allMenu[i].parent_id == item.id) {
-          allMenu[i].meta = { title: allMenu[i].title, icon: allMenu[i].icon }
-          delete allMenu[i].title;
-          delete allMenu[i].icon;
+          allMenu[i].meta = {
+            title: allMenu[i].title,
+            icon: allMenu[i].icon
+          }
+          delete allMenu[i].title
+          delete allMenu[i].icon
           arrayList.push(allMenu[i])
         }
       }
       return arrayList
-
     }
     //得到所有子集
     function getAllChild(array) {
@@ -54,15 +56,19 @@ class menuManage {
         for (let j in childList) {
           childList[j].children = []
           childList[j].children = getAllChild([childList[j]])
+          if (childList[j].children.length == 0) {
+            delete childList[j].children
+          }
         }
         array[0].children = childList
       }
       return childList
     }
     if (output.length == 0) {
-      return (ctx.body = 'Failed! do not have any data!')
+      return (ctx.body = [])
     } else {
       ctx.body = {
+        code: 2001,
         data: {
           router: output
         }

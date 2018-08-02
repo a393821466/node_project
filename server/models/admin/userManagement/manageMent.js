@@ -6,7 +6,6 @@ const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 const validate = require('../../../utils/validate')
 const redis = require('../../../middleware/redis').getUser
-const statusCode=require('../../../config/statusCode')
 const formartDate = require('../../../utils/tool')
 class adminUser {
   static getInstance() {
@@ -53,10 +52,10 @@ class adminUser {
 
     let valid = await validate(data)
     if (valid) {
-      ctx.error(statusCode.serverErr,valid)
+      ctx.error(valid)
     }
     if (cfg.checkList.indexOf(data.username) !== -1) {
-      ctx.error(statusCode.serverErr,'不能使用该用户名注册')
+      ctx.error('不能使用该用户名注册')
     }
     let findUsername = await User.vaUserPswMerchant([
       data.username,
@@ -64,14 +63,14 @@ class adminUser {
       data.code
     ])
     if (findUsername.length > 0) {
-      ctx.error(statusCode.serverErr,'用户名已存在')
+      ctx.error('用户名已存在')
     }
     let findUserGroup = await Group.findGroup('id', [data.groupId, data.code])
     if (findUserGroup.length == 0) {
-      ctx.error(statusCode.serverErr,'没有该用户组')
+      ctx.error('没有该用户组')
     }
     if (findUserGroup[0].power) {
-      ctx.error(statusCode.serverErr,'该用户组已禁止入驻用户')
+      ctx.error('该用户组已禁止入驻用户')
     }
     let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,'',data.status,1,1,data.roomId,data.create_time]
     await User.innsertUsername(val).then(result => {
@@ -85,7 +84,7 @@ class adminUser {
       ctx.error(er)
     })
     ctx.body = {
-      code:statusCode.suCode,
+      code:2001,
       statusCode: true
     }
   }
@@ -101,15 +100,15 @@ class adminUser {
       findUser = await redis(token),
       params = JSON.parse(findUser).value[0].id
     if (ids.indexOf(params) > -1) {
-      ctx.error(statusCode.serverErr,'不能删除自己')
+      ctx.error('不能删除自己')
     }
     if (!ids) {
-      ctx.error(statusCode.queryErr, '参数id不正确')
+      ctx.error('参数id不正确')
     }
     await User.delUsername(ids)
     await Usergroup.delGroup(ids)
     ctx.body = {
-      code:statusCode.suCode,
+      code:2001,
       statusCode: true
     }
   }
@@ -147,14 +146,14 @@ class adminUser {
       counts = searchDB.length
     }
     if (!searchDB) {
-      ctx.error(statusCode.serverErr,'抱歉，查询功能偷了一下懒')
+      ctx.error('抱歉，查询功能偷了一下懒')
     }
     let pageSum = Math.ceil(counts / size) //总页数
     for (let i = 0; i < searchDB.length; i++) {
       delete searchDB[i].password
     }
     ctx.body = {
-      code:statusCode.suCode,
+      code:2001,
       statusCode: true,
       value: searchDB,
       page: page,
@@ -171,11 +170,11 @@ class adminUser {
   static async findSingleMsg(ctx) {
     let uId = ctx.query.id
     if (!uId) {
-      ctx.error(statusCode.queryErr, '参数id错误')
+      ctx.error('参数id错误')
     }
     let findUser = await User.findUsername(uId)
     if (!findUser) {
-      ctx.error(statusCode.serverErr,'抱歉,查询功能偷了一下懒')
+      ctx.error('抱歉,查询功能偷了一下懒')
     }
     delete findUser[0].password
     ctx.body = {
@@ -199,11 +198,11 @@ class adminUser {
   static async updateUser(ctx) {
     let {id,password,nicename,avator,phone,qq,status,roomId} = ctx.request.body
     if (!id) {
-      ctx.error(statusCode.queryErr, '参数id错误')
+      ctx.error(400, '参数id错误')
     }
     let findUser = await User.findUsername(id)
     if (!findUser) {
-      ctx.error(statusCode.serverErr,'抱歉,系统开了个小差')
+      ctx.error('抱歉,系统开了个小差')
     }
     let passwords = !password
         ? findUser[0].password
@@ -221,12 +220,12 @@ class adminUser {
       let userDit=await User.updateUser(value);
       if(!userDit){
         if(!rs){
-          ctx.error(statusCode.serverErr,'更新资料失败');
+          ctx.error('更新资料失败');
         }
       }
     await UserSubset.updateTable([phones,qqs,id]);
     ctx.body = {
-      code:statusCode.suCode,
+      code:2001,
       statusCode: true
     }
   }
@@ -241,7 +240,7 @@ class adminUser {
    */
   static async updateUserStatus(ctx){
     let query=ctx.request.body;
-    let ids=!query.id?ctx.error(statusCode.queryErr,'参数id错误'):query.id;
+    let ids=!query.id?ctx.error(400,'参数id错误'):query.id;
     let findUser=await User.findUsername(ids);
     if(!findUser){
       ctx.error()
@@ -253,10 +252,10 @@ class adminUser {
       end_freeze:!query.end_freeze?0:formartDate.timeFormart(query.end_freeze)
     }
     if(data.a_status==0 && !data.end_anexcuse){
-      ctx.error(statusCode.serverErr,'禁言时间为空');
+      ctx.error('禁言时间为空');
     }
     if(data.f_status==0 && !data.end_freeze){
-      ctx.error(statusCode.serverErr,'冻结时间为空');
+      ctx.error('冻结时间为空');
     }
     let BsetUser=()=>{
       return new Promise((resolve,reject)=>{
@@ -284,7 +283,7 @@ class adminUser {
       ctx.error();
     }
     ctx.body={
-      code:statusCode.suCode,
+      code:2001,
       statusCode:true
     }
   }

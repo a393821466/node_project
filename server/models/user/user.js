@@ -123,8 +123,9 @@ class user {
    */
   static async userLogout(ctx) {
     let { id } = ctx.query
+    console.log(id);
     if (!id) {
-      ctx.error(400, '参数有误')
+      ctx.error(400, '参数不正确')
     }
     if (ctx.request.header['authorization']) {
       let token = ctx.request.header['authorization']
