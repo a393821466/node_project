@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 01 日 18:28
+-- 生成日期: 2018 年 08 月 03 日 16:15
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -107,14 +107,24 @@ CREATE TABLE IF NOT EXISTS `live_menu` (
 INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redirect`, `title`, `icon`, `hidden`) VALUES
 (1, 0, 'login', '/login', 'login/index', '', NULL, NULL, 1),
 (2, 0, '404', '/404', '404', NULL, NULL, NULL, 1),
-(3, 0, 'home', '/', 'Layout', '/home', NULL, NULL, 1),
-(4, 3, NULL, 'home', 'home/index', NULL, NULL, NULL, NULL),
-(5, 0, 'Example', '/admin/example', 'Layout', '/admin/example/table', 'Example', 'example', NULL),
-(6, 5, 'Table', 'table', 'table/index', NULL, 'Table', 'table', NULL),
-(7, 5, 'Tree', 'tree', 'tree/index', NULL, 'Tree', 'tree', NULL),
-(8, 0, 'nested', '/admin/nested', 'Layout', '/admin/nested/menu1', 'nested', 'nested', NULL),
-(9, 8, 'menu1', 'menu1', 'nested/menu1/index', NULL, 'menu1', NULL, NULL),
-(10, 0, NULL, '*', NULL, '/404', NULL, NULL, 1);
+(3, 0, ' ', '/', 'Layout', 'home', '系统概述', 'example', NULL),
+(6, 5, 'CallBoard', 'callBoard', 'systemModule/callBoard/index', '', '公告板', 'announcement', NULL),
+(7, 5, 'ChatRecord', 'chatRecord', 'systemModule/chatRecord/index', NULL, '聊天记录', 'chatManagement', NULL),
+(8, 5, 'Logger', 'logger', 'systemModule/logger/index', NULL, '日志管理', 'logger', NULL),
+(9, 5, 'QuickReply', 'quickReply', 'systemModule/quickReply/index', NULL, '快捷回复', 'quickreply', NULL),
+(4, 3, '', 'home', 'home/index', '', '系统概述', 'example', 0),
+(5, 0, 'System', '/systemModule', 'Layout', 'callBoard', '系统设置', 'setup', NULL),
+(21, 0, NULL, '*', NULL, '/404', '', '', 1),
+(10, 5, 'CustomerService', 'customerService', 'systemModule/customerService/index', NULL, '在线客服', 'service', NULL),
+(11, 0, 'Room', '/roomModule', 'Layout', 'roomSetup', '房间管理', 'roomManagement', NULL),
+(12, 11, 'RoomSetup', 'roomSetup', 'roomModule/roomSetup/index', NULL, '房间设置', 'roomSetup', NULL),
+(13, 11, 'AdminSetup', 'adminSetup', 'roomModule/adminSetup/index', NULL, '管理员设置', 'adminSetup', NULL),
+(14, 11, 'ServiceSetup', 'serviceSetup', 'roomModule/serviceSetup/index', NULL, '客服设置', 'roomService', NULL),
+(15, 0, 'User', '/userModule', 'Layout', 'UserSetup', '用户管理', 'userManagement', NULL),
+(16, 15, 'MerchantSetup', 'merchantSetup', 'userModule/merchant/index', NULL, '品牌设置', 'merchant', NULL),
+(17, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户组管理', 'group', NULL),
+(18, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '用户设置', 'userSetup', NULL),
+(19, 15, 'RobotSetup', 'robotSetup', 'userModule/robot/index', NULL, '机器人管理', 'robot', NULL);
 
 -- --------------------------------------------------------
 
@@ -196,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=173 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=174 ;
 
 --
 -- 转存表中的数据 `live_user`
@@ -215,7 +225,8 @@ INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `
 (162, 'a222252624', '1LbC5qTJd5z2yU3e/nCWAA==', '', 'oppo', '', 0, 1, 1, NULL, '1531993607954'),
 (172, 'admin54343', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'taobao', '', 1, 1, 1, NULL, '1532635585325'),
 (170, 'admin123', 'J/pxBuzR2StTyENGpkemJg==', '', 'oppo', '', 1, 1, 1, NULL, '1532282533415'),
-(171, 'a8658145', 'UkI668l+MPIkcKs+FVBv5g==', '', 'oppo', '', 0, 1, 1, NULL, '1532630528864');
+(171, 'a8658145', 'UkI668l+MPIkcKs+FVBv5g==', '', 'oppo', '', 0, 1, 1, NULL, '1532630528864'),
+(173, 'a86581445', 'rz5+Jk6Xa4L7yKqrV681hw==', '', 'oppo', '', 0, 1, 1, NULL, '1533181740184');
 
 -- --------------------------------------------------------
 
@@ -228,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -251,7 +262,8 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (58, 169, 38),
 (59, 170, 40),
 (60, 171, 40),
-(61, 172, 41);
+(61, 172, 41),
+(62, 173, 40);
 
 -- --------------------------------------------------------
 
@@ -269,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `live_usersubset`
@@ -281,7 +293,8 @@ INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `
 (3, 169, '', '', '', '0', '0'),
 (4, 170, '', '', '', '0', '0'),
 (5, 171, '', '', '', '0', '0'),
-(6, 172, NULL, NULL, NULL, '0', '0');
+(6, 172, NULL, NULL, NULL, '0', '0'),
+(7, 173, '', '', '', '0', '0');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
