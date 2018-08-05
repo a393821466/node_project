@@ -16,7 +16,7 @@ class redis_middleware {
    * @param {String} uid
    * @param {Object} v
    */
-  static async uidToken(code, v, ips) {
+  static async uidToken(c, v, ips) {
     let id = await redis.get(v[0].id)
     let uid = !id ? '' : JSON.parse(id).token
     let tokenSurvive = !id
@@ -42,19 +42,13 @@ class redis_middleware {
         },
         code: 2001,
         token: uid,
-        merchant: code,
+        merchant: v[0].merchant,
         tokenCreate: Date.now()
       }
       redis.set(uid, JSON.stringify(user))
-      redis.set(
-        v[0].id,
-        JSON.stringify({
-          username: v[0].username,
-          token: user.token,
-          tokenCreate: user.tokenCreate
-        })
-      )
+
     }
+    await redis_middleware.userKeys(v[0].id, v[0].username, uid, c)
     await userLog(v[0].username, {
       time: formartDate.now('YYYY-MM-DD H:mm:ss'),
       ip: ips,
@@ -128,18 +122,26 @@ class redis_middleware {
         userMsg = JSON.parse(verifyToken),
         createTime = !verifyToken
           ? ctx.error(401, 'token不存在')
-          : formartDate.newTimeAndOldTime(Date.now(), userMsg.tokenCreate)
-      if (createTime > cfg.EXPIRE) {
+          : formartDate.newTimeAndOldTime(Date.now(), userMsg.tokenCreate),
+        remumber = await redis.get(userMsg.value.id)
+      if (JSON.parse(remumber).remumber == true) {
+        if (createTime > cfg.LONGEXPIRE) {
+          expire();
+        }
+      } else {
+        if (createTime > cfg.EXPIRE) {
+          expire();
+        }
+        await redis_middleware.updateToken(token)
+      }
+      function expire() {
         redis.del(token)
         redis.del(userMsg.value.id)
         ctx.status = 401
         ctx.error(401, 'token已失效')
       }
       console.log(createTime)
-      let updateTokens = await redis_middleware.updateToken(token)
-      if (updateTokens) {
-        await next()
-      }
+      await next()
     } else {
       ctx.status = 401
       ctx.error(401, '没有token')
@@ -180,9 +182,16 @@ class redis_middleware {
    */
   static async delToken(id, token) {
     if (token) {
-      redis.del(id)
-      redis.del(token)
-      return true
+      let remumberData = await redis.get(id);
+      let rem = JSON.parse(remumberData);
+      if (rem.remumber == true) {
+        return true
+      } else {
+        redis.del(id)
+        redis.del(token)
+        return true
+      }
+
     }
   }
 
@@ -232,6 +241,19 @@ class redis_middleware {
    */
   static async getUser(token) {
     return redis.get(token)
+  }
+  /**
+   * key保存用户的id
+   */
+  static async userKeys(id, username, uid, remumber) {
+    redis.set(
+      id,
+      JSON.stringify({
+        username: username,
+        token: uid,
+        remumber: remumber
+      })
+    )
   }
 }
 module.exports = redis_middleware

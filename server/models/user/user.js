@@ -6,6 +6,7 @@ const md5 = require('../../utils/md5')
 const utils = require('../../utils/tool')
 const configName = require('../../config/config').checkList
 const redis = require('../../middleware/redis')
+const redisConfig = require('../../config/redis.config').redis;
 const cfg = require('../../config/config').administrator
 class user {
   /**
@@ -14,31 +15,39 @@ class user {
    *  @param {password} 密码
    */
   static async userLogin(ctx) {
-    let { username, password } = ctx.request.body
+    let { username, password, remumber } = ctx.request.body
     let ip = utils.getIp(ctx.request)
     let code =
       username == cfg.username ? cfg.merchant : ctx.request.header['merchant']
-    if (!username || !password) {
-      ctx.error(500, '用户名或密码不能为空')
-    }
-    let finUser = ''
-    if (username === cfg.username) {
-      finUser = await User.validateUser([
-        username,
-        md5(md5(password) + 'maple')
-      ])
+    //获取token判断
+    let data = await redisConfig.get(password);
+    if (!data || data == null) {
+      if (!username || !password) {
+        ctx.error(500, '用户名或密码不能为空')
+      }
+      let finUser = ''
+      if (username === cfg.username) {
+        finUser = await User.validateUser([
+          username,
+          md5(md5(password) + 'maple')
+        ])
+      } else {
+        finUser = await User.vaUserPswMerchant([
+          username,
+          md5(md5(password) + 'maple'),
+          code
+        ])
+      }
+      // console.log(finUser)
+      if (finUser.length <= 0) {
+        ctx.error(403, '用户名或密码错误')
+      }
+      data = await redis.uidToken(remumber, finUser, ip)
     } else {
-      finUser = await User.vaUserPswMerchant([
-        username,
-        md5(md5(password) + 'maple'),
-        code
-      ])
+      let info = JSON.parse(data);
+      // console.log(info.value.id, info.value.username, info.token, remumber);
+      await redis.userKeys(info.value.id, info.value.username, info.token, remumber)
     }
-    // console.log(finUser)
-    if (finUser.length <= 0) {
-      ctx.error(403, '用户名或密码错误')
-    }
-    let data = await redis.uidToken(code, finUser, ip)
     ctx.body = typeof data == 'string' ? JSON.parse(data) : data
   }
   /**
@@ -112,7 +121,7 @@ class user {
         ctx.error(er)
       })
     ctx.body = {
-      code:2001,
+      code: 2001,
       statusCode: true
     }
   }
@@ -132,7 +141,7 @@ class user {
       let del = await redis.delToken(id, token)
       if (del) {
         ctx.body = {
-          code:2001,
+          code: 2001,
           statusCode: true
         }
       }
