@@ -31,7 +31,7 @@ class MerchantCode {
     }
     await insercode.insertCode(code)
     ctx.body = {
-      code:2001,
+      code: 2001,
       statusCode: true
     }
   }
@@ -46,22 +46,22 @@ class MerchantCode {
       code = !ctx.query.code ? '' : ctx.query.code,
       status = !ctx.query.status ? 0 : ctx.query.status,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
-      size = !ctx.query.pagesize ? 1 : parseInt(ctx.query.pagesize),
-      findMerchantCode = await merchantDB.blurryFind(merchant, code, status,page,size);
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
+      findMerchantCode = await merchantDB.blurryFind(merchant, code, status, page, size);
     if (!findMerchantCode) {
       ctx.error('服务器繁忙，请稍后再试')
     }
-    let findAll=await merchantDB.findAll();
+    let findAll = await merchantDB.findAll();
     let counts = findAll[0].count;
-    let pageSum = Math.ceil(counts / size)
+    // let pageSum = Math.ceil(counts / size)
     ctx.body = {
       statusCode: true,
-      code:2001,
-      value:{
-        data:findMerchantCode,
+      code: 2001,
+      value: {
+        data: findMerchantCode,
         page: page,
         pageSize: size,
-        totelPage: pageSum
+        totelPage: counts
       },
     }
   }
@@ -93,7 +93,7 @@ class MerchantCode {
           })
       })
     ctx.body = {
-      code:2001,
+      code: 2001,
       statusCode: true
     }
   }
@@ -120,7 +120,7 @@ class MerchantCode {
       ctx.error('系统繁忙，请稍后再试')
     }
     ctx.body = {
-      code:2001,
+      code: 2001,
       statusCode: true
     }
   }
