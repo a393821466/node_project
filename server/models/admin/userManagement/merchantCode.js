@@ -45,14 +45,24 @@ class MerchantCode {
     let merchant = !ctx.query.merchant ? '' : ctx.query.merchant,
       code = !ctx.query.code ? '' : ctx.query.code,
       status = !ctx.query.status ? 0 : ctx.query.status,
-      findMerchantCode = await merchantDB.blurryFind(merchant, code, status)
+      page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
+      size = !ctx.query.pagesize ? 1 : parseInt(ctx.query.pagesize),
+      findMerchantCode = await merchantDB.blurryFind(merchant, code, status,page,size);
     if (!findMerchantCode) {
       ctx.error('服务器繁忙，请稍后再试')
     }
+    let findAll=await merchantDB.findAll();
+    let counts = findAll[0].count;
+    let pageSum = Math.ceil(counts / size)
     ctx.body = {
       statusCode: true,
       code:2001,
-      value: findMerchantCode
+      value:{
+        data:findMerchantCode,
+        page: page,
+        pageSize: size,
+        totelPage: pageSum
+      },
     }
   }
 

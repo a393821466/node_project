@@ -155,10 +155,12 @@ class adminUser {
     ctx.body = {
       code:2001,
       statusCode: true,
-      value: searchDB,
-      page: page,
-      pageSize: size,
-      totelPage: pageSum
+      value:{
+        data:searchDB,
+        page: page,
+        pageSize: size,
+        totelPage: pageSum
+      }
     }
   }
 

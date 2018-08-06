@@ -15,7 +15,7 @@ class user {
    *  @param {password} 密码
    */
   static async userLogin(ctx) {
-    let { username, password, remumber } = ctx.request.body
+    let { username, password, remumber} = ctx.request.body
     let ip = utils.getIp(ctx.request)
     let code =
       username == cfg.username ? cfg.merchant : ctx.request.header['merchant']

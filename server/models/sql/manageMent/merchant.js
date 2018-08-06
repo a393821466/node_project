@@ -1,5 +1,5 @@
 const sqls = require('../connect').do
-//查询d
+//查询id
 const findId = value => {
   let _sql = `select * from live_merchant where id=?`
   return sqls(_sql, value)
@@ -28,9 +28,13 @@ const delMerchant = code => {
   let _sql = `delete m,d from live_merchant m inner join live_domain d on m.code = d.code where m.code=?`
   return sqls(_sql, code)
 }
-
+//查找全部
+const findAll = () => {
+  let _sql = `select count(*) as count from live_merchant`
+  return sqls(_sql)
+}
 //查找品牌
-const blurryFind = (val1, val2, val3) => {
+const blurryFind = (val1, val2, val3, page, size) => {
   let _sql = `select * from live_merchant where 1=1 `
   let arr = []
   if (val1 != '') {
@@ -48,6 +52,8 @@ const blurryFind = (val1, val2, val3) => {
     _sql += `and status like ? `
     arr.push(val3)
   }
+  _sql += `ORDER BY create_time,id limit ?,?`
+  arr.push((page - 1) * size, size)
   return sqls(_sql, arr)
 }
 
@@ -60,6 +66,7 @@ module.exports = {
   findCode,
   findId,
   findMerchant,
+  findAll,
   innsertMerchant,
   blurryFind,
   delMerchant,
