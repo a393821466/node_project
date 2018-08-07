@@ -24,7 +24,8 @@ const innsertMerchant = value => {
 }
 
 //品牌删除
-const delMerchant = code => {
+const delMerchants = code => {
+  console.log(code)
   let _sql = `delete m,d from live_merchant m inner join live_domain d on m.code = d.code where m.code=?`
   return sqls(_sql, code)
 }
@@ -34,7 +35,7 @@ const findAll = () => {
   return sqls(_sql)
 }
 //查找品牌
-const blurryFind = (val1, val2, val3, page, size) => {
+const blurryFind = (val1, val3, page, size) => {
   let _sql = `select * from live_merchant where 1=1 `
   let arr = []
   if (val1 != '') {
@@ -42,12 +43,12 @@ const blurryFind = (val1, val2, val3, page, size) => {
     _sql += `and merchant like ? `
     arr.push(val1)
   }
-  if (val2 != '') {
-    val2 = '%' + val2 + '%'
-    _sql += `and code like ? `
-    arr.push(val2)
-  }
-  if (val3 != '') {
+  // if (val2 != '') {
+  //   val2 = '%' + val2 + '%'
+  //   _sql += `and code like ? `
+  //   arr.push(val2)
+  // }
+  if (val3 != '' && val3 == 0 || val3 == 1) {
     val3 = '%' + val3 + '%'
     _sql += `and status like ? `
     arr.push(val3)
@@ -59,9 +60,10 @@ const blurryFind = (val1, val2, val3, page, size) => {
 
 //更新品牌
 const updateMerchant = value => {
-  let _sql = `update live_merchant set merchant=? , status=? where id=?`
+  let _sql = `update live_merchant set status=? where id=?`
   return sqls(_sql, value)
 }
+
 module.exports = {
   findCode,
   findId,
@@ -69,6 +71,6 @@ module.exports = {
   findAll,
   innsertMerchant,
   blurryFind,
-  delMerchant,
+  delMerchants,
   updateMerchant
 }
