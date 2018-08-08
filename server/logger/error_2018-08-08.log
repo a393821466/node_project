@@ -1,0 +1,6 @@
+{"name":"myapp","hostname":"SC-201807121532","pid":15900,"level":50,"message":"connect ECONNREFUSED 127.0.0.1:3306","msg":"","time":"2018-08-08T11:37:17.009Z","v":0}
+{"name":"myapp","hostname":"SC-201807121532","pid":1568,"level":50,"message":"ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1","msg":"","time":"2018-08-08T11:39:59.714Z","v":0}
+{"name":"myapp","hostname":"SC-201807121532","pid":9084,"level":50,"message":"ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=''' at line 1","msg":"","time":"2018-08-08T11:44:07.285Z","v":0}
+{"name":"myapp","hostname":"SC-201807121532","pid":1288,"level":50,"message":"ER_SP_UNDECLARED_VAR: Undeclared variable: NaN","msg":"","time":"2018-08-08T12:45:57.181Z","v":0}
+{"name":"myapp","hostname":"SC-201807121532","pid":2308,"level":50,"message":"ER_SP_UNDECLARED_VAR: Undeclared variable: NaN","msg":"","time":"2018-08-08T12:46:16.066Z","v":0}
+{"name":"myapp","hostname":"SC-201807121532","pid":2092,"level":50,"message":"ER_SP_UNDECLARED_VAR: Undeclared variable: NaN","msg":"","time":"2018-08-08T12:47:22.023Z","v":0}

@@ -1,6 +1,7 @@
 const groups = require('../../sql/manageMent/group')
 const userGroup = require('../../sql/manageMent/userGroup')
 const Merchant = require('../../sql/manageMent/merchant')
+const cfg = require('../../../config/config').administrator
 class group {
   /**
    * 添加用户组
@@ -32,7 +33,7 @@ class group {
       ctx.error()
     }
     ctx.body = {
-      code:2001,
+      code: 2001,
       statusCode: true
     }
   }
@@ -61,7 +62,7 @@ class group {
       icon: !icon ? findGroup[0].icon : icon,
       create_time: Date.now()
     }
-    console.log(data);
+    console.log(data)
     return groups
       .updateGroup([
         data.groupname,
@@ -72,7 +73,7 @@ class group {
       ])
       .then(rs => {
         ctx.body = {
-          code:2001,
+          code: 2001,
           statusCode: true
         }
       })
@@ -95,7 +96,7 @@ class group {
       .findGroupUser('limit', data)
       .then(rs => {
         ctx.body = {
-          code:2001,
+          code: 2001,
           statusCode: true,
           value: rs
         }
@@ -104,7 +105,26 @@ class group {
         ctx.error()
       })
   }
-
+  /**
+   * 查询品牌用户组
+   */
+  static async findMerchantGroup(ctx) {
+    let code = ctx.query.code == cfg.merchant ? '' : ctx.query.code,
+      page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
+    await groups
+      .findGroupMerchant(code, page, size)
+      .then(rs => {
+        ctx.body = {
+          code: 2001,
+          statusCode: true,
+          value: rs
+        }
+      })
+      .catch(xhr => {
+        ctx.error()
+      })
+  }
   /**
    * 删除用户组
    */
@@ -119,7 +139,7 @@ class group {
       .delGroup(ids)
       .then(rs => {
         ctx.body = {
-          code:2001,
+          code: 2001,
           statusCode: true
         }
       })

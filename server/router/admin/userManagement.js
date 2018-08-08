@@ -23,6 +23,8 @@ adminUser
   .post('/addUserGroup', checkToken, checkMerchant, apiUser.addUserGroupApi)
   //修改用户组信息
   .post('/updateGroup', checkToken, checkMerchant, apiUser.updateGroupApi)
+  //查询品牌用户组
+  .get('/findGroup', checkToken, checkMerchant, apiUser.findMerchantGroupApi)
   //查询某个组成员
   .get('/findGroupUser', checkToken, checkMerchant, apiUser.findGroupApi)
   //删除用户组

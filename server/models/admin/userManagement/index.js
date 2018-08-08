@@ -17,6 +17,7 @@ const userManageCenter = {
   addUserGroupApi: UserGroup.addGroup, //添加用户组
   updateGroupApi: UserGroup.upDateGroup, //修改用户组信息
   findGroupApi: UserGroup.findGroupUser, //查找组用户
+  findMerchantGroupApi:UserGroup.findMerchantGroup, //查找品牌用户组
   delGroupApi: UserGroup.delUserGroup, //删除用户组
   getMenusApi: Menus.getMenu //获取菜单
 }
