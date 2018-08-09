@@ -115,19 +115,25 @@ class group {
       groupname = !ctx.query.groupname ? '' : ctx.query.groupname,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
       size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
-      code = ''
+      code = '';
     if (userAdmin.merchant == cfg.merchant) {
       code = !ctx.query.code ? '' : ctx.query.code
     } else {
       code = !ctx.query.code ? userAdmin.merchant : ctx.query.code
     }
+    let groupCount = await groups.groupCount([code, groupname]);
     await groups
       .findGroupMerchant(code, groupname, page, size)
       .then(rs => {
         ctx.body = {
           code: 2001,
           statusCode: true,
-          value: rs
+          value: {
+            data: rs,
+            page: page,
+            pageSize: size,
+            totelPage: groupCount[0].count
+          }
         }
       })
       .catch(xhr => {

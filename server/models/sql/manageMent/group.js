@@ -18,6 +18,18 @@ const findGroupMerchant = (val1, val2, page, size) => {
   return sqls(_sql, arr)
 }
 
+//查找用户组条数
+const groupCount = (value) => {
+  let _sql = ''
+  if (value[0] == '' && value[1] == '') {
+    _sql = `select count(*) as count from live_group`
+    return sqls(_sql)
+  } else {
+    _sql = `select count(*) as count from live_group where merchant=? or name=?`
+    return sqls(_sql, value)
+  }
+}
+
 //查找单个用户组
 const findGroup = (type, value) => {
   let _sql = ''
@@ -42,6 +54,7 @@ const updateGroup = val => {
   return sqls(_sql, val)
 }
 
+
 //删除用户组
 const delGroup = ids => {
   let params = []
@@ -61,5 +74,6 @@ module.exports = {
   findGroup,
   innsertGroup,
   updateGroup,
-  delGroup
+  delGroup,
+  groupCount
 }

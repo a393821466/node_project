@@ -35,7 +35,7 @@ const findAll = value => {
     _sql = `select count(*) as count from live_merchant`
     return sqls(_sql)
   } else {
-    _sql = `select count(*) as count from live_merchant where status=?`
+    _sql = `select count(*) as count from live_merchant where merchant=? or status=?`
     return sqls(_sql, value)
   }
 }
