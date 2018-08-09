@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 03 日 16:15
+-- 生成日期: 2018 年 08 月 09 日 13:02
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `live_domain` (
   `code` varchar(48) NOT NULL COMMENT '品牌code',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
 --
 -- 转存表中的数据 `live_domain`
@@ -44,7 +44,13 @@ INSERT INTO `live_domain` (`id`, `domainlink`, `code`) VALUES
 (23, '', 'huawei'),
 (24, '', 'sony'),
 (25, '', 'oppo'),
-(27, '', 'taobao');
+(27, '', 'taobao'),
+(28, '', 'lalala'),
+(29, '', 'bobobo'),
+(35, '', 'alizhazha'),
+(36, '', 'huasan'),
+(38, '', 'baichuoyan'),
+(39, '', 'salaheiyo');
 
 -- --------------------------------------------------------
 
@@ -122,8 +128,8 @@ INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redire
 (14, 11, 'ServiceSetup', 'serviceSetup', 'roomModule/serviceSetup/index', NULL, '客服设置', 'roomService', NULL),
 (15, 0, 'User', '/userModule', 'Layout', 'UserSetup', '用户管理', 'userManagement', NULL),
 (16, 15, 'MerchantSetup', 'merchantSetup', 'userModule/merchant/index', NULL, '品牌设置', 'merchant', NULL),
-(17, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户组管理', 'group', NULL),
-(18, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '用户设置', 'userSetup', NULL),
+(17, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '用户组管理', 'group', NULL),
+(18, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户设置', 'userSetup', NULL),
 (19, 15, 'RobotSetup', 'robotSetup', 'userModule/robot/index', NULL, '机器人管理', 'robot', NULL);
 
 -- --------------------------------------------------------
@@ -140,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
 
 --
 -- 转存表中的数据 `live_merchant`
@@ -149,10 +155,16 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
 INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) VALUES
 (20, '三星', 'samsung', 1, '1531805219075'),
 (22, '苹果', 'apple', 1, '1531814405064'),
-(23, '华为', 'huawei', 0, '1531819604041'),
+(23, '华为', 'huawei', 1, '1531819604041'),
 (24, '索尼', 'sony', 1, '1531888488498'),
 (25, 'oppo', 'oppo', 1, '1531915582708'),
-(27, ' 淘宝电商平台', 'taobao', 0, '1532633659023');
+(27, ' 淘宝电商平台', 'taobao', 1, '1532633659023'),
+(28, '啦啦啦', 'lalala', 1, '1533559135084'),
+(29, '波波波', 'bobobo', 1, '1533559149078'),
+(35, '阿里渣渣', 'alizhazha', 0, '1533718008058'),
+(36, '华山', 'huasan', 1, '1533718950030'),
+(38, '百戳厌', 'baichuoyan', 1, '1533719512628'),
+(39, '撒拉嘿哟', 'salaheiyo', 1, '1533812155617');
 
 -- --------------------------------------------------------
 

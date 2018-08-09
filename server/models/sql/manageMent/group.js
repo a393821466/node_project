@@ -1,13 +1,17 @@
 const sqls = require('../connect').do
 //查找品牌内用户组
-const findGroupMerchant = (val1, page, size) => {
+const findGroupMerchant = (val1, val2, page, size) => {
   let arr = []
-  console.log(val1,page,size);
   let _sql = `select * from live_group where 1=1 `
   if (val1 != '') {
     val1 = '%' + val1 + '%'
     _sql += `and merchant like ? `
     arr.push(val1)
+  }
+  if (val2 != '') {
+    val1 = '%' + val2 + '%'
+    _sql += `and name like ? `
+    arr.push(val2)
   }
   _sql += `ORDER BY create_time,id limit ?,?`
   arr.push((page - 1) * size, size)

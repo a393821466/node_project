@@ -2,6 +2,8 @@ const merchantDB = require('../../sql/manageMent/merchant')
 const findUser = require('../../sql/manageMent/user')
 const findGroup = require('../../sql/manageMent/group')
 const insercode = require('../../sql/manageMent/domain')
+const cfg = require('../../../config/config').administrator
+const redis = require('../../../config/redis.config').redis
 
 class MerchantCode {
   /**
@@ -39,26 +41,38 @@ class MerchantCode {
   /**
    * 查找品牌
    * @param {String} merchant
-   * 注:只接收品牌名参数
+   * @param {Number} status
+   * @param {Number} page
+   * @param {Number} size
    */
   static async findMerchant(ctx) {
-    let merchant = !ctx.query.merchant ? '' : ctx.query.merchant,
-      // code = !ctx.query.code ? '' : ctx.query.code,
-      status = !ctx.query.status ? 0 : ctx.query.status,
+    let token = ctx.request.header['authorization'],
+      merchant = '',
+      authUser = await redis.get(token),
+      userAdmin = JSON.parse(authUser),
+      status = !ctx.query.status ? 2 : ctx.query.status,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
-      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
-      findMerchantCode = await merchantDB.blurryFind(
-        merchant,
-        // code,
-        status,
-        page,
-        size
-      )
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
+    if (userAdmin.merchant == cfg.merchant) {
+      merchant = !ctx.query.merchant ? '' : ctx.query.merchant
+    } else {
+      merchant = userAdmin.merchant
+    }
+    let findMerchantCode = await merchantDB.blurryFind(
+      merchant,
+      // code,
+      status,
+      page,
+      size
+    )
     if (!findMerchantCode) {
       ctx.error('服务器繁忙，请稍后再试')
     }
-    let findAll = await merchantDB.findAll()
-    let counts = findAll[0].count
+    let findAll = await merchantDB.findAll([merchant, status]),
+      counts = findAll[0].count
+    // pageCount = ''
+    // pageCount = counts
+
     // let pageSum = Math.ceil(counts / size)
     ctx.body = {
       statusCode: true,

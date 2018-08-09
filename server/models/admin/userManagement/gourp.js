@@ -2,6 +2,7 @@ const groups = require('../../sql/manageMent/group')
 const userGroup = require('../../sql/manageMent/userGroup')
 const Merchant = require('../../sql/manageMent/merchant')
 const cfg = require('../../../config/config').administrator
+const redis = require('../../../config/redis.config').redis
 class group {
   /**
    * 添加用户组
@@ -62,7 +63,6 @@ class group {
       icon: !icon ? findGroup[0].icon : icon,
       create_time: Date.now()
     }
-    console.log(data)
     return groups
       .updateGroup([
         data.groupname,
@@ -109,11 +109,20 @@ class group {
    * 查询品牌用户组
    */
   static async findMerchantGroup(ctx) {
-    let code = ctx.query.code == cfg.merchant ? '' : ctx.query.code,
+    let token = ctx.request.header['authorization'],
+      authUser = await redis.get(token),
+      userAdmin = JSON.parse(authUser),
+      groupname = !ctx.query.groupname ? '' : ctx.query.groupname,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
-      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
+      code = ''
+    if (userAdmin.merchant == cfg.merchant) {
+      code = !ctx.query.code ? '' : ctx.query.code
+    } else {
+      code = !ctx.query.code ? userAdmin.merchant : ctx.query.code
+    }
     await groups
-      .findGroupMerchant(code, page, size)
+      .findGroupMerchant(code, groupname, page, size)
       .then(rs => {
         ctx.body = {
           code: 2001,

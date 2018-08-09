@@ -25,14 +25,19 @@ const innsertMerchant = value => {
 
 //品牌删除
 const delMerchants = code => {
-  console.log(code)
   let _sql = `delete m,d from live_merchant m inner join live_domain d on m.code = d.code where m.code=?`
   return sqls(_sql, code)
 }
-//查找全部
-const findAll = () => {
-  let _sql = `select count(*) as count from live_merchant`
-  return sqls(_sql)
+//查找条数
+const findAll = value => {
+  let _sql = ''
+  if (value[0] == '' && value[1] == 2) {
+    _sql = `select count(*) as count from live_merchant`
+    return sqls(_sql)
+  } else {
+    _sql = `select count(*) as count from live_merchant where status=?`
+    return sqls(_sql, value)
+  }
 }
 //查找品牌
 const blurryFind = (val1, val3, page, size) => {
@@ -48,7 +53,7 @@ const blurryFind = (val1, val3, page, size) => {
   //   _sql += `and code like ? `
   //   arr.push(val2)
   // }
-  if (val3 != '' && val3 == 0 || val3 == 1) {
+  if ((val3 != '' && val3 == 0) || val3 == 1) {
     val3 = '%' + val3 + '%'
     _sql += `and status like ? `
     arr.push(val3)
