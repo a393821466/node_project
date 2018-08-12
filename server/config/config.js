@@ -6,13 +6,21 @@ const config = {
   logConfig: {
     logDay: 1 // 日志保存天数
   },
-  //数据库配置
+  //生产数据库配置
   sqlConfig: {
     host: 'localhost',
     user: 'root',
     password: 'root',
     port: '3306',
     database: 'live_db'
+  },
+  //测试数据库
+  testsqlConfig: {
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    port: '3306',
+    database: 'live_test_db'
   },
   //redis配置
   redisConfig: {

@@ -1,7 +1,8 @@
 const mysql = require('mysql')
-const config = require('../../config/config').sqlConfig
+const config = require('../../config/config')
 const logger = require('../../log')
-pool = mysql.createPool(config)
+const isConfig = process.env.NODE_ENV == 'development' ? config.testsqlConfig : config.sqlConfig
+pool = mysql.createPool(isConfig)
 //数据库连接池
 exports.do = function (sql, data) {
   return new Promise((resolve, reject) => {
