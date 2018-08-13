@@ -16,6 +16,7 @@ class adminUser {
   }
 
   /**
+   * 添加用户
    * @param {String} username 用户名
    * @param {String} password 密码
    * @param {number} groupId 用户组id
@@ -49,11 +50,10 @@ class adminUser {
     // let time1 = data.end_anexcuse
     // let sum = formartDate.timeFormart(new Date()) >= time1
     // console.log(sum)
-
-    let valid = await validate(data)
-    if (valid) {
-      ctx.error(valid)
-    }
+    // let valid = await validate(data)
+    // if (valid) {
+    //   ctx.error(valid)
+    // }
     if (cfg.checkList.indexOf(data.username) !== -1) {
       ctx.error('不能使用该用户名注册')
     }

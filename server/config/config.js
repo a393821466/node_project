@@ -1,7 +1,8 @@
 process.env.NODE_ENV = 'development' // production || development
 const config = {
   //基础配置
-  PORT: 3001,
+  domain:'http://127.0.0.1:3001', //暂时测试本地存储图片域名
+  PORT: 3001, //测试端口
   isDebug: process.env.NODE_ENV !== 'production', // 只有production才关闭debug功能
   logConfig: {
     logDay: 1 // 日志保存天数
@@ -21,6 +22,13 @@ const config = {
     password: 'root',
     port: '3306',
     database: 'live_test_db'
+  },
+  //七牛配置
+  qiniu:{
+    accessKey:'',
+    secretKey:'',
+    bucket:'', //七牛云空间名字
+    origin:'' //域名
   },
   //redis配置
   redisConfig: {

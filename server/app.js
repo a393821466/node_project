@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const router = require('./router/')
 const bodyParser = require('koa-bodyparser')
-const koaStatic = require('koa-static')
+// const koaStatic = require('koa-static')
 // const views = require('koa-views');
 const path = require('path')
 const app = new Koa()
@@ -13,7 +13,7 @@ const userRouter = router.userRouter
 const userSetting = router.systemSetting
 const userManagement = router.userManagement
 //加载静态资源
-app.use(koaStatic(path.join(__dirname, './public')))
+app.use(require('koa-static')(__dirname + '/public'))
 
 //处理请求请求体
 app.use(

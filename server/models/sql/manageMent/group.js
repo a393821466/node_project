@@ -9,11 +9,11 @@ const findGroupMerchant = (val1, val2, page, size) => {
     arr.push(val1)
   }
   if (val2 != '') {
-    val1 = '%' + val2 + '%'
+    val2 = '%' + val2 + '%'
     _sql += `and name like ? `
     arr.push(val2)
   }
-  _sql += `ORDER BY create_time,id limit ?,?`
+  _sql += `ORDER BY id,id limit ?,?`
   arr.push((page - 1) * size, size)
   return sqls(_sql, arr)
 }

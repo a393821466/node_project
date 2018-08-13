@@ -30,13 +30,13 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon start.js",
-    "start": "cross-env NODE_ENV=production nodemon start.js",
+    "start": "nodemon start.js",
     "inst": "node server/config/init.js",
     "test": "mocha ./server/test/api.test.js"
   },
   "dependencies": {
     "cross-env": "^5.2.0",
+    "file-type": "^9.0.0",
     "supertest": "^3.1.0",
     "uuid": "^3.3.2"
   }

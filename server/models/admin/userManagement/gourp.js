@@ -3,6 +3,7 @@ const userGroup = require('../../sql/manageMent/userGroup')
 const Merchant = require('../../sql/manageMent/merchant')
 const cfg = require('../../../config/config').administrator
 const redis = require('../../../config/redis.config').redis
+const upload = require('../../../utils/uploadImg')
 class group {
   /**
    * 添加用户组
@@ -19,6 +20,10 @@ class group {
     if (!groupname) {
       ctx.error(400, '组名称未填写')
     }
+    let imgUrl = await upload.authImg('groupIcon', icon)
+    if (!imgUrl) {
+      ctx.error('上传出错了')
+    }
     let findMessage = await Merchant.findCode(code)
     if (findMessage.length == 0) {
       ctx.error('没有该品牌')
@@ -28,7 +33,7 @@ class group {
       ctx.error('用户组名称已存在')
     }
     let createTime = Date.now(),
-      data = [groupname, introduce, code, icon, '', createTime],
+      data = [groupname, introduce, code, imgUrl, '', createTime],
       addUserGroup = await groups.innsertGroup(data)
     if (!addUserGroup) {
       ctx.error()
@@ -48,19 +53,27 @@ class group {
    */
   static async upDateGroup(ctx) {
     let { id, code, groupname, introduce, icon } = ctx.request.body
+    let imgUrl='';
     if (!id || !code) {
       ctx.error(400, '参数不正确')
     }
-    let findGroup = await groups.findGroup('id', [id, code])
-    if (findGroup.length > 0) {
-      if (findGroup[0].name == groupname) {
+    if(icon!==''){
+      imgUrl = await upload.authImg('groupIcon', icon)
+      if (!imgUrl) {
+        ctx.error('上传出错了')
+      }
+    }
+    let findGroup=await groups.findGroupMerchant(code,'',1,10);
+    for(let i=0;i<findGroup.length;i++){
+      if(findGroup[i].name==groupname && findGroup[i].id!==id){
         ctx.error('用户组名称已存在')
       }
     }
+    let findMyGroup=await groups.findGroup('id',[id,code])
     let data = {
-      groupname: !groupname ? findGroup[0].name : groupname,
-      introduce: !introduce ? findGroup[0].introduce : introduce,
-      icon: !icon ? findGroup[0].icon : icon,
+      groupname: !groupname ? findMyGroup[0].name : groupname,
+      introduce: !introduce ? findMyGroup[0].introduce : introduce,
+      icon: !icon ? findMyGroup[0].icon : imgUrl,
       create_time: Date.now()
     }
     return groups
@@ -115,13 +128,13 @@ class group {
       groupname = !ctx.query.groupname ? '' : ctx.query.groupname,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
       size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
-      code = '';
+      code = ''
     if (userAdmin.merchant == cfg.merchant) {
       code = !ctx.query.code ? '' : ctx.query.code
     } else {
       code = !ctx.query.code ? userAdmin.merchant : ctx.query.code
     }
-    let groupCount = await groups.groupCount([code, groupname]);
+    let groupCount = await groups.groupCount([code, groupname])
     await groups
       .findGroupMerchant(code, groupname, page, size)
       .then(rs => {
