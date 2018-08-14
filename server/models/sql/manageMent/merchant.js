@@ -45,7 +45,7 @@ const blurryFind = (val1, val3, page, size) => {
   let arr = []
   if (val1 != '') {
     val1 = '%' + val1 + '%'
-    _sql += `and merchant or code like ? `
+    _sql += `and merchant like ? `
     arr.push(val1)
   }
   // if (val2 != '') {

@@ -37,7 +37,7 @@ adminUser
   .post('/userStatus', checkToken, checkMerchant, apiUser.UserStatusApi)
   //删除用户
   .del('/userDelete', checkToken, checkMerchant, apiUser.delUserApi)
-  //搜索关键字
+  //搜索用户关键字
   .get('/userSearch', checkToken, checkMerchant, apiUser.searchUserApi)
   //查询单个用户
   .get('/findSingleUser', checkToken, apiUser.findSingleApi)

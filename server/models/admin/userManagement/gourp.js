@@ -17,12 +17,15 @@ class group {
     //   getUserMsg = await redis.getUser(token),
     //   userMessage = JSON.parse(getUserMsg),
     let { groupname, code, introduce, icon } = ctx.request.body
+    let imgUrl='';
     if (!groupname) {
       ctx.error(400, '组名称未填写')
     }
-    let imgUrl = await upload.authImg('groupIcon', icon)
-    if (!imgUrl) {
-      ctx.error('上传出错了')
+    if(icon!==''){
+      imgUrl = await upload.authImg('groupIcon', icon)
+      if (!imgUrl) {
+        ctx.error('上传出错了')
+      }
     }
     let findMessage = await Merchant.findCode(code)
     if (findMessage.length == 0) {
@@ -157,7 +160,7 @@ class group {
    * 删除用户组
    */
   static async delUserGroup(ctx) {
-    let ids = ctx.request.body.id
+    let ids = ctx.query.id
     if (!ids) ctx.error(400, '参数id不正确')
     let findGrousUser = await userGroup.findGroupUser('', ids)
     if (findGrousUser.length > 0) {
