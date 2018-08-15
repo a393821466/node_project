@@ -66,13 +66,14 @@ class init {
           md5(md5(administrator.password) + 'maple'),
           administrator.nicname,
           administrator.merchant,
+          administrator.groupName,
           administrator.status,
           administrator.f_status,
           administrator.a_status,
           createTime
         ]
         let addADmin = sql(
-          `insert into live_user(username, password,nicename,merchant, status, f_status,a_status, create_time) values(?,?,?,?,?,?,?,?)`,
+          `insert into live_user(username, password,nicename,merchant,groupName, status, f_status,a_status, create_time) values(?,?,?,?,?,?,?,?,?)`,
           adminUser
         )
         resolve(addADmin)

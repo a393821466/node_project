@@ -4,8 +4,9 @@ const Usergroup = require('../../sql/manageMent/userGroup')
 const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
-const validate = require('../../../utils/validate')
+// const validate = require('../../../utils/validate')
 const redis = require('../../../middleware/redis').getUser
+const redisConfig = require('../../../config/redis.config').redis
 const formartDate = require('../../../utils/tool')
 class adminUser {
   static getInstance() {
@@ -72,7 +73,7 @@ class adminUser {
     if (findUserGroup[0].power) {
       ctx.error('该用户组已禁止入驻用户')
     }
-    let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,'',data.status,1,1,data.roomId,data.create_time]
+    let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,findUserGroup[0].name,'',data.status,1,1,data.roomId,data.create_time]
     await User.innsertUsername(val).then(result => {
       return result;
     }).then(result => {
@@ -122,6 +123,7 @@ class adminUser {
    * @param {String} roomId 房间号
    * @param {number} f_status 冻结状态(0:限时冻结,1:可登录,-1:永久状态)
    * @param {number} a_status 禁言状态(0:限时禁言,1:可发言,-1:永久禁言)
+   * @param {String} merchant 品牌别名
    * @param {String} superior_user 开户人用户名
    */
   static async searchUser(ctx) {
@@ -132,13 +134,22 @@ class adminUser {
       roomId = !ctx.query.roomId ? '' : ctx.query.roomId,
       f_status = !ctx.query.f_status ? '' : ctx.query.f_status,
       a_status = !ctx.query.a_status ? '' : ctx.query.a_status,
-      superior_user = !ctx.query.superior_user ? '' : ctx.query.superior_user,
+      groupName=!ctx.query.groupName ? '' : ctx.query.groupName,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
-      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
+      size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
+      token = ctx.request.header['authorization'],
+      authUser = await redisConfig.get(token),
+      userAdmin = JSON.parse(authUser);
     //查询数据库
-    let searchDB = await User.blurryFind(username,nicename,status,roomId,f_status,a_status,superior_user,page,size)
+    let searchDB = '';
+    if(userAdmin.merchant==cfg.administrator.merchant){
+      let merchant=!ctx.query.merchant ? '' : ctx.query.merchant
+      searchDB=await User.blurryFind(username,nicename,status,roomId,f_status,a_status,merchant,groupName,page,size)
+    }else{
+      searchDB=await User.blurryFind(username,nicename,status,roomId,f_status,a_status,userAdmin.merchant,groupName,page,size)
+    }
     let counts = 0
-    if (!username &&!nicename &&!status &&!f_status&&!a_status&&!roomId &&!superior_user) {
+    if (!username &&!nicename &&!status &&!f_status&&!a_status&&!roomId&&!groupName) {
       //如果什么都没有，就查找全部
       let pageCount = await User.userCount()
       counts = pageCount[0].count
@@ -148,10 +159,10 @@ class adminUser {
     if (!searchDB) {
       ctx.error('抱歉，查询功能偷了一下懒')
     }
-    let pageSum = Math.ceil(counts / size) //总页数
-    for (let i = 0; i < searchDB.length; i++) {
-      delete searchDB[i].password
-    }
+    // let pageSum = Math.ceil(counts / size) //总页数
+    // for (let i = 0; i < searchDB.length; i++) {
+    //   delete searchDB[i].password
+    // }
     ctx.body = {
       code:2001,
       statusCode: true,
@@ -159,7 +170,7 @@ class adminUser {
         data:searchDB,
         page: page,
         pageSize: size,
-        totelPage: pageSum
+        totelPage: counts
       }
     }
   }

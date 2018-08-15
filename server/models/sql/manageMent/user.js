@@ -25,7 +25,7 @@ const vaUserPswMerchant = value => {
 
 //插入用户
 const innsertUsername = val => {
-  let _sql = `insert into live_user(username,password,nicename,merchant,avator,status,f_status,a_status,roomId,create_time) values(?,?,?,?,?,?,?,?,?,?)`
+  let _sql = `insert into live_user(username,password,nicename,merchant,groupName,avator,status,f_status,a_status,roomId,create_time) values(?,?,?,?,?,?,?,?,?,?,?)`
   return sqls(_sql, val)
 }
 //删除用户
@@ -43,45 +43,55 @@ const delUsername = ids => {
 }
 
 //选择查询
-const blurryFind = (val1, val2, val3, val4, val5, val6, val7, page, size) => {
-  let _sql = `select * from live_user where 1=1 `
+const blurryFind = (val1, val2, val3, val4, val5, val6, val7, val8, page, size) => {
+  let _sql = `select u.* from live_user u where 1=1 `
   let arr = []
   if (val1 != '') {
     val1 = '%' + val1 + '%'
-    _sql += `and username like ? `
+    _sql += `and u.username like ? `
     arr.push(val1)
   }
   if (val2 != '') {
     val2 = '%' + val2 + '%'
-    _sql += `and nicename like ? `
+    _sql += `and u.nicename like ? `
     arr.push(val2)
   }
   if (val3 != '') {
     val3 = '%' + val3 + '%'
-    _sql += `and status like ? `
+    _sql += `and u.status like ? `
     arr.push(val3)
   }
   if (val4 != '') {
     val4 = '%' + val4 + '%'
-    _sql += `and roomId like ? `
+    _sql += `and u.roomId like ? `
     arr.push(val4)
   }
   if (val5 != '') {
     val5 = '%' + val5 + '%'
-    _sql += `and f_status like ? `
+    _sql += `and u.f_status like ? `
     arr.push(val5)
   }
   if (val6 != '') {
     val6 = '%' + val6 + '%'
-    _sql += `and a_status like ? `
+    _sql += `and u.a_status like ? `
     arr.push(val6)
   }
   if (val7 != '') {
     val7 = '%' + val7 + '%'
-    _sql += `and superior_user like ? `
+    _sql += `and u.superior_user like ? `
     arr.push(val7)
   }
-  _sql += `ORDER BY create_time,id limit ?,?`
+  if (val7 != '') {
+    val7 = '%' + val7 + '%'
+    _sql += `and u.merchant like ?`
+    arr.push(val7)
+  }
+  if (val8 != '') {
+    val8 = '%' + val8 + '%'
+    _sql += `and u.groupName like ?`
+    arr.push(val8)
+  }
+  _sql += `ORDER BY u.create_time,u.id limit ?,?`
   arr.push((page - 1) * size, size)
   return sqls(_sql, arr)
 }

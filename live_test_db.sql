@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 12 日 08:18
+-- 生成日期: 2018 年 08 月 15 日 12:52
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -32,7 +32,14 @@ CREATE TABLE IF NOT EXISTS `live_domain` (
   `code` varchar(48) NOT NULL COMMENT '品牌code',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+
+--
+-- 转存表中的数据 `live_domain`
+--
+
+INSERT INTO `live_domain` (`id`, `domainlink`, `code`) VALUES
+(40, '', 'apple');
 
 -- --------------------------------------------------------
 
@@ -50,14 +57,25 @@ CREATE TABLE IF NOT EXISTS `live_group` (
   `create_time` varchar(64) NOT NULL COMMENT '用户组创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
 
 --
 -- 转存表中的数据 `live_group`
 --
 
 INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`, `create_time`) VALUES
-(42, '超级管理员', '你们都是我小弟', 'system', '', 1, '1534061589422');
+(42, '超级管理员', '你们都是我小弟', 'system', '', 1, '1534061589422'),
+(43, '管理员', '大飒飒我', 'apple', '', 0, '1534139663166'),
+(44, '普通用户', '的撒哇哇', 'apple', '', 0, '1534143811991'),
+(45, '讲师', '看来我看到了请问', 'apple', '', 0, '1534143881851'),
+(46, '骑兵', '打完我去', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534218906668.png', 0, '1534219072471'),
+(54, '嘎嘎', '', 'apple', '', 0, '1534237713957'),
+(55, 'ha哈', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237749323.png', 0, '1534237749329'),
+(56, '我认为', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237860343.png', 0, '1534237860348'),
+(57, '我认为啊', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237888595.png', 0, '1534237888600'),
+(58, 'uuu', '4113', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237948914.jpeg', 0, '1534237948918'),
+(59, 'adww', '', 'apple', '', 0, '1534237980921'),
+(60, '普通会员', '', 'apple', '', 0, '1534330991641');
 
 -- --------------------------------------------------------
 
@@ -101,7 +119,7 @@ INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redire
 (14, 11, 'ServiceSetup', 'serviceSetup', 'roomModule/serviceSetup/index', NULL, '客服设置', 'roomService', NULL),
 (15, 0, 'User', '/userModule', 'Layout', 'UserSetup', '用户管理', 'userManagement', NULL),
 (16, 15, 'MerchantSetup', 'merchantSetup', 'userModule/merchant/index', NULL, '品牌设置', 'merchant', NULL),
-(17, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '用户组管理', 'group', NULL),
+(17, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '角色管理', 'group', NULL),
 (18, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户设置', 'userSetup', NULL),
 (19, 15, 'RobotSetup', 'robotSetup', 'userModule/robot/index', NULL, '机器人管理', 'robot', NULL);
 
@@ -119,7 +137,14 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=40 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+
+--
+-- 转存表中的数据 `live_merchant`
+--
+
+INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) VALUES
+(40, '苹果', 'apple', 1, '1534132383313');
 
 -- --------------------------------------------------------
 
@@ -165,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `password` varchar(255) NOT NULL COMMENT '用户密码',
   `nicename` varchar(50) DEFAULT NULL COMMENT '昵称',
   `merchant` varchar(32) DEFAULT NULL,
+  `groupName` varchar(48) NOT NULL COMMENT '用户组名称',
   `avator` text COMMENT '用户头像',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态(1:审核,0:未审核)',
   `f_status` int(11) NOT NULL DEFAULT '1' COMMENT '是否可以登录(0:限时冻结,1:可登录,-1:永久状态)',
@@ -173,14 +199,27 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=175 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=188 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
-INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
-(174, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', NULL, 1, 1, 1, NULL, '1534061589659');
+INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `groupName`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
+(174, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', '', NULL, 1, 1, 1, NULL, '1534061589659'),
+(175, 'apple001', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '', '', 1, 1, 1, NULL, '1534152485741'),
+(176, 'apple002', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331006025'),
+(177, 'apple003', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331010271'),
+(178, 'apple004', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331014103'),
+(179, 'apple005', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331016289'),
+(180, 'apple006', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331018537'),
+(181, 'apple007', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331023206'),
+(182, 'apple008', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331026077'),
+(183, 'apple009', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331029190'),
+(184, 'apple010', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331032282'),
+(185, 'apple011', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331034762'),
+(186, 'apple013', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '', '', 1, 1, 1, NULL, '1534334176744'),
+(187, 'apple014', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '管理员', '', 1, 1, 1, NULL, '1534334537927');
 
 -- --------------------------------------------------------
 
@@ -193,14 +232,27 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=77 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
 --
 
 INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
-(63, 174, 42);
+(63, 174, 42),
+(64, 175, 43),
+(65, 176, 60),
+(66, 177, 60),
+(67, 178, 60),
+(68, 179, 60),
+(69, 180, 60),
+(70, 181, 60),
+(71, 182, 60),
+(72, 183, 60),
+(73, 184, 60),
+(74, 185, 60),
+(75, 186, 43),
+(76, 187, 43);
 
 -- --------------------------------------------------------
 
@@ -218,7 +270,26 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+
+--
+-- 转存表中的数据 `live_usersubset`
+--
+
+INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `end_anexcuse_time`, `end_freeze_time`) VALUES
+(8, 175, NULL, NULL, NULL, '0', '0'),
+(9, 176, '', '', '', '0', '0'),
+(10, 177, '', '', '', '0', '0'),
+(11, 178, '', '', '', '0', '0'),
+(12, 179, '', '', '', '0', '0'),
+(13, 180, '', '', '', '0', '0'),
+(14, 181, '', '', '', '0', '0'),
+(15, 182, '', '', '', '0', '0'),
+(16, 183, '', '', '', '0', '0'),
+(17, 184, '', '', '', '0', '0'),
+(18, 185, '', '', '', '0', '0'),
+(19, 186, NULL, NULL, NULL, '0', '0'),
+(20, 187, NULL, NULL, NULL, '0', '0');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -48,6 +48,7 @@ const config = {
     password: 'admin',
     nicname: '沙拉嘿哟',
     merchant: 'system',
+    groupName:'超级管理员',
     status: 1,
     f_status: 1,
     a_status: 1,
