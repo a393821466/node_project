@@ -46,7 +46,6 @@ class redis_middleware {
         tokenCreate: Date.now()
       }
       redis.set(uid, JSON.stringify(user))
-
     }
     await redis_middleware.userKeys(v[0].id, v[0].username, uid, c)
     await userLog(v[0].username, {
@@ -79,28 +78,32 @@ class redis_middleware {
       if (v[0].f_status == -1)
         reject({ code: 5002, message: '此用户已被永久冻结' })
       return end_time.findUserBset('findStatus', v[0].id).then(rs => {
-        let end_freeze =
-          rs[0].end_freeze_time - formartDate.timeFormart(new Date())
-        if (v[0].f_status == 0 && end_freeze >= 0) {
-          reject({
-            code: 5004,
-            message: `账号冻结状态,将在${Math.floor(end_freeze / 60)}分钟后解除`
-          })
-        }
-        if (v[0].f_status == 0 && end_freeze < 0) {
-          return sqlUser
-            .findUsername(v[0].id)
-            .then(result => {
-              return result[0].a_status
+        if (rs.length > 0) {
+          let end_freeze =
+            rs[0].end_freeze_time - formartDate.timeFormart(new Date())
+          if (v[0].f_status == 0 && end_freeze >= 0) {
+            reject({
+              code: 5004,
+              message: `账号冻结状态,将在${Math.floor(
+                end_freeze / 60
+              )}分钟后解除`
             })
-            .then(res => {
-              sqlUser.updateUserStatus([1, res, v[0].id]).then(rs => {
-                resolve(true)
+          }
+          if (v[0].f_status == 0 && end_freeze < 0) {
+            return sqlUser
+              .findUsername(v[0].id)
+              .then(result => {
+                return result[0].a_status
               })
-            })
-            .catch(err => {
-              reject(err)
-            })
+              .then(res => {
+                sqlUser.updateUserStatus([1, res, v[0].id]).then(rs => {
+                  resolve(true)
+                })
+              })
+              .catch(err => {
+                reject(err)
+              })
+          }
         }
         resolve(true)
         // if (v[0].a_status == -1)
@@ -126,11 +129,11 @@ class redis_middleware {
         remumber = await redis.get(userMsg.value.id)
       if (JSON.parse(remumber).remumber == true) {
         if (createTime > cfg.LONGEXPIRE) {
-          expire();
+          expire()
         }
       } else {
         if (createTime > cfg.EXPIRE) {
-          expire();
+          expire()
         }
         await redis_middleware.updateToken(token)
       }
@@ -182,8 +185,8 @@ class redis_middleware {
    */
   static async delToken(id, token) {
     if (token) {
-      let remumberData = await redis.get(id);
-      let rem = JSON.parse(remumberData);
+      let remumberData = await redis.get(id)
+      let rem = JSON.parse(remumberData)
       if (rem.remumber == true) {
         return true
       } else {
@@ -191,7 +194,6 @@ class redis_middleware {
         redis.del(token)
         return true
       }
-
     }
   }
 
@@ -254,6 +256,12 @@ class redis_middleware {
         remumber: remumber
       })
     )
+  }
+  /**
+   * 取品牌和角色
+   */
+  static async merchantAndGroup(val){
+
   }
 }
 module.exports = redis_middleware

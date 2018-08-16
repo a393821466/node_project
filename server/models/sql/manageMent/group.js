@@ -5,7 +5,7 @@ const findGroupMerchant = (val1, val2, page, size) => {
   let _sql = `select * from live_group where 1=1 `
   if (val1 != '') {
     val1 = '%' + val1 + '%'
-    _sql += `and merchant like ? `
+    _sql += `and group_code like ? `
     arr.push(val1)
   }
   if (val2 != '') {
@@ -25,7 +25,7 @@ const groupCount = (value) => {
     _sql = `select count(*) as count from live_group`
     return sqls(_sql)
   } else {
-    _sql = `select count(*) as count from live_group where merchant=? or name=?`
+    _sql = `select count(*) as count from live_group where group_code=? or name=?`
     return sqls(_sql, value)
   }
 }
@@ -34,17 +34,17 @@ const groupCount = (value) => {
 const findGroup = (type, value) => {
   let _sql = ''
   if (type == 'id') {
-    _sql = `select * from live_group where id=? and merchant=?`
+    _sql = `select * from live_group where id=? and group_code=?`
   }
   if (type == 'name') {
-    _sql = `select * from live_group where name=? and merchant=?`
+    _sql = `select * from live_group where name=? and group_code=?`
   }
   return sqls(_sql, value)
 }
 
 //插入用户组
 const innsertGroup = val => {
-  let _sql = `insert into live_group(name, introduce, merchant, icon,power, create_time) values(?,?,?,?,?,?)`
+  let _sql = `insert into live_group(name, introduce, group_code, icon,power, create_time) values(?,?,?,?,?,?)`
   return sqls(_sql, val)
 }
 

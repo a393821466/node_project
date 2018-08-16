@@ -7,7 +7,7 @@ const findUsername = value => {
 
 //查找用户品牌
 const findUserMerchant = value => {
-  let _sql = `select * from live_group g,live_user u where g.merchant=u.merchant and u.merchant=?`
+  let _sql = `select * from live_group g,live_user u where g.group_code=u.user_code and u.user_code=?`
   return sqls(_sql, value)
 }
 
@@ -19,13 +19,13 @@ const validateUser = value => {
 
 //验证用户名密码和品牌
 const vaUserPswMerchant = value => {
-  let _sql = `select * from live_user where username=? and password=? and merchant=?`
+  let _sql = `select * from live_user where username=? and password=? and user_code=?`
   return sqls(_sql, value)
 }
 
 //插入用户
 const innsertUsername = val => {
-  let _sql = `insert into live_user(username,password,nicename,merchant,groupName,avator,status,f_status,a_status,roomId,create_time) values(?,?,?,?,?,?,?,?,?,?,?)`
+  let _sql = `insert into live_user(username,password,nicename,user_code,groupName,avator,status,f_status,a_status,roomId,create_time) values(?,?,?,?,?,?,?,?,?,?,?)`
   return sqls(_sql, val)
 }
 //删除用户
@@ -83,7 +83,7 @@ const blurryFind = (val1, val2, val3, val4, val5, val6, val7, val8, page, size) 
   }
   if (val7 != '') {
     val7 = '%' + val7 + '%'
-    _sql += `and u.merchant like ?`
+    _sql += `and u.user_code like ?`
     arr.push(val7)
   }
   if (val8 != '') {

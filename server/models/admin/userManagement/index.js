@@ -12,7 +12,6 @@ const userManageCenter = {
   delUserApi: UserManage.delUser, //批量删除用户
   searchUserApi: UserManage.searchUser, //关键字搜索
   updateUserApi: UserManage.updateUser, //更新用户信息
-  findSingleApi: UserManage.findSingleMsg, //查找单个用户
   UserStatusApi: UserManage.updateUserStatus, //更改用户状态
   addUserGroupApi: UserGroup.addGroup, //添加用户组
   updateGroupApi: UserGroup.upDateGroup, //修改用户组信息

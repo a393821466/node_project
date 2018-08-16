@@ -73,7 +73,7 @@ class init {
           createTime
         ]
         let addADmin = sql(
-          `insert into live_user(username, password,nicename,merchant,groupName, status, f_status,a_status, create_time) values(?,?,?,?,?,?,?,?,?)`,
+          `insert into live_user(username, password,nicename,user_code,groupName, status, f_status,a_status, create_time) values(?,?,?,?,?,?,?,?,?)`,
           adminUser
         )
         resolve(addADmin)

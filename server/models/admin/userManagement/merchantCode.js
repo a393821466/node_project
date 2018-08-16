@@ -3,7 +3,7 @@ const findUser = require('../../sql/manageMent/user')
 const findGroup = require('../../sql/manageMent/group')
 const insercode = require('../../sql/manageMent/domain')
 const cfg = require('../../../config/config').administrator
-const redis = require('../../../config/redis.config').redis
+const redis = require('../../../middleware/redis')
 
 class MerchantCode {
   /**
@@ -48,7 +48,7 @@ class MerchantCode {
   static async findMerchant(ctx) {
     let token = ctx.request.header['authorization'],
       merchant = '',
-      authUser = await redis.get(token),
+      authUser = await redis.getUser(token),
       userAdmin = JSON.parse(authUser),
       status = !ctx.query.status ? 2 : ctx.query.status,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),

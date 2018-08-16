@@ -180,21 +180,21 @@ class adminUser {
    * @param {number} id
    * 只接收一个用户ID
    */
-  static async findSingleMsg(ctx) {
-    let uId = ctx.query.id
-    if (!uId) {
-      ctx.error('参数id错误')
-    }
-    let findUser = await User.findUsername(uId)
-    if (!findUser) {
-      ctx.error('抱歉,查询功能偷了一下懒')
-    }
-    delete findUser[0].password
-    ctx.body = {
-      statusCode: true,
-      value: findUser
-    }
-  }
+  // static async findSingleMsg(ctx) {
+  //   let uId = ctx.query.id
+  //   if (!uId) {
+  //     ctx.error('参数id错误')
+  //   }
+  //   let findUser = await User.findUsername(uId)
+  //   if (!findUser) {
+  //     ctx.error('抱歉,查询功能偷了一下懒')
+  //   }
+  //   delete findUser[0].password
+  //   ctx.body = {
+  //     statusCode: true,
+  //     value: findUser
+  //   }
+  // }
 
   /**
    * 更新用户信息

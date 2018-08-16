@@ -1,8 +1,8 @@
 const sqls = require('../connect').do
 //查询id
-const findId = value => {
-  let _sql = `select * from live_merchant where id=?`
-  return sqls(_sql, value)
+const merchantList = () => {
+  let _sql = `select m.merchant,m.code from live_merchant m`
+  return sqls(_sql)
 }
 
 //查询code
@@ -17,6 +17,11 @@ const findMerchant = value => {
   return sqls(_sql, value)
 }
 
+//查询merchant和group
+const findMerchantAndGroupName = value => {
+  let _sql = `select m.merchant,m.code,g.name,g.group_code from live_merchant as m,live_group as g where m.code=g.group_code`
+  return sqls(_sql)
+}
 //插入品牌
 const innsertMerchant = value => {
   let _sql = `insert into live_merchant(merchant,code,status,create_time) values(?,?,?,?)`
@@ -45,7 +50,7 @@ const blurryFind = (val1, val3, page, size) => {
   let arr = []
   if (val1 != '') {
     val1 = '%' + val1 + '%'
-    _sql += `and merchant or code like ? `
+    _sql += `and concat (merchant,code) like ? `
     arr.push(val1)
   }
   // if (val2 != '') {
@@ -71,11 +76,12 @@ const updateMerchant = value => {
 
 module.exports = {
   findCode,
-  findId,
+  merchantList,
   findMerchant,
   findAll,
   innsertMerchant,
   blurryFind,
   delMerchants,
-  updateMerchant
+  updateMerchant,
+  findMerchantAndGroupName
 }
