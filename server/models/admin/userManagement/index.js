@@ -6,6 +6,7 @@ const userManageCenter = {
   //用户管理
   addMerchantApi: MerchanCodes.addMerchant, //新增品牌
   findMerchantApi: MerchanCodes.findMerchant, //查找品牌
+  // findAllMerchantApi:MerchanCodes.findAllMerchant, //查询所有品牌
   delMerchantApi: MerchanCodes.delMerchant, //删除品牌
   updateMerchantApi: MerchanCodes.updateMerchantStatus, //更改品牌状态
   addUserApi: UserManage.addUser, //添加用户

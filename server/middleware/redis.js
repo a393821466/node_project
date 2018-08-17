@@ -42,7 +42,7 @@ class redis_middleware {
         },
         code: 2001,
         token: uid,
-        merchant: v[0].merchant,
+        merchant: v[0].user_code,
         tokenCreate: Date.now()
       }
       redis.set(uid, JSON.stringify(user))
@@ -216,7 +216,10 @@ class redis_middleware {
       if (findMerchants.length == 0) {
         ctx.error(400, '请填写正确的品牌参数')
       }
-      if (findMerchants[0].status == 0) {
+      if (
+        findMerchants[0].status == 0 &&
+        ctx.request.url.indexOf('logout') == -1
+      ) {
         ctx.error('无权限访问')
       }
     }
@@ -232,9 +235,9 @@ class redis_middleware {
     if (findMerchants.length == 0) {
       ctx.error(400, '品牌参数不正确')
     }
-    if (findMerchants[0].status == 0) {
-      ctx.error('无权限访问')
-    }
+    // if (findMerchants[0].status == 0) {
+    //   ctx.error('无权限访问')
+    // }
     await next()
   }
 
@@ -260,8 +263,6 @@ class redis_middleware {
   /**
    * 取品牌和角色
    */
-  static async merchantAndGroup(val){
-
-  }
+  static async merchantAndGroup(val) {}
 }
 module.exports = redis_middleware

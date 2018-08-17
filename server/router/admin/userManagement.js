@@ -14,6 +14,8 @@ adminUser
   .post('/addMerchant', checkToken, checkMerchant, apiUser.addMerchantApi)
   //查找品牌
   .get('/findMerchant', checkToken, checkMerchant, apiUser.findMerchantApi)
+  //查询所有品牌
+  .get('/userSearch', checkToken, checkMerchant, apiUser.searchUserApi)
   //删除品牌
   .del('/delMerchant', checkToken, checkMerchant, apiUser.delMerchantApi)
   //更新品牌状态
@@ -35,8 +37,8 @@ adminUser
   .post('/userUpdate', checkToken, checkMerchant, apiUser.updateUserApi)
   //更新用户状态
   .post('/userStatus', checkToken, checkMerchant, apiUser.UserStatusApi)
-  //删除用户
-  .del('/userDelete', checkToken, checkMerchant, apiUser.delUserApi)
+  //删除用户以及批量删除
+  .post('/userDelete', checkToken, checkMerchant, apiUser.delUserApi)
   //搜索用户关键字
   .get('/userSearch', checkToken, checkMerchant, apiUser.searchUserApi)
   //添加导航

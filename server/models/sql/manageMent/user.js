@@ -78,11 +78,6 @@ const blurryFind = (val1, val2, val3, val4, val5, val6, val7, val8, page, size) 
   }
   if (val7 != '') {
     val7 = '%' + val7 + '%'
-    _sql += `and u.superior_user like ? `
-    arr.push(val7)
-  }
-  if (val7 != '') {
-    val7 = '%' + val7 + '%'
     _sql += `and u.user_code like ?`
     arr.push(val7)
   }

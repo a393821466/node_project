@@ -4,6 +4,7 @@ const findGroup = require('../../sql/manageMent/group')
 const insercode = require('../../sql/manageMent/domain')
 const cfg = require('../../../config/config').administrator
 const redis = require('../../../middleware/redis')
+// const redisConfig = require('../../../config/redis.config').redis;
 
 class MerchantCode {
   /**
@@ -37,7 +38,31 @@ class MerchantCode {
       statusCode: true
     }
   }
-
+  /**
+   * 查找所有品牌
+   */
+  // static async findAllMerchant(ctx) {
+  //   let token = ctx.request.header['authorization'],
+  //     merchant = '',
+  //     authUser = await redis.getUser(token),
+  //     userAdmin = JSON.parse(authUser)
+  //   if (userAdmin.merchant == cfg.merchant) {
+  //     merchant = ''
+  //   } else {
+  //     merchant = userAdmin.merchant
+  //   }
+  //   let allMerchant = await merchantDB.findMerchant()
+  //   if (!allMerchant) {
+  //     ctx.error('服务器繁忙,请稍后在试')
+  //   }
+  //   ctx.body = {
+  //     statusCode: true,
+  //     code: 2001,
+  //     value: {
+  //       data: allMerchant
+  //     }
+  //   }
+  // }
   /**
    * 查找品牌
    * @param {String} merchant
@@ -116,7 +141,7 @@ class MerchantCode {
         ctx.error('该品牌还有用户存在')
       }
     })
-    await findGroup.findGroupMerchant(code).then(rs => {
+    await findGroup.findGroupMerchant(code,'',1,10).then(rs => {
       if (rs.length > 0) {
         ctx.error('该品牌还有用户组存在')
       }

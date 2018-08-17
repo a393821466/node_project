@@ -2,7 +2,7 @@ const groups = require('../../sql/manageMent/group')
 const userGroup = require('../../sql/manageMent/userGroup')
 const Merchant = require('../../sql/manageMent/merchant')
 const cfg = require('../../../config/config').administrator
-const redis = require('../../../config/redis.config').redis
+const redis = require('../../../middleware/redis')
 const upload = require('../../../utils/uploadImg')
 class group {
   /**
@@ -126,7 +126,7 @@ class group {
    */
   static async findMerchantGroup(ctx) {
     let token = ctx.request.header['authorization'],
-      authUser = await redis.get(token),
+      authUser = await redis.getUser(token),
       userAdmin = JSON.parse(authUser),
       groupname = !ctx.query.groupname ? '' : ctx.query.groupname,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),

@@ -1,8 +1,8 @@
 const sqls = require('../connect').do
 //查询id
-const merchantList = () => {
-  let _sql = `select m.merchant,m.code from live_merchant m`
-  return sqls(_sql)
+const findId = value => {
+  let _sql = `select * from live_merchant where id=?`
+  return sqls(_sql, value)
 }
 
 //查询code
@@ -76,7 +76,7 @@ const updateMerchant = value => {
 
 module.exports = {
   findCode,
-  merchantList,
+  findId,
   findMerchant,
   findAll,
   innsertMerchant,

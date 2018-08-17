@@ -5,8 +5,8 @@ const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
 // const validate = require('../../../utils/validate')
-const redis = require('../../../middleware/redis').getUser
-const redisConfig = require('../../../config/redis.config').redis
+const redis = require('../../../middleware/redis')
+const upload = require('../../../utils/uploadImg')
 const formartDate = require('../../../utils/tool')
 class adminUser {
   static getInstance() {
@@ -44,6 +44,7 @@ class adminUser {
         roomId: query.roomId,
         phone: query.phone,
         qq: query.qq,
+        avator:query.file,
         superior_user: query.superior_user,
         // formartDate.timeFormart(query.end_freeze),
         create_time: Date.now()
@@ -55,6 +56,15 @@ class adminUser {
     // if (valid) {
     //   ctx.error(valid)
     // }
+    let imgUrl='';
+    if(!data.avator){
+      imgUrl =''
+    }else{
+      imgUrl =await upload.authImg('userAvator', data.avator)
+      if (!imgUrl) {
+        ctx.error('上传出错了')
+      }
+    }
     if (cfg.checkList.indexOf(data.username) !== -1) {
       ctx.error('不能使用该用户名注册')
     }
@@ -73,7 +83,7 @@ class adminUser {
     if (findUserGroup[0].power) {
       ctx.error('该用户组已禁止入驻用户')
     }
-    let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,findUserGroup[0].name,'',data.status,1,1,data.roomId,data.create_time]
+    let val = [data.username,md5(md5(data.password) + 'maple'),data.nicename,data.code,findUserGroup[0].name,imgUrl,data.status,1,1,data.roomId,data.create_time]
     await User.innsertUsername(val).then(result => {
       return result;
     }).then(result => {
@@ -91,15 +101,15 @@ class adminUser {
   }
 
   /**
-   * 批量删除用户
+   * 删除用户
    * @param {array OR number} id
    * 默认接收一个或多个id参数
    */
   static async delUser(ctx) {
     let ids = ctx.request.body.id,
       token = ctx.request.header['authorization'],
-      findUser = await redis(token),
-      params = JSON.parse(findUser).value[0].id
+      findUser = await redis.getUser(token),
+      params = JSON.parse(findUser)
     if (ids.indexOf(params) > -1) {
       ctx.error('不能删除自己')
     }
@@ -138,7 +148,7 @@ class adminUser {
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
       size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize),
       token = ctx.request.header['authorization'],
-      authUser = await redisConfig.get(token),
+      authUser = await redis.getUser(token),
       userAdmin = JSON.parse(authUser);
     //查询数据库
     let searchDB = '';
@@ -160,9 +170,9 @@ class adminUser {
       ctx.error('抱歉，查询功能偷了一下懒')
     }
     // let pageSum = Math.ceil(counts / size) //总页数
-    // for (let i = 0; i < searchDB.length; i++) {
-    //   delete searchDB[i].password
-    // }
+    for (let i = 0; i < searchDB.length; i++) {
+      delete searchDB[i].password
+    }
     ctx.body = {
       code:2001,
       statusCode: true,
