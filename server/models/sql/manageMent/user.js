@@ -22,6 +22,11 @@ const vaUserPswMerchant = value => {
   let _sql = `select * from live_user where username=? and password=? and user_code=?`
   return sqls(_sql, value)
 }
+//验证用户和品牌
+const vaUserMerchant = value => {
+  let _sql = `select * from live_user where username=? and user_code=?`
+  return sqls(_sql, value)
+}
 
 //插入用户
 const innsertUsername = val => {
@@ -117,6 +122,7 @@ const updateUserStatus = value => {
 module.exports = {
   findUsername,
   findUserMerchant,
+  vaUserMerchant,
   validateUser,
   vaUserPswMerchant,
   innsertUsername,

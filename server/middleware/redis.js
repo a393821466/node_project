@@ -36,7 +36,7 @@ class redis_middleware {
         value: {
           id: v[0].id,
           username: v[0].username,
-          groupId: v[0].groupId,
+          groupName: v[0].groupName,
           nicename: v[0].nicename,
           ip: ips
         },
@@ -162,7 +162,7 @@ class redis_middleware {
         value: {
           id: upUser.value.id,
           username: upUser.value.username,
-          groupId: upUser.value.groupId,
+          groupName: upUser.value.groupName,
           nicename: upUser.value.nicename,
           ip: upUser.value.ip
         },

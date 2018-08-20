@@ -79,9 +79,8 @@ class user {
       ctx.error('不能使用该用户名注册')
     }
     //注册逻辑
-    let findUser = await User.vaUserPswMerchant([
+    let findUser = await User.vaUserMerchant([
       user.username,
-      md5(md5(user.password) + 'maple'),
       code
     ])
     if (findUser.length > 0) {
