@@ -41,6 +41,8 @@ adminUser
   .post('/userDelete', checkToken, checkMerchant, apiUser.delUserApi)
   //搜索用户关键字
   .get('/userSearch', checkToken, checkMerchant, apiUser.searchUserApi)
+  //查看用户附表
+  .get('/getUserSubset',checkToken,checkMerchant,apiUser.getUserSubsetApi)
   //添加导航
   .get('/findMenu', apiUser.getMenusApi)
 

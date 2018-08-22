@@ -11,6 +11,7 @@ const userManageCenter = {
   updateMerchantApi: MerchanCodes.updateMerchantStatus, //更改品牌状态
   addUserApi: UserManage.addUser, //添加用户
   delUserApi: UserManage.delUser, //批量删除用户
+  getUserSubsetApi:UserManage.getUserSubset,//查看用户附表
   searchUserApi: UserManage.searchUser, //关键字搜索
   updateUserApi: UserManage.updateUser, //更新用户信息
   UserStatusApi: UserManage.updateUserStatus, //更改用户状态

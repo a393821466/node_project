@@ -1,0 +1,1 @@
+{"name":"myapp","hostname":"SC-201807121532","pid":11424,"level":50,"message":"ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 1","msg":"","time":"2018-08-22T11:12:20.441Z","v":0}

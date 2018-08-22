@@ -254,6 +254,26 @@ class adminUser {
   }
 
   /**
+   * 查看用户附表
+   */
+
+   static async getUserSubset(ctx){
+     let ids=ctx.query.id;
+     if(!ids){
+       ctx.error('参数错误')
+     }
+     let findSubset=await UserSubset.findUserBset('',ids);
+     if(!findSubset){
+       ctx.error()
+     }
+     ctx.body={
+      code:2001,
+      statusCode:true,
+      value:findSubset
+     }
+   }
+
+  /**
    * 更新用户状态
    * @param {Number} id 用户id
    * @param {Number} f_status 冻结状态
@@ -269,8 +289,8 @@ class adminUser {
       ctx.error()
     }
     let data={
-      f_status:!query.f_status?findUser[0].f_status:query.f_status,
-      a_status:!query.a_status?findUser[0].f_status:query.a_status,
+      f_status:query.f_status!==0?findUser[0].f_status:query.f_status,
+      a_status:!query.a_status!==0?findUser[0].f_status:query.a_status,
       end_anexcuse:!query.end_anexcuse?0: formartDate.timeFormart(query.end_anexcuse),
       end_freeze:!query.end_freeze?0:formartDate.timeFormart(query.end_freeze)
     }
@@ -280,6 +300,7 @@ class adminUser {
     if(data.f_status==0 && !data.end_freeze){
       ctx.error('冻结时间为空');
     }
+    
     let BsetUser=()=>{
       return new Promise((resolve,reject)=>{
         UserSubset.findUserBset('findStatus',ids).then(rs=>{

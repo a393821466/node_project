@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 15 日 12:52
+-- 生成日期: 2018 年 08 月 22 日 13:11
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -32,14 +32,31 @@ CREATE TABLE IF NOT EXISTS `live_domain` (
   `code` varchar(48) NOT NULL COMMENT '品牌code',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
 
 --
 -- 转存表中的数据 `live_domain`
 --
 
 INSERT INTO `live_domain` (`id`, `domainlink`, `code`) VALUES
-(40, '', 'apple');
+(40, '', 'apple'),
+(41, '', 'huawei'),
+(42, '', 'oppo'),
+(43, '', 'yichala'),
+(45, '', 'asds'),
+(46, '', 'sdasd'),
+(47, '', 'sda'),
+(48, '', 'asd'),
+(49, '', 'q'),
+(96, '', 'asd23131'),
+(110, '', 'a31312'),
+(126, '', 'a2321'),
+(128, '', 'sadas'),
+(129, '', 'asdass'),
+(130, '', 'dsa3434'),
+(131, '', 'asd12'),
+(132, '', 'as144213'),
+(133, '', 'fdf324');
 
 -- --------------------------------------------------------
 
@@ -51,31 +68,31 @@ CREATE TABLE IF NOT EXISTS `live_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户组id',
   `name` varchar(32) NOT NULL COMMENT '用户组名称',
   `introduce` varchar(255) DEFAULT NULL COMMENT '用户组介绍',
-  `merchant` varchar(48) DEFAULT NULL COMMENT '品牌名',
+  `group_code` varchar(48) DEFAULT NULL COMMENT '品牌名',
   `icon` text COMMENT '用户组标志',
   `power` int(11) DEFAULT NULL COMMENT '权限',
   `create_time` varchar(64) NOT NULL COMMENT '用户组创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=100 ;
 
 --
 -- 转存表中的数据 `live_group`
 --
 
-INSERT INTO `live_group` (`id`, `name`, `introduce`, `merchant`, `icon`, `power`, `create_time`) VALUES
+INSERT INTO `live_group` (`id`, `name`, `introduce`, `group_code`, `icon`, `power`, `create_time`) VALUES
 (42, '超级管理员', '你们都是我小弟', 'system', '', 1, '1534061589422'),
 (43, '管理员', '大飒飒我', 'apple', '', 0, '1534139663166'),
 (44, '普通用户', '的撒哇哇', 'apple', '', 0, '1534143811991'),
-(45, '讲师', '看来我看到了请问', 'apple', '', 0, '1534143881851'),
 (46, '骑兵', '打完我去', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534218906668.png', 0, '1534219072471'),
-(54, '嘎嘎', '', 'apple', '', 0, '1534237713957'),
-(55, 'ha哈', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237749323.png', 0, '1534237749329'),
+(55, '多拉拉', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237749323.png', 0, '1534493068278'),
 (56, '我认为', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237860343.png', 0, '1534237860348'),
 (57, '我认为啊', '', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237888595.png', 0, '1534237888600'),
 (58, 'uuu', '4113', 'apple', 'http://127.0.0.1:3001/uploads/groupIcon/1534237948914.jpeg', 0, '1534237948918'),
-(59, 'adww', '', 'apple', '', 0, '1534237980921'),
-(60, '普通会员', '', 'apple', '', 0, '1534330991641');
+(60, '普通会员', '', 'apple', '', 0, '1534330991641'),
+(85, '的撒旦', '', 'asd23131', '', 0, '1534746199379'),
+(86, '大飒飒', '', 'asd23131', '', 0, '1534746210676'),
+(99, '的撒网', '', 'asd23131', '', 0, '1534758556807');
 
 -- --------------------------------------------------------
 
@@ -137,14 +154,31 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
 
 --
 -- 转存表中的数据 `live_merchant`
 --
 
 INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) VALUES
-(40, '苹果', 'apple', 1, '1534132383313');
+(40, '苹果', 'apple', 1, '1534132383313'),
+(41, '华为', 'huawei', 1, '1534411750976'),
+(42, 'oppo', 'oppo', 1, '1534413583688'),
+(43, '一查拉病毒', 'yichala', 1, '1534486163731'),
+(45, 'asdas', 'asds', 1, '1534737258969'),
+(46, 'asa', 'sdasd', 1, '1534737262603'),
+(47, 'dsadas', 'sda', 1, '1534737266622'),
+(48, 'wqe', 'asd', 1, '1534737270432'),
+(49, 'qa', 'q', 1, '1534737280242'),
+(96, '的撒哇哇', 'asd23131', 1, '1534744569335'),
+(110, '阿萨德撒网', 'a31312', 1, '1534752809168'),
+(126, '的撒网2131', 'a2321', 1, '1534755025819'),
+(128, '的撒的撒', 'sadas', 1, '1534757516402'),
+(129, 'daas', 'asdass', 1, '1534757665463'),
+(130, '大的萨达', 'dsa3434', 1, '1534757670088'),
+(131, '的撒打算', 'asd12', 1, '1534757678372'),
+(132, '迪瑟尔', 'as144213', 1, '1534757683987'),
+(133, '的飒飒', 'fdf324', 1, '1534757689801');
 
 -- --------------------------------------------------------
 
@@ -188,8 +222,8 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户id',
   `username` varchar(60) NOT NULL COMMENT '用户名',
   `password` varchar(255) NOT NULL COMMENT '用户密码',
-  `nicename` varchar(50) DEFAULT NULL COMMENT '昵称',
-  `merchant` varchar(32) DEFAULT NULL,
+  `nicename` varchar(50) DEFAULT '匿名人士' COMMENT '昵称',
+  `user_code` varchar(32) DEFAULT NULL,
   `groupName` varchar(48) NOT NULL COMMENT '用户组名称',
   `avator` text COMMENT '用户头像',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态(1:审核,0:未审核)',
@@ -199,27 +233,36 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=188 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=230 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
-INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `merchant`, `groupName`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
+INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `user_code`, `groupName`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
 (174, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', '', NULL, 1, 1, 1, NULL, '1534061589659'),
-(175, 'apple001', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '', '', 1, 1, 1, NULL, '1534152485741'),
-(176, 'apple002', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331006025'),
-(177, 'apple003', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331010271'),
-(178, 'apple004', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331014103'),
-(179, 'apple005', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331016289'),
-(180, 'apple006', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331018537'),
-(181, 'apple007', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331023206'),
-(182, 'apple008', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331026077'),
-(183, 'apple009', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331029190'),
-(184, 'apple010', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331032282'),
-(185, 'apple011', 'UkI668l+MPIkcKs+FVBv5g==', '', 'apple', '', '', 0, 1, 1, NULL, '1534331034762'),
-(186, 'apple013', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '', '', 1, 1, 1, NULL, '1534334176744'),
-(187, 'apple014', 'UkI668l+MPIkcKs+FVBv5g==', '傻逼的东西', 'apple', '管理员', '', 1, 1, 1, NULL, '1534334537927');
+(217, 'a4644343', 'J/pxBuzR2StTyENGpkemJg==', 'sad2324', 'apple', '管理员', '', 1, 1, 1, 0, '1534759955377'),
+(215, 'a421413', 'J/pxBuzR2StTyENGpkemJg==', 'asdsasa', 'apple', '管理员', '', 1, 1, 1, 0, '1534759933942'),
+(216, 'a1234122', 'J/pxBuzR2StTyENGpkemJg==', 'sadsad', 'apple', '管理员', '', 1, 1, 1, 0, '1534759943680'),
+(213, 'a132422', 'J/pxBuzR2StTyENGpkemJg==', 'dsadwe11', 'apple', '管理员', '', 0, 1, 1, 0, '1534759787143'),
+(212, 'asdasd113', 'J/pxBuzR2StTyENGpkemJg==', 'asda11', 'apple', '管理员', '', 1, 1, 1, 0, '1534759594134'),
+(200, 'zhazhahui', 'J/pxBuzR2StTyENGpkemJg==', '的撒旦', 'apple', '普通用户', '', 0, 1, 1, 1324, '1534758925410'),
+(201, 'kldka', 'rz5+Jk6Xa4L7yKqrV681hw==', '渣渣辉', 'apple', '骑兵', '', 0, 1, 1, 0, '1534758961001'),
+(202, 'jdskjw222', 'J/pxBuzR2StTyENGpkemJg==', '金蛇狂舞', 'apple', '我认为啊', '', 1, 1, 1, 1334, '1534759000480'),
+(203, 'akfje333', '8S6NcvuBGOI22xBu9BSrlA==', '渣渣', 'apple', '普通用户', '', 1, 1, 1, 0, '1534759029381'),
+(206, 'zhazhahui1', 'J/pxBuzR2StTyENGpkemJg==', 'a1111131', 'apple', '管理员', '', 1, 1, 1, 0, '1534759327100'),
+(207, 'lalal001', 'J/pxBuzR2StTyENGpkemJg==', '的撒爱上', 'apple', '管理员', '', 1, 1, 1, 0, '1534759511760'),
+(208, 'lala2', 'J/pxBuzR2StTyENGpkemJg==', 'dsa213', 'apple', '骑兵', '', 1, 1, 1, 0, '1534759528209'),
+(209, 'asdasdas1131', 'J/pxBuzR2StTyENGpkemJg==', 'dsa131', 'apple', '管理员', '', 1, 1, 1, 0, '1534759541828'),
+(210, 'dsa2311', 'J/pxBuzR2StTyENGpkemJg==', 'asa11', 'apple', '管理员', '', 1, 1, 1, 0, '1534759557055'),
+(211, 'sdsa2342', 'J/pxBuzR2StTyENGpkemJg==', '的撒网22', 'apple', '普通用户', '', 1, 1, 1, 0, '1534759577687'),
+(218, 'a432435', 'J/pxBuzR2StTyENGpkemJg==', 'adsa131', 'apple', '管理员', '', 0, 1, 1, 0, '1534760222676'),
+(219, 'a654gfd', 'zCFaeIx0hgvxKvUFRcv1QA==', 'dsadsa4333', 'apple', 'uuu', '', 0, 1, 1, 13332, '1534760238969'),
+(220, 'a5575422', 'J/pxBuzR2StTyENGpkemJg==', 'dsad23342', 'apple', '多拉拉', '', 0, 1, 1, 0, '1534760251136'),
+(221, 'aa34234235', 'J/pxBuzR2StTyENGpkemJg==', 'adsa411', 'apple', '普通用户', '', 0, 1, 1, 0, '1534760267560'),
+(222, 'a4132555', 'J/pxBuzR2StTyENGpkemJg==', '的撒的', 'apple', '多拉拉', '', 0, 1, 1, 0, '1534760372295'),
+(229, 'a222222', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '普通用户', '', 1, 0, 1, 0, '1534933724425'),
+(228, 'a111111', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '管理员', '', 1, 1, 1, 0, '1534908541252');
 
 -- --------------------------------------------------------
 
@@ -232,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=77 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -240,19 +283,29 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
 
 INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (63, 174, 42),
-(64, 175, 43),
-(65, 176, 60),
-(66, 177, 60),
-(67, 178, 60),
-(68, 179, 60),
-(69, 180, 60),
-(70, 181, 60),
-(71, 182, 60),
-(72, 183, 60),
-(73, 184, 60),
-(74, 185, 60),
-(75, 186, 43),
-(76, 187, 43);
+(110, 221, 44),
+(97, 208, 46),
+(96, 207, 43),
+(95, 206, 43),
+(92, 203, 44),
+(91, 202, 57),
+(90, 201, 46),
+(89, 200, 44),
+(100, 211, 44),
+(107, 218, 43),
+(106, 217, 43),
+(99, 210, 43),
+(76, 187, 43),
+(98, 209, 43),
+(101, 212, 43),
+(102, 213, 43),
+(104, 215, 43),
+(105, 216, 43),
+(108, 219, 58),
+(109, 220, 55),
+(111, 222, 55),
+(117, 228, 43),
+(118, 229, 44);
 
 -- --------------------------------------------------------
 
@@ -270,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
 
 --
 -- 转存表中的数据 `live_usersubset`
@@ -289,7 +342,49 @@ INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `
 (17, 184, '', '', '', '0', '0'),
 (18, 185, '', '', '', '0', '0'),
 (19, 186, NULL, NULL, NULL, '0', '0'),
-(20, 187, NULL, NULL, NULL, '0', '0');
+(20, 187, NULL, NULL, NULL, '0', '0'),
+(21, 188, '', '', 'admin', '0', '0'),
+(22, 189, '', '', 'admin', '0', '0'),
+(23, 190, '', '', 'admin', '0', '0'),
+(24, 191, '', '', 'admin', '0', '0'),
+(25, 192, '', '', 'admin', '0', '0'),
+(26, 193, '', '', 'admin', '0', '0'),
+(27, 194, '', '', 'admin', '0', '0'),
+(28, 195, '', '', 'admin', '0', '0'),
+(29, 196, '', '', 'admin', '0', '0'),
+(30, 197, '', '', 'admin', '0', '0'),
+(31, 198, '', '', 'admin', '0', '0'),
+(32, 199, '', '', 'admin', '0', '0'),
+(33, 200, '', '', 'admin', '0', '0'),
+(34, 201, '', '', 'admin', '0', '0'),
+(35, 202, '', '', 'admin', '0', '0'),
+(36, 203, '', '', 'admin', '0', '0'),
+(37, 204, '', '', 'admin', '0', '0'),
+(38, 205, '', '', 'admin', '0', '0'),
+(39, 206, '', '', 'admin', '0', '0'),
+(40, 207, '', '', 'admin', '0', '0'),
+(41, 208, '', '', 'admin', '0', '0'),
+(42, 209, '', '', 'admin', '0', '0'),
+(43, 210, '', '', 'admin', '0', '0'),
+(44, 211, '', '', 'admin', '0', '0'),
+(45, 212, '', '', 'admin', '0', '0'),
+(46, 213, '', '', 'admin', '0', '0'),
+(47, 214, '', '', 'admin', '0', '0'),
+(48, 215, '', '', 'admin', '0', '0'),
+(49, 216, '', '', 'admin', '0', '0'),
+(50, 217, '', '', 'admin', '0', '0'),
+(51, 218, '', '', 'admin', '0', '0'),
+(52, 219, '', '', 'admin', '0', '0'),
+(53, 220, '', '', 'admin', '0', '0'),
+(54, 221, '', '', 'admin', '0', '0'),
+(55, 222, '', '', 'admin', '0', '0'),
+(56, 223, '', '', 'admin', '0', '0'),
+(57, 224, '', '', 'admin', '0', '0'),
+(58, 225, '', '', 'admin', '0', '0'),
+(59, 226, '', '', 'admin', '0', '0'),
+(60, 227, '', '', 'admin', '0', '0'),
+(61, 228, '', '', 'admin', '0', '1534348800'),
+(62, 229, '', '', 'a111111', '0', '1534953600');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
