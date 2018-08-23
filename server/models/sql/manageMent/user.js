@@ -104,7 +104,7 @@ const userCount = () => {
 
 //更新
 const updateUser = value => {
-  let _sql = `update live_user set password=?,nicename=?,avator=?,status=?,roomId=? where id=?`
+  let _sql = `update live_user set nicename=?,avator=?,status=?,roomId=? where id=?`
   return sqls(_sql, value)
 }
 

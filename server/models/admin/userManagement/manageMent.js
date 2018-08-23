@@ -209,7 +209,6 @@ class adminUser {
   /**
    * 更新用户信息
    * @param {Number} id 用户id
-   * @param {String} password 用户密码
    * @param {Number} groupId 用户所在组
    * @param {String} nicename 昵称 用户昵称
    * @param {String} avator  用户头像
@@ -219,7 +218,7 @@ class adminUser {
    * @param {String} roomId 房间号
    */
   static async updateUser(ctx) {
-    let {id,password,nicename,avator,phone,qq,status,roomId} = ctx.request.body
+    let {id,nickname,avator,phone,qq,status,roomId} = ctx.request.body
     if (!id) {
       ctx.error(400, '参数id错误')
     }
@@ -227,19 +226,26 @@ class adminUser {
     if (!findUser) {
       ctx.error('抱歉,系统开了个小差')
     }
-    let passwords = !password
-        ? findUser[0].password
-        : md5(md5(password) + 'maple'),
-      nicenames = !nicename ? findUser[0].nicename : nicename,
+    let nicknames = !nickname ? findUser[0].nicename : nickname,
       avators = !avator ? findUser[0].avator : avator,
       phones = !phone ? findUser[0].phone : phone,
       qqs = !qq ? findUser[0].qq : qq,
       statuss = !status ? findUser[0].status : status,
-      roomIds = !roomId ? findUser[0].roomId : roomId,
+      roomIds = !roomId ? findUser[0].roomId : roomId;
       // end_anexcuses=!end_anexcuse? 0: formartDate.timeFormart(end_anexcuse),
       // end_freezes=!end_freeze? 0:formartDate.timeFormart(end_freeze),
-      value = [passwords, nicenames, avators, statuss, roomIds,id]
-     
+      console.log(avators)
+      let imgUrl='';
+      if(!avators){
+        imgUrl =''
+      }else{
+        imgUrl =await upload.authImg('userAvator', avators)
+        if (!imgUrl) {
+          ctx.error('上传出错了')
+        }
+      }
+      let value = [nicknames, imgUrl, statuss, roomIds,id]
+      console.log(value)
       let userDit=await User.updateUser(value);
       if(!userDit){
         if(!rs){
@@ -289,8 +295,8 @@ class adminUser {
       ctx.error()
     }
     let data={
-      f_status:query.f_status!==0?findUser[0].f_status:query.f_status,
-      a_status:!query.a_status!==0?findUser[0].f_status:query.a_status,
+      f_status:query.f_status,
+      a_status:query.a_status,
       end_anexcuse:!query.end_anexcuse?0: formartDate.timeFormart(query.end_anexcuse),
       end_freeze:!query.end_freeze?0:formartDate.timeFormart(query.end_freeze)
     }

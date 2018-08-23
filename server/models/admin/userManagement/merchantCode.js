@@ -75,14 +75,17 @@ class MerchantCode {
       merchant = '',
       authUser = await redis.getUser(token),
       userAdmin = JSON.parse(authUser),
-      status = !ctx.query.status ? 2 : ctx.query.status,
+      status = !ctx.query.status||ctx.query.status==2 ? '' : ctx.query.status,
       page = !ctx.query.page ? 1 : parseInt(ctx.query.page),
       size = !ctx.query.pagesize ? 10 : parseInt(ctx.query.pagesize)
+
     if (userAdmin.merchant == cfg.merchant) {
       merchant = !ctx.query.merchant ? '' : ctx.query.merchant
     } else {
       merchant = userAdmin.merchant
     }
+    let findAll = await merchantDB.findAll([merchant, status]),
+      counts = findAll[0].count
     let findMerchantCode = await merchantDB.blurryFind(
       merchant,
       // code,
@@ -93,8 +96,6 @@ class MerchantCode {
     if (!findMerchantCode) {
       ctx.error('服务器繁忙，请稍后再试')
     }
-    let findAll = await merchantDB.findAll([merchant, status]),
-      counts = findAll[0].count
     // pageCount = ''
     // pageCount = counts
 

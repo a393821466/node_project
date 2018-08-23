@@ -85,7 +85,7 @@ class redis_middleware {
             reject({
               code: 5004,
               message: `账号冻结状态,将在${Math.floor(
-                end_freeze / 60
+                end_freeze / 60 + 1
               )}分钟后解除`
             })
           }

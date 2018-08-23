@@ -36,7 +36,7 @@ const delMerchants = code => {
 //查找条数
 const findAll = value => {
   let _sql = ''
-  if (value[0] == '' && value[1] == 2) {
+  if (value[0] == '' && value[1] == '') {
     _sql = `select count(*) as count from live_merchant`
     return sqls(_sql)
   } else {

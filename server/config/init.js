@@ -3,6 +3,7 @@ const sql = require('../models/sql/connect').do
 const User = require('../models/sql/manageMent/user')
 const Group = require('../models/sql/manageMent/group')
 const Usergroup = require('../models/sql/manageMent/userGroup')
+const UserMerchant = require('../models/sql/manageMent/merchant')
 const md5 = require('../utils/md5')
 const mysql = require('../models/sql/connect')
 const redis = require('./redis.config').redisConfigs
@@ -24,7 +25,7 @@ class init {
   static async connectInit() {
     try {
       await init.testRedisConnect()
-      await init.isInsertAdmin()
+      await init.createAdminMerchant()
       mysql.quit()
       redis.quit()
     } catch (e) {
@@ -38,7 +39,18 @@ class init {
     let r = await redis.redisClient()
     console.log(r)
   }
-
+  //创建管理员品牌
+  static async createAdminMerchant() {
+    const getAdmins = await UserMerchant.innsertMerchant(
+      initConfig.adminMerchant
+    )
+    if(getAdmins.length>0){
+      throw Error('管理员品牌已存在')
+      return
+    }
+    console.log('管理员品牌创建成功')
+    await this.isInsertAdmin()
+  }
   //判断超级管理员是否存在
   static async isInsertAdmin() {
     const findAdmin = await User.validateUser([
