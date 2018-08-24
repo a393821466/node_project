@@ -39,12 +39,12 @@ class roomSetup{
     if(verify){
       ctx.error(verify)
     }
-    let addRooms=await roomSql.addRoom([data.room,data.code,data.title,data.keywords,data.descrip,data.logo,data.icon,data.bag,data.qr,data.roomStatus,data.chatServerUrl,data.videoModule,data.liveService,data.pcCode,data.mobileCode,data.robotNum,data.service,data.statistics,data.copyright,Date.now()])
+    let addRooms=await roomSql.addRoom([data.room,data.code,data.title,data.logo,data.icon,data.bag,data.qr,data.roomStatus,data.chatServerUrl,data.videoModule,data.liveService,data.pcCode,data.mobileCode,data.robotNum,data.service,data.statistics,data.copyright,Date.now()])
     if(!addRooms){
       ctx.error('服务器繁忙,请稍后在试')
     }
     console.log(addRooms)
-    // let addSubset=await roomSubset.addRoomSubset([data.room,data.regfilter,data.chatfilter,data.roompwd,data.roomkeymsg,data.videolooktime,data.msgshield,data.msgrecording,data.threeLogin,data.regreview])
+    // let addSubset=await roomSubset.addRoomSubset([data.room,data.regfilter,data.chatfilter,data.roompwd,data.roomkeymsg,data.videolooktime,data.msgshield,data.msgrecording,data.threeLogin,data.regreview,data.keywords,data.descrip])
   }
 }
 

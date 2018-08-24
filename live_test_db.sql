@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 24 日 10:45
+-- 生成日期: 2018 年 08 月 24 日 13:08
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -169,7 +169,7 @@ INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) 
 (45, 'asdas', 'asds', 1, '1534737258969'),
 (46, 'asa', 'sdasd', 1, '1534737262603'),
 (47, 'dsadas', 'sda', 1, '1534737266622'),
-(48, 'wqe', 'asd', 0, '1534737270432'),
+(48, 'wqe', 'asd', 1, '1534737270432'),
 (49, 'qa', 'q', 0, '1534737280242'),
 (96, '的撒哇哇', 'asd23131', 0, '1534744569335'),
 (110, '阿萨德撒网', 'a31312', 1, '1534752809168'),
@@ -222,18 +222,17 @@ CREATE TABLE IF NOT EXISTS `live_privilege` (
 
 CREATE TABLE IF NOT EXISTS `live_room` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '房间id号',
-  `code` varchar(60) NOT NULL COMMENT '所属品牌',
-  `title` varchar(120) NOT NULL COMMENT '房间标题',
-  `keywords` text COMMENT '房间关键词',
-  `descrip` text COMMENT '房间描述',
+  `room` bigint(20) DEFAULT NULL COMMENT '房间id',
+  `code` varchar(60) DEFAULT NULL COMMENT '所属品牌',
+  `title` varchar(120) DEFAULT NULL COMMENT '房间标题',
   `logo` text COMMENT '房间logo',
   `icon` text COMMENT '房间icon',
   `bag` text COMMENT '房间背景',
   `qr` text COMMENT '房间二维码',
   `roomStatus` int(11) DEFAULT '0' COMMENT '系统状态0:关闭,1:开启,2:限时,3:加密',
   `chatServerUrl` varchar(128) DEFAULT NULL COMMENT '聊天服务器地址',
-  `videoModule` int(11) NOT NULL DEFAULT '0' COMMENT '视频模块0:直播1:广告2:图片',
-  `liveService` int(11) NOT NULL DEFAULT '0' COMMENT '直播厂商0:七牛云1:阿里云2:YY',
+  `videoModule` int(11) DEFAULT '0' COMMENT '视频模块0:直播1:广告2:图片',
+  `liveService` int(11) DEFAULT '0' COMMENT '直播厂商0:七牛云1:阿里云2:YY',
   `pcCode` text COMMENT 'pc端直播模块代码',
   `mobileCode` text COMMENT 'mobile直播模块代码',
   `robotNum` bigint(20) DEFAULT NULL COMMENT '机器人人数',
@@ -243,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `live_room` (
   `create_time` varchar(68) NOT NULL COMMENT '房间创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='房间' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='房间' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -253,17 +252,19 @@ CREATE TABLE IF NOT EXISTS `live_room` (
 
 CREATE TABLE IF NOT EXISTS `live_roomsubset` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '房间附属表id',
-  `roomId` bigint(20) NOT NULL COMMENT '房间id',
+  `roomId` bigint(20) DEFAULT NULL COMMENT '房间id',
   `regfilter` text COMMENT '注册过滤',
   `chatfilter` text COMMENT '聊天过滤',
   `roompwd` varchar(48) DEFAULT NULL COMMENT '房间密码 ',
   `roomkeymsg` varchar(68) DEFAULT NULL COMMENT '房间加密提示',
   `videolooktime` bigint(120) DEFAULT NULL COMMENT '直播限时观看',
-  `msgshield` int(11) NOT NULL DEFAULT '0' COMMENT '消息屏蔽0屏蔽,1不屏蔽',
-  `msgrecording` int(11) NOT NULL DEFAULT '0' COMMENT '消息记录0记录,1不记录',
-  `msgreview` int(11) NOT NULL DEFAULT '0' COMMENT '消息审核0审核1不审核',
-  `threeLogin` int(11) NOT NULL DEFAULT '0' COMMENT '第三方登陆0否,1是',
-  `regreview` int(11) NOT NULL DEFAULT '0' COMMENT '注册审核',
+  `msgshield` int(11) DEFAULT '0' COMMENT '消息屏蔽0屏蔽,1不屏蔽',
+  `msgrecording` int(11) DEFAULT '0' COMMENT '消息记录0记录,1不记录',
+  `msgreview` int(11) DEFAULT '0' COMMENT '消息审核0审核1不审核',
+  `threeLogin` int(11) DEFAULT '0' COMMENT '第三方登陆0否,1是',
+  `regreview` int(11) DEFAULT '0' COMMENT '注册审核',
+  `keywords` text COMMENT '关键字',
+  `descrip` text COMMENT '描述',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='房间附表' AUTO_INCREMENT=1 ;
