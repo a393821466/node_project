@@ -38,6 +38,7 @@ class redis_middleware {
           username: v[0].username,
           groupName: v[0].groupName,
           nicename: v[0].nicename,
+          avator:v[0].avator,
           ip: ips
         },
         code: 2001,
@@ -164,6 +165,7 @@ class redis_middleware {
           username: upUser.value.username,
           groupName: upUser.value.groupName,
           nicename: upUser.value.nicename,
+          avator:upUser.value.avator,
           ip: upUser.value.ip
         },
         code: 2001,
@@ -248,15 +250,15 @@ class redis_middleware {
     return redis.get(token)
   }
   /**
-   * key保存用户的id
+   * key保存用户的数据
    */
   static async userKeys(id, username, uid, remumber) {
     redis.set(
       id,
       JSON.stringify({
-        username: username,
-        token: uid,
-        remumber: remumber
+        "username": username,
+        "token": uid,
+        "remumber": remumber
       })
     )
   }

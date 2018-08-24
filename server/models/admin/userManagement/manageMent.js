@@ -4,7 +4,7 @@ const Usergroup = require('../../sql/manageMent/userGroup')
 const UserSubset = require('../../sql/manageMent/usersubset')
 const md5 = require('../../../utils/md5')
 const cfg = require('../../../config/config')
-// const validate = require('../../../utils/validate')
+const validate = require('../../../utils/validate');
 const redis = require('../../../middleware/redis')
 const upload = require('../../../utils/uploadImg')
 const formartDate = require('../../../utils/tool')
@@ -116,8 +116,16 @@ class adminUser {
     if (!ids) {
       ctx.error('参数id不正确')
     }
-    await User.delUsername(ids)
-    await Usergroup.delGroup(ids)
+    await User.delUsername(ids).then(()=>{
+      return ids
+    }).then(result=>{
+      Usergroup.delGroup(result)
+      return result
+    }).then(res=>{
+      UserSubset.delSubset(res)
+    }).catch(err=>{
+      ctx.error('服务器出错了')
+    })
     ctx.body = {
       code:2001,
       statusCode: true
@@ -234,7 +242,6 @@ class adminUser {
       roomIds = !roomId ? findUser[0].roomId : roomId;
       // end_anexcuses=!end_anexcuse? 0: formartDate.timeFormart(end_anexcuse),
       // end_freezes=!end_freeze? 0:formartDate.timeFormart(end_freeze),
-      console.log(avators)
       let imgUrl='';
       if(!avators){
         imgUrl =''
@@ -245,7 +252,6 @@ class adminUser {
         }
       }
       let value = [nicknames, imgUrl, statuss, roomIds,id]
-      console.log(value)
       let userDit=await User.updateUser(value);
       if(!userDit){
         if(!rs){

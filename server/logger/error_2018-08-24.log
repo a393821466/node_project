@@ -1,0 +1,1 @@
+{"name":"myapp","hostname":"SC-201807121532","pid":200,"level":50,"message":"ER_BAD_FIELD_ERROR: Unknown column 'userid' in 'where clause'","msg":"","time":"2018-08-24T09:18:05.847Z","v":0}

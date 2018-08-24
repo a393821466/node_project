@@ -30,7 +30,8 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
-    "start": "nodemon start.js",
+    "dev": "nodemon start.js",
+    "start":"node start.js",
     "inst": "node server/config/init.js",
     "test": "mocha ./server/test/api.test.js"
   },

@@ -28,10 +28,23 @@ const findUserBset=(idx,value)=>{
   }
   return sqls(_sql,value);
 }
-
+//删除用户附表
+const delSubset = ids => {
+  let params = []
+  let _sql = `delete from live_usersubset where userid in (`
+  for (let i = 0; i < ids.length; i++) {
+    params.push(ids[i])
+  }
+  for (let i = 0; i < ids.length - 1; i++) {
+    _sql = _sql + ids[i]
+  }
+  _sql = _sql + ids[ids.length - 1] + `)`
+  return sqls(_sql, params)
+}
 module.exports = {
   subsetInsert,
   updateTable,
   findUserBset,
-  updateUserTime
+  updateUserTime,
+  delSubset
 }

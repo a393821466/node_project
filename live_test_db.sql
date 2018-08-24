@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2018 年 08 月 22 日 13:11
+-- 生成日期: 2018 年 08 月 24 日 10:45
 -- 服务器版本: 5.5.53
 -- PHP 版本: 5.4.45
 
@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `live_menu` (
   `title` varchar(32) DEFAULT NULL COMMENT '标题',
   `icon` varchar(48) DEFAULT NULL COMMENT 'icon',
   `hidden` tinyint(1) DEFAULT NULL COMMENT '导航是否显示',
+  `row` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -118,27 +119,27 @@ CREATE TABLE IF NOT EXISTS `live_menu` (
 -- 转存表中的数据 `live_menu`
 --
 
-INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redirect`, `title`, `icon`, `hidden`) VALUES
-(1, 0, 'login', '/login', 'login/index', '', NULL, NULL, 1),
-(2, 0, '404', '/404', '404', NULL, NULL, NULL, 1),
-(3, 0, ' ', '/', 'Layout', 'home', '系统概述', 'example', NULL),
-(6, 5, 'CallBoard', 'callBoard', 'systemModule/callBoard/index', '', '公告板', 'announcement', NULL),
-(7, 5, 'ChatRecord', 'chatRecord', 'systemModule/chatRecord/index', NULL, '聊天记录', 'chatManagement', NULL),
-(8, 5, 'Logger', 'logger', 'systemModule/logger/index', NULL, '日志管理', 'logger', NULL),
-(9, 5, 'QuickReply', 'quickReply', 'systemModule/quickReply/index', NULL, '快捷回复', 'quickreply', NULL),
-(4, 3, '', 'home', 'home/index', '', '系统概述', 'example', 0),
-(5, 0, 'System', '/systemModule', 'Layout', 'callBoard', '系统设置', 'setup', NULL),
-(21, 0, NULL, '*', NULL, '/404', '', '', 1),
-(10, 5, 'CustomerService', 'customerService', 'systemModule/customerService/index', NULL, '在线客服', 'service', NULL),
-(11, 0, 'Room', '/roomModule', 'Layout', 'roomSetup', '房间管理', 'roomManagement', NULL),
-(12, 11, 'RoomSetup', 'roomSetup', 'roomModule/roomSetup/index', NULL, '房间设置', 'roomSetup', NULL),
-(13, 11, 'AdminSetup', 'adminSetup', 'roomModule/adminSetup/index', NULL, '管理员设置', 'adminSetup', NULL),
-(14, 11, 'ServiceSetup', 'serviceSetup', 'roomModule/serviceSetup/index', NULL, '客服设置', 'roomService', NULL),
-(15, 0, 'User', '/userModule', 'Layout', 'UserSetup', '用户管理', 'userManagement', NULL),
-(16, 15, 'MerchantSetup', 'merchantSetup', 'userModule/merchant/index', NULL, '品牌设置', 'merchant', NULL),
-(17, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '角色管理', 'group', NULL),
-(18, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户设置', 'userSetup', NULL),
-(19, 15, 'RobotSetup', 'robotSetup', 'userModule/robot/index', NULL, '机器人管理', 'robot', NULL);
+INSERT INTO `live_menu` (`id`, `parent_id`, `name`, `path`, `component`, `redirect`, `title`, `icon`, `hidden`, `row`) VALUES
+(1, 0, 'login', '/login', 'login/index', '', NULL, NULL, 1, NULL),
+(2, 0, '404', '/404', '404', NULL, NULL, NULL, 1, NULL),
+(3, 0, ' ', '/', 'Layout', 'home', '系统概述', 'example', NULL, NULL),
+(6, 5, 'CallBoard', 'callBoard', 'systemModule/callBoard/index', '', '公告板', 'announcement', NULL, NULL),
+(7, 5, 'ChatRecord', 'chatRecord', 'systemModule/chatRecord/index', NULL, '聊天记录', 'chatManagement', NULL, NULL),
+(8, 5, 'Logger', 'logger', 'systemModule/logger/index', NULL, '日志管理', 'logger', NULL, NULL),
+(9, 5, 'QuickReply', 'quickReply', 'systemModule/quickReply/index', NULL, '快捷回复', 'quickreply', NULL, NULL),
+(4, 3, '', 'home', 'home/index', '', '系统概述', 'example', 0, NULL),
+(5, 0, 'System', '/systemModule', 'Layout', 'callBoard', '系统设置', 'setup', NULL, NULL),
+(21, 0, NULL, '*', NULL, '/404', '', '', 1, NULL),
+(10, 5, 'CustomerService', 'customerService', 'systemModule/customerService/index', NULL, '在线客服', 'service', NULL, NULL),
+(11, 0, 'Room', '/roomModule', 'Layout', 'roomSetup', '房间管理', 'roomManagement', NULL, NULL),
+(12, 11, 'RoomSetup', 'roomSetup', 'roomModule/roomSetup/index', NULL, '房间设置', 'roomSetup', NULL, NULL),
+(13, 11, 'AdminSetup', 'adminSetup', 'roomModule/adminSetup/index', NULL, '管理员设置', 'adminSetup', NULL, NULL),
+(14, 11, 'ServiceSetup', 'serviceSetup', 'roomModule/serviceSetup/index', NULL, '客服设置', 'roomService', NULL, NULL),
+(15, 0, 'User', '/userModule', 'Layout', 'UserSetup', '用户管理', 'userManagement', NULL, NULL),
+(16, 15, 'MerchantSetup', 'merchantSetup', 'userModule/merchant/index', NULL, '品牌设置', 'merchant', NULL, 1),
+(17, 15, 'GroupSetup', 'groupSetup', 'userModule/group/index', NULL, '角色管理', 'group', NULL, NULL),
+(18, 15, 'UserSetup', 'userSetup', 'userModule/user/index', NULL, '用户设置', 'userSetup', NULL, NULL),
+(19, 15, 'RobotSetup', 'robotSetup', 'userModule/robot/index', NULL, '机器人管理', 'robot', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -154,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `live_merchant` (
   `create_time` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=143 ;
 
 --
 -- 转存表中的数据 `live_merchant`
@@ -168,9 +169,9 @@ INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) 
 (45, 'asdas', 'asds', 1, '1534737258969'),
 (46, 'asa', 'sdasd', 1, '1534737262603'),
 (47, 'dsadas', 'sda', 1, '1534737266622'),
-(48, 'wqe', 'asd', 1, '1534737270432'),
-(49, 'qa', 'q', 1, '1534737280242'),
-(96, '的撒哇哇', 'asd23131', 1, '1534744569335'),
+(48, 'wqe', 'asd', 0, '1534737270432'),
+(49, 'qa', 'q', 0, '1534737280242'),
+(96, '的撒哇哇', 'asd23131', 0, '1534744569335'),
 (110, '阿萨德撒网', 'a31312', 1, '1534752809168'),
 (126, '的撒网2131', 'a2321', 1, '1534755025819'),
 (128, '的撒的撒', 'sadas', 1, '1534757516402'),
@@ -178,7 +179,8 @@ INSERT INTO `live_merchant` (`id`, `merchant`, `code`, `status`, `create_time`) 
 (130, '大的萨达', 'dsa3434', 1, '1534757670088'),
 (131, '的撒打算', 'asd12', 1, '1534757678372'),
 (132, '迪瑟尔', 'as144213', 1, '1534757683987'),
-(133, '的飒飒', 'fdf324', 1, '1534757689801');
+(133, '的飒飒', 'fdf324', 1, '1534757689801'),
+(142, '超级管理', 'system', 1, '1535005286126');
 
 -- --------------------------------------------------------
 
@@ -215,6 +217,60 @@ CREATE TABLE IF NOT EXISTS `live_privilege` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `live_room`
+--
+
+CREATE TABLE IF NOT EXISTS `live_room` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '房间id号',
+  `code` varchar(60) NOT NULL COMMENT '所属品牌',
+  `title` varchar(120) NOT NULL COMMENT '房间标题',
+  `keywords` text COMMENT '房间关键词',
+  `descrip` text COMMENT '房间描述',
+  `logo` text COMMENT '房间logo',
+  `icon` text COMMENT '房间icon',
+  `bag` text COMMENT '房间背景',
+  `qr` text COMMENT '房间二维码',
+  `roomStatus` int(11) DEFAULT '0' COMMENT '系统状态0:关闭,1:开启,2:限时,3:加密',
+  `chatServerUrl` varchar(128) DEFAULT NULL COMMENT '聊天服务器地址',
+  `videoModule` int(11) NOT NULL DEFAULT '0' COMMENT '视频模块0:直播1:广告2:图片',
+  `liveService` int(11) NOT NULL DEFAULT '0' COMMENT '直播厂商0:七牛云1:阿里云2:YY',
+  `pcCode` text COMMENT 'pc端直播模块代码',
+  `mobileCode` text COMMENT 'mobile直播模块代码',
+  `robotNum` bigint(20) DEFAULT NULL COMMENT '机器人人数',
+  `service` varchar(48) DEFAULT NULL COMMENT '客服号码',
+  `statistics` text COMMENT '统计代码',
+  `copyright` varchar(68) DEFAULT NULL COMMENT '版权',
+  `create_time` varchar(68) NOT NULL COMMENT '房间创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='房间' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `live_roomsubset`
+--
+
+CREATE TABLE IF NOT EXISTS `live_roomsubset` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '房间附属表id',
+  `roomId` bigint(20) NOT NULL COMMENT '房间id',
+  `regfilter` text COMMENT '注册过滤',
+  `chatfilter` text COMMENT '聊天过滤',
+  `roompwd` varchar(48) DEFAULT NULL COMMENT '房间密码 ',
+  `roomkeymsg` varchar(68) DEFAULT NULL COMMENT '房间加密提示',
+  `videolooktime` bigint(120) DEFAULT NULL COMMENT '直播限时观看',
+  `msgshield` int(11) NOT NULL DEFAULT '0' COMMENT '消息屏蔽0屏蔽,1不屏蔽',
+  `msgrecording` int(11) NOT NULL DEFAULT '0' COMMENT '消息记录0记录,1不记录',
+  `msgreview` int(11) NOT NULL DEFAULT '0' COMMENT '消息审核0审核1不审核',
+  `threeLogin` int(11) NOT NULL DEFAULT '0' COMMENT '第三方登陆0否,1是',
+  `regreview` int(11) NOT NULL DEFAULT '0' COMMENT '注册审核',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='房间附表' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `live_user`
 --
 
@@ -233,15 +289,14 @@ CREATE TABLE IF NOT EXISTS `live_user` (
   `create_time` varchar(64) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=230 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=231 ;
 
 --
 -- 转存表中的数据 `live_user`
 --
 
 INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `user_code`, `groupName`, `avator`, `status`, `f_status`, `a_status`, `roomId`, `create_time`) VALUES
-(174, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', '', NULL, 1, 1, 1, NULL, '1534061589659'),
-(217, 'a4644343', 'J/pxBuzR2StTyENGpkemJg==', 'sad2324', 'apple', '管理员', '', 1, 1, 1, 0, '1534759955377'),
+(174, 'admin', 'jrGAqhl4nzar/dlRelu0+w==', '沙拉嘿哟', 'system', '超级管理员', 'http://127.0.0.1:3001/uploads/userAvator/1535088609984.png', 1, 1, 1, NULL, '1534061589659'),
 (215, 'a421413', 'J/pxBuzR2StTyENGpkemJg==', 'asdsasa', 'apple', '管理员', '', 1, 1, 1, 0, '1534759933942'),
 (216, 'a1234122', 'J/pxBuzR2StTyENGpkemJg==', 'sadsad', 'apple', '管理员', '', 1, 1, 1, 0, '1534759943680'),
 (213, 'a132422', 'J/pxBuzR2StTyENGpkemJg==', 'dsadwe11', 'apple', '管理员', '', 0, 1, 1, 0, '1534759787143'),
@@ -250,19 +305,13 @@ INSERT INTO `live_user` (`id`, `username`, `password`, `nicename`, `user_code`, 
 (201, 'kldka', 'rz5+Jk6Xa4L7yKqrV681hw==', '渣渣辉', 'apple', '骑兵', '', 0, 1, 1, 0, '1534758961001'),
 (202, 'jdskjw222', 'J/pxBuzR2StTyENGpkemJg==', '金蛇狂舞', 'apple', '我认为啊', '', 1, 1, 1, 1334, '1534759000480'),
 (203, 'akfje333', '8S6NcvuBGOI22xBu9BSrlA==', '渣渣', 'apple', '普通用户', '', 1, 1, 1, 0, '1534759029381'),
-(206, 'zhazhahui1', 'J/pxBuzR2StTyENGpkemJg==', 'a1111131', 'apple', '管理员', '', 1, 1, 1, 0, '1534759327100'),
-(207, 'lalal001', 'J/pxBuzR2StTyENGpkemJg==', '的撒爱上', 'apple', '管理员', '', 1, 1, 1, 0, '1534759511760'),
 (208, 'lala2', 'J/pxBuzR2StTyENGpkemJg==', 'dsa213', 'apple', '骑兵', '', 1, 1, 1, 0, '1534759528209'),
 (209, 'asdasdas1131', 'J/pxBuzR2StTyENGpkemJg==', 'dsa131', 'apple', '管理员', '', 1, 1, 1, 0, '1534759541828'),
-(210, 'dsa2311', 'J/pxBuzR2StTyENGpkemJg==', 'asa11', 'apple', '管理员', '', 1, 1, 1, 0, '1534759557055'),
+(210, 'dsa2311', 'J/pxBuzR2StTyENGpkemJg==', '爱你就像老鼠爱大米', 'apple', '管理员', 'http://127.0.0.1:3001/uploads/userAvator/1535031484427.png', 1, 1, 1, 0, '1534759557055'),
 (211, 'sdsa2342', 'J/pxBuzR2StTyENGpkemJg==', '的撒网22', 'apple', '普通用户', '', 1, 1, 1, 0, '1534759577687'),
-(218, 'a432435', 'J/pxBuzR2StTyENGpkemJg==', 'adsa131', 'apple', '管理员', '', 0, 1, 1, 0, '1534760222676'),
-(219, 'a654gfd', 'zCFaeIx0hgvxKvUFRcv1QA==', 'dsadsa4333', 'apple', 'uuu', '', 0, 1, 1, 13332, '1534760238969'),
-(220, 'a5575422', 'J/pxBuzR2StTyENGpkemJg==', 'dsad23342', 'apple', '多拉拉', '', 0, 1, 1, 0, '1534760251136'),
-(221, 'aa34234235', 'J/pxBuzR2StTyENGpkemJg==', 'adsa411', 'apple', '普通用户', '', 0, 1, 1, 0, '1534760267560'),
-(222, 'a4132555', 'J/pxBuzR2StTyENGpkemJg==', '的撒的', 'apple', '多拉拉', '', 0, 1, 1, 0, '1534760372295'),
-(229, 'a222222', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '普通用户', '', 1, 0, 1, 0, '1534933724425'),
-(228, 'a111111', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '管理员', '', 1, 1, 1, 0, '1534908541252');
+(219, 'a654gfd', 'zCFaeIx0hgvxKvUFRcv1QA==', 'dsadsa4333', 'apple', 'uuu', '', 0, 0, 1, 13332, '1534760238969'),
+(229, 'a222222', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '普通用户', 'http://127.0.0.1:3001/uploads/userAvator/1535084872752.jpeg', 1, 1, 1, 0, '1534933724425'),
+(228, 'a111111', 'J/pxBuzR2StTyENGpkemJg==', NULL, 'apple', '管理员', 'http://127.0.0.1:3001/uploads/userAvator/1535084770267.jpeg', 1, 1, 1, 0, '1534908541252');
 
 -- --------------------------------------------------------
 
@@ -275,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
   `userid` bigint(20) NOT NULL COMMENT '用户id',
   `groupid` bigint(20) NOT NULL COMMENT '用户组id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=120 ;
 
 --
 -- 转存表中的数据 `live_usergroup`
@@ -283,17 +332,12 @@ CREATE TABLE IF NOT EXISTS `live_usergroup` (
 
 INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (63, 174, 42),
-(110, 221, 44),
 (97, 208, 46),
-(96, 207, 43),
-(95, 206, 43),
 (92, 203, 44),
 (91, 202, 57),
 (90, 201, 46),
 (89, 200, 44),
 (100, 211, 44),
-(107, 218, 43),
-(106, 217, 43),
 (99, 210, 43),
 (76, 187, 43),
 (98, 209, 43),
@@ -302,8 +346,6 @@ INSERT INTO `live_usergroup` (`id`, `userid`, `groupid`) VALUES
 (104, 215, 43),
 (105, 216, 43),
 (108, 219, 58),
-(109, 220, 55),
-(111, 222, 55),
 (117, 228, 43),
 (118, 229, 44);
 
@@ -323,14 +365,14 @@ CREATE TABLE IF NOT EXISTS `live_usersubset` (
   `end_freeze_time` varchar(64) DEFAULT '0' COMMENT '冻结结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=66 ;
 
 --
 -- 转存表中的数据 `live_usersubset`
 --
 
 INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `end_anexcuse_time`, `end_freeze_time`) VALUES
-(8, 175, NULL, NULL, NULL, '0', '0'),
+(8, 174, NULL, NULL, NULL, '0', '0'),
 (9, 176, '', '', '', '0', '0'),
 (10, 177, '', '', '', '0', '0'),
 (11, 178, '', '', '', '0', '0'),
@@ -365,7 +407,7 @@ INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `
 (40, 207, '', '', 'admin', '0', '0'),
 (41, 208, '', '', 'admin', '0', '0'),
 (42, 209, '', '', 'admin', '0', '0'),
-(43, 210, '', '', 'admin', '0', '0'),
+(43, 210, NULL, NULL, 'admin', '0', '0'),
 (44, 211, '', '', 'admin', '0', '0'),
 (45, 212, '', '', 'admin', '0', '0'),
 (46, 213, '', '', 'admin', '0', '0'),
@@ -374,7 +416,7 @@ INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `
 (49, 216, '', '', 'admin', '0', '0'),
 (50, 217, '', '', 'admin', '0', '0'),
 (51, 218, '', '', 'admin', '0', '0'),
-(52, 219, '', '', 'admin', '0', '0'),
+(52, 219, '', '', 'admin', '0', '1535040000'),
 (53, 220, '', '', 'admin', '0', '0'),
 (54, 221, '', '', 'admin', '0', '0'),
 (55, 222, '', '', 'admin', '0', '0'),
@@ -383,8 +425,8 @@ INSERT INTO `live_usersubset` (`id`, `userid`, `phone`, `qq`, `superior_user`, `
 (58, 225, '', '', 'admin', '0', '0'),
 (59, 226, '', '', 'admin', '0', '0'),
 (60, 227, '', '', 'admin', '0', '0'),
-(61, 228, '', '', 'admin', '0', '1534348800'),
-(62, 229, '', '', 'a111111', '0', '1534953600');
+(61, 228, NULL, NULL, 'admin', '0', '1534999680'),
+(62, 229, NULL, NULL, 'a111111', '0', '1535000100');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

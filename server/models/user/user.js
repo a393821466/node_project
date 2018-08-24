@@ -7,7 +7,7 @@ const utils = require('../../utils/tool')
 const configName = require('../../config/config').checkList
 const redis = require('../../middleware/redis')
 const redisConfig = require('../../config/redis.config').redis;
-const cfg = require('../../config/config').administrator
+const cfg = require('../../config/config')
 class user {
   /**
    *  登录中间件
@@ -18,15 +18,22 @@ class user {
     let { username, password, remumber} = ctx.request.body
     let ip = utils.getIp(ctx.request)
     let code =
-      username == cfg.username ? cfg.merchant : ctx.request.header['merchant']
+      username == cfg.administrator.username ? cfg.administrator.merchant : ctx.request.header['merchant'];
     //获取token判断
     let data = await redisConfig.get(password);
+    let formartData=!data?"":JSON.parse(data);
+    let t=utils.newTimeAndOldTime(Date.now(),formartData.tokenCreate)
+    if(t>cfg.LONGEXPIRE){
+      redisConfig.del(password)
+      redisConfig.del(formartData.value.id)
+      ctx.error(500, '密码已过期')
+    }
     if (!data || data == null) {
       if (!username || !password) {
         ctx.error(500, '用户名或密码不能为空')
       }
       let finUser = ''
-      if (username === cfg.username) {
+      if (username === cfg.administrator.username) {
         finUser = await User.validateUser([
           username,
           md5(md5(password) + 'maple')
@@ -44,9 +51,7 @@ class user {
       }
       data = await redis.uidToken(remumber, finUser, ip)
     } else {
-      let info = JSON.parse(data);
-      // console.log(info.value.id, info.value.username, info.token, remumber);
-      await redis.userKeys(info.value.id, info.value.username, info.token, remumber)
+      await redis.userKeys(formartData.value.id, formartData.value.username, formartData.token, remumber)
     }
     ctx.body = typeof data == 'string' ? JSON.parse(data) : data
   }

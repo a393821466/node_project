@@ -12,6 +12,7 @@ const errorMiddleware = require('./middleware/http_error').errorMiddleware
 const userRouter = router.userRouter
 const userSetting = router.systemSetting
 const userManagement = router.userManagement
+const roomManagement=router.roomSetup
 //加载静态资源
 app.use(require('koa-static')(__dirname + '/public'))
 
@@ -36,5 +37,6 @@ app.use(errorMiddleware())
 app.use(userRouter.routes()).use(userRouter.allowedMethods())
 app.use(userSetting.routes()).use(userSetting.allowedMethods())
 app.use(userManagement.routes()).use(userManagement.allowedMethods())
+app.use(roomManagement.routes()).use(roomManagement.allowedMethods())
 
 module.exports = app
