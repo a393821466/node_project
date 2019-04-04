@@ -1,5 +1,4 @@
-;
-handleResponse({
+{
   "status": 200,
   "value": [{
       "commodityName": {
@@ -2040,4 +2039,4 @@ handleResponse({
       }
     }
   ]
-})
+}
